@@ -17,7 +17,7 @@ class StoreClient(object):
                 username=configuration.store_username,
                 password=configuration.store_password,
                 timeout=5)
-        except RuntimeError as e:
+        except Exception as e:
             print("could not create client", e)
             self.client = None
 
@@ -28,7 +28,6 @@ class StoreClient(object):
         else:
             print("client not available")
             raise RuntimeError("bla")
-
 
 
 def client():

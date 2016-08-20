@@ -4,13 +4,15 @@ import os
 
 from injector import inject, singleton
 
+from .store_client import StoreClient
 from . import config
 
 @singleton
 class DataLog(object):
-    @inject(configuration=config.Config)
-    def __init__(self, configuration):
+    @inject(configuration=config.Config, store_client=StoreClient)
+    def __init__(self, configuration, store_client):
         self.log_path = configuration.log_path
+        self.store_client = store_client
 
     def store(self, data, timestamp):
         with open(os.path.join(self.log_path, timestamp + '.json'), 'w') as output_file:
@@ -29,8 +31,9 @@ class DataLog(object):
                     continue
                 print("{}: {}".format(data_file_name, data))
                 try:
-                    self.client.write_points(data)
-                except:
-                    print("transmission error of archive - skipping")
+                    print("client:", self.store_client)
+                    self.store_client.store(data)
+                except Exception as e:
+                    print("transmission error of archive - skipping", e)
                     break
             os.unlink(data_file_name)

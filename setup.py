@@ -7,7 +7,7 @@ import glob
 
 setup(
     name='klimalogger',
-    version='0.1.12',
+    version='0.1.19',
     packages=find_packages(),
     scripts=glob.glob('scripts/*'),
     url='',
@@ -33,6 +33,6 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
     ],
-    install_requires=['influxdb', 'injector'],
+    install_requires=['influxdb', 'injector', 'lazy'],
     tests_require=['pytest-cov', 'mock', 'assertpy']
 )

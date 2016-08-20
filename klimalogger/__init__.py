@@ -27,8 +27,8 @@ class Client(object):
         try:
             self.store_client.store(data)
             print("stored data")
-        except:
-            print("error during data transmission: create local log entry")
+        except Exception as e:
+            print("error during data transmission: create local log entry", e)
             self.data_log.store(data, timestamp)
 
         self.data_log.transmit_stored_data()
