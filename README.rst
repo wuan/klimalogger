@@ -6,7 +6,7 @@
     :target: http://badge.fury.io/gh/wuan%2Fklimalogger
 .. image:: https://badge.fury.io/py/klimalogger.svg
     :alt: PyPi-Package
-    :target: https://badge.fury.io/py/klima
+    :target: https://badge.fury.io/py/klimalogger
 .. image:: https://travis-ci.org/wuan/klimalogger.svg?branch=master
     :alt: Build Status
     :target: https://travis-ci.org/wuan/klimalogger
