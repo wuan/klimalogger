@@ -2,94 +2,9 @@
 # -*- coding: utf8 -*-
 
 from __future__ import print_function
-from sht1x.Sht1x import Sht1x as SHT1x
 
-import os
-import glob
-import json
-import datetime, pytz, socket
+from klimalogger import client as logger_client
 
-sht1x = SHT1x(dataPin=18, sckPin=16, gpioMode=SHT1x.GPIO_BOARD)
-(temperature, humidity) = sht1x.read_temperature_C_and_humidity()
+client = logger_client()
+client.measure_and_store()
 
-print(temperature, humidity)
-
-if temperature > -40.0:
-    print("valid values")
-    dew_point = sht1x.calculate_dew_point(temperature, humidity)
-    dew_point = round(dew_point, 2)
-
-    temperature = round(temperature, 2)
-    humidity = round(humidity, 2)
-else:
-    temperature = None
-    humidity = None
-    dew_point = None
-
-host_name = socket.gethostname()
-timestamp = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC).isoformat()
-
-class ValueCreator(object):
-
-    def __init__(self, location):
-        self.location = location
-        self.host_name = socket.gethostname()
-        self.timestamp = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC).isoformat()
-        self.data = []
-
-    def add(self, sensor, measurement_type, measurement_unit, measurement_value, calculated=False):
-	if measurement_value is not None:
-            self.data += [self.create(sensor, measurement_type, measurement_unit, measurement_value, calculated)]
-
-    def create(self, sensor, measurement_type, measurement_unit, measurement_value, calculated=False):
-      return {
-                "measurement": "data",
-                "tags": {
-                    "host": host_name,
-                    "location": self.location,
-                    "type": measurement_type,
-                    "unit": measurement_unit,
-                    "sensor": sensor,
-                    "calculated": calculated
-                },
-                "time": self.timestamp,
-                "fields": {
-                    "value": measurement_value
-                }
-            }
-
-value_creator = ValueCreator("Schlafzimmer")
-
-value_creator.add("SHT1x", "temperature", "°C", temperature),
-value_creator.add("SHT1x", "dew point", "°C", dew_point, True),
-value_creator.add("SHT1x", "relative humidity", "%", humidity),
-
-from influxdb import InfluxDBClient
-
-data = value_creator.data
-timestamp = value_creator.timestamp
-
-client = InfluxDBClient('uranos.home.wuerl.net', 8086, 'klima', 'klima', 'klima', timeout=5)
-try:
-    client.write_points(data)
-except:
-    with open(os.path.join('/var/cache/klimalogger', timestamp + '.json'), 'w') as output_file:
-        output_file.write(json.dumps(data))
-    print("created local data file after transmission error")
-
-data_file_names = glob.glob('/var/cache/klimalogger/*.json')
-data_file_names.sort()
-for data_file_name in data_file_names:
-    with open(data_file_name, 'r') as input_file:
-        try:
-            data = json.loads(input_file.read())
-        except:
-            print("error loading data {}".format(data_file_name))
-            continue
-        print("{}: {}".format(data_file_name, data))
-        try:
-            client.write_points(data)
-        except:
-            print("transmission error of archive - skipping")
-            break
-    os.unlink(data_file_name)
