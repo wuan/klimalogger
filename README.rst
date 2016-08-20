@@ -1,4 +1,4 @@
-`klima <https://github.com/wuan/klimalogger>`_
+`klimalogger <https://github.com/wuan/klimalogger>`_
 ============================================
 
 .. image:: https://badge.fury.io/gh/wuan%2Fklimalogger.svg
@@ -9,7 +9,7 @@
     :target: https://badge.fury.io/py/klima
 .. image:: https://travis-ci.org/wuan/klimalogger.svg?branch=master
     :alt: Build Status
-    :target: https://travis-ci.org/wuan/klima
+    :target: https://travis-ci.org/wuan/klimalogger
 .. image:: https://coveralls.io/repos/wuan/klimalogger/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/wuan/klimalogger?branch=master
 
