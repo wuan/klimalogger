@@ -7,7 +7,7 @@ import glob
 
 setup(
     name='klimalogger',
-    version='0.1.20',
+    version='0.1.21',
     packages=find_packages(),
     scripts=glob.glob('scripts/*'),
     url='',
