@@ -8,8 +8,7 @@ from . import config
 @singleton
 class StoreClient(object):
     @inject(configuration=config.Config)
-    def __init__(self, configuration, data_log):
-        self.data_log = data_log
+    def __init__(self, configuration):
         try:
             self.client = InfluxDBClient(
                 host=configuration.store_host,
@@ -18,13 +17,16 @@ class StoreClient(object):
                 username=configuration.store_username,
                 password=configuration.store_password,
                 timeout=5)
-        except:
+        except RuntimeError as e:
+            print("could not create client", e)
             self.client = None
 
     def store(self, data):
         if self.client:
+            print("write data")
             self.client.write_points(data)
         else:
+            print("client not available")
             raise RuntimeError("bla")
 
 

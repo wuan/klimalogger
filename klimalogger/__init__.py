@@ -26,6 +26,7 @@ class Client(object):
         timestamp = self.data_builder.timestamp
         try:
             self.store_client.store(data)
+            print("stored data")
         except:
             print("error during data transmission: create local log entry")
             self.data_log.store(data, timestamp)

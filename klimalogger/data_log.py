@@ -29,7 +29,7 @@ class DataLog(object):
                     continue
                 print("{}: {}".format(data_file_name, data))
                 try:
-                    client.write_points(data)
+                    self.client.write_points(data)
                 except:
                     print("transmission error of archive - skipping")
                     break

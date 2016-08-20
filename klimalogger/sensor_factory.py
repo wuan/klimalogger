@@ -16,6 +16,7 @@ class SensorFactory(object):
 
     def measure(self, data_builder):
         for sensor in self.sensors:
-            importlib.import_module('klimalogger.sensor.' + sensor + '.Sensor')
-            sensor = self.current_injector.get(Sensor)
+            module = importlib.import_module('klimalogger.sensor.' + sensor + '_sensor')
+            print("module:", module)
+            sensor = self.current_injector.get(module.Sensor)
             sensor.measure(data_builder)
