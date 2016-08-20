@@ -4,11 +4,10 @@
 from setuptools import setup, find_packages
 
 import glob
-import klimalogger
 
 setup(
     name='klimalogger',
-    version=klimalogger.__version__,
+    version='0.1.2',
     packages=find_packages(),
     scripts=glob.glob('scripts/*'),
     url='',

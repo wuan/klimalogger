@@ -6,8 +6,6 @@ from .store_client import StoreClient
 from .data_builder import DataBuilder
 from .config import ConfigModule
 
-__version__ = '0.1.0'
-
 INJECTOR = Injector(
     [config.ConfigModule()])
 
