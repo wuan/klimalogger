@@ -1,3 +1,5 @@
+import os
+
 from injector import singleton, provides, Module, inject
 from lazy import lazy
 
@@ -46,6 +48,13 @@ class ConfigModule(Module):
     @singleton
     @provides(configparser.ConfigParser)
     def provide_config_parser(self):
-        config_parser = configparser.ConfigParser()
-        config_parser.read('/etc/klimalogger/klimalogger.conf')
-        return config_parser
+
+        config_file_locations = ['/etc/klimalogger/klimalogger.conf', '/etc/klimalogger.conf']
+
+        for config_file_location in config_file_locations:
+            if os.path.exists(config_file_location):
+                config_parser = configparser.ConfigParser()
+                config_parser.read(config_file_location)
+                return config_parser
+
+        raise IOError("config file not found")
