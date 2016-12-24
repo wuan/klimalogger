@@ -1,4 +1,5 @@
 import os
+import socket
 
 from injector import singleton, provides, Module, inject
 from lazy import lazy
@@ -18,6 +19,10 @@ class Config(object):
     @lazy
     def client_location_name(self):
         return self.config_parser.get('client', 'location_name')
+
+    @lazy
+    def client_host_name(self):
+        return socket.gethostname()
 
     @lazy
     def store_username(self):
@@ -53,6 +58,7 @@ class ConfigModule(Module):
 
         for config_file_location in config_file_locations:
             if os.path.exists(config_file_location):
+                print("reading config file location", config_file_location)
                 config_parser = configparser.ConfigParser()
                 config_parser.read(config_file_location)
                 return config_parser

@@ -10,7 +10,7 @@ class DataBuilder(object):
     @inject(configuration=config.Config)
     def __init__(self, configuration):
         self.location = configuration.client_location_name
-        self.host_name = socket.gethostname()
+        self.host_name = configuration.client_host_name
         self.timestamp = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC).isoformat()
         self.data = []
 
