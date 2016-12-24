@@ -4,6 +4,9 @@ import importlib
 
 import configparser
 
+from .data_builder import DataBuilder
+
+
 @singleton
 class SensorFactory(object):
     @inject(configuration=configparser.ConfigParser, current_injector=Injector)
@@ -11,7 +14,7 @@ class SensorFactory(object):
         self.sensors = [sensor.strip() for sensor in configuration.get('client', 'sensors').split(',')]
         self.current_injector = current_injector
 
-    def measure(self, data_builder):
+    def measure(self, data_builder: DataBuilder):
         for sensor in self.sensors:
             module = importlib.import_module('klimalogger.sensor.' + sensor + '_sensor')
             print("module:", module)

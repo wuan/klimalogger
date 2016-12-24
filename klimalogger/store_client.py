@@ -21,7 +21,7 @@ class StoreClient(object):
             print("could not create client", e)
             self.client = None
 
-    def store(self, data):
+    def store(self, data: dict):
         if self.client:
             print("write data")
             self.client.write_points(data)

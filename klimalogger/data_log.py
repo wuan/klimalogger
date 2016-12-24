@@ -7,6 +7,7 @@ from injector import inject, singleton
 from .store_client import StoreClient
 from . import config
 
+
 @singleton
 class DataLog(object):
     @inject(configuration=config.Config, store_client=StoreClient)

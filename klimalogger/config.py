@@ -14,35 +14,35 @@ class Config(object):
         self.config_parser = config_parser
 
     @lazy
-    def client_location_name(self):
+    def client_location_name(self) -> str:
         return self.config_parser.get('client', 'location_name')
 
     @lazy
-    def client_host_name(self):
+    def client_host_name(self) -> str:
         return socket.gethostname()
 
     @lazy
-    def store_username(self):
+    def store_username(self) -> str:
         return self.config_parser.get('store', 'username')
 
     @lazy
-    def store_password(self):
+    def store_password(self) -> str:
         return self.config_parser.get('store', 'password')
 
     @lazy
-    def store_name(self):
+    def store_name(self) -> str:
         return self.config_parser.get('store', 'name')
 
     @lazy
-    def store_host(self):
+    def store_host(self) -> str:
         return self.config_parser.get('store', 'host')
 
     @lazy
-    def store_port(self):
+    def store_port(self) -> int:
         return int(self.config_parser.get('store', 'port'))
 
     @lazy
-    def log_path(self):
+    def log_path(self) -> str:
         return self.config_parser.get('log', 'path')
 
 
