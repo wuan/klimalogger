@@ -13,7 +13,7 @@ install:
   - pip list
 
 script:
-  - pytest
+  - pytest --cov=klimalogger
 
 after_success:
   - coveralls
