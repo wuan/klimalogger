@@ -14,9 +14,9 @@ class DataBuilder(object):
         self.timestamp = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC).isoformat()
         self.data = []
 
-    def add(self, sensor, measurement_type, measurement_unit, measurement_value, calculated=False):
+    def add(self, sensor, measurement_type, measurement_unit, measurement_value, is_calculated=False):
         if measurement_value is not None:
-            self.data += [self.create(sensor, measurement_type, measurement_unit, measurement_value, calculated)]
+            self.data += [self.create(sensor, measurement_type, measurement_unit, measurement_value, is_calculated)]
 
     def create(self, sensor, measurement_type, measurement_unit, measurement_value, is_calculated=False):
         return {
