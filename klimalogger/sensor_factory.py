@@ -2,10 +2,7 @@ from injector import singleton, inject, Injector
 
 import importlib
 
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
+import configparser
 
 @singleton
 class SensorFactory(object):

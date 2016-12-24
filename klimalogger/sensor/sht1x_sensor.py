@@ -1,13 +1,13 @@
 # -*- coding: utf8 -*-
 
-from __future__ import print_function
+
 
 from injector import singleton, inject
 
 try:
     import configparser
 except ImportError:
-    import ConfigParser as configparser
+    import configparser as configparser
 
 from sht1x.Sht1x import Sht1x as SHT1x
 

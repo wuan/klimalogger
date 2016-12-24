@@ -1,7 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf8 -*-
-
-from __future__ import print_function
 
 from klimalogger import client as logger_client
 
