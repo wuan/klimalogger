@@ -44,7 +44,7 @@ class TestDataBuilderTest(object):
     def test_store_name(self):
         self.config_parser.get.return_value = '<store_name>'
 
-        result = self.uut.store_host
+        result = self.uut.store_name
 
         self.config_parser.get.assert_called_once_with('store', 'name')
         assert_that(result).is_equal_to('<store_name>')
