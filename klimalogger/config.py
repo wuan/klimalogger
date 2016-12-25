@@ -39,7 +39,8 @@ class Config(object):
 
     @lazy
     def store_port(self) -> int:
-        return int(self.config_parser.get('store', 'port'))
+        port_string = self.config_parser.get('store', 'port')
+        return int(port_string)
 
     @lazy
     def log_path(self) -> str:
