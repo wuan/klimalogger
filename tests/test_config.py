@@ -41,13 +41,21 @@ class TestDataBuilderTest(object):
         self.config_parser.get.assert_called_once_with('store', 'password')
         assert_that(result).is_equal_to('<password>')
 
+    def test_store_name(self):
+        self.config_parser.get.return_value = '<store_name>'
+
+        result = self.uut.store_host
+
+        self.config_parser.get.assert_called_once_with('store', 'name')
+        assert_that(result).is_equal_to('<store_name>')
+
     def test_store_host(self):
-        self.config_parser.get.return_value = '<host>'
+        self.config_parser.get.return_value = '<store_host>'
 
         result = self.uut.store_host
 
         self.config_parser.get.assert_called_once_with('store', 'host')
-        assert_that(result).is_equal_to('<host>')
+        assert_that(result).is_equal_to('<store_host>')
 
     def test_store_port(self):
         self.config_parser.get.return_value = '5'
