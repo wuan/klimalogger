@@ -13,4 +13,4 @@
 .. image:: https://coveralls.io/repos/wuan/klimalogger/badge.svg?branch=master&service=github
     :target: https://coveralls.io/github/wuan/klimalogger?branch=master
 
-Simple python client for logging climate date to InfluxDb.
+Simple python client for logging measured climate data to InfluxDb.
