@@ -20,10 +20,8 @@ class Client(object):
         self.data_log = data_log
 
     def measure_and_store(self):
-        self.sensor_factory.measure(self.data_builder)
+        (timestamp, data) = self.measure()
 
-        data = self.data_builder.data
-        timestamp = self.data_builder.timestamp
         try:
             self.store_client.store(data)
             print("stored data")
@@ -32,6 +30,11 @@ class Client(object):
             self.data_log.store(data, timestamp)
 
         self.data_log.transmit_stored_data()
+
+    def measure(self):
+        self.sensor_factory.measure(self.data_builder)
+
+        return (self.data_builder.timestamp, self.data_builder.data)
 
 
 def client():

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
 from setuptools import setup, find_packages
@@ -7,15 +7,15 @@ import glob
 
 setup(
     name='klimalogger',
-    version='0.1.22',
+    version='0.1.26',
     packages=find_packages(),
     scripts=glob.glob('scripts/*'),
-    url='',
+    url='https://github.com/wuan/klimalogger',
     license='License :: OSI Approved :: Apache License 2.0',
     author='Andreas Würl',
     author_email='andreas@wuerl.net',
     description='Simple data logging client for InfluxDB',
-    classifiers=[
+    classifiers=[ 
         'Development Status :: 3 - Alpha',
 
         # Indicate who your project is intended for
