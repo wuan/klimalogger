@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
 from setuptools import setup, find_packages
@@ -7,7 +7,7 @@ import glob
 
 setup(
     name='klimalogger',
-    version='0.1.22',
+    version='0.1.25',
     packages=find_packages(),
     scripts=glob.glob('scripts/*'),
     url='',
