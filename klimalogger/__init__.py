@@ -8,7 +8,7 @@ from .sensor_factory import SensorFactory
 from .store import StoreModule
 
 INJECTOR = Injector(
-    [StoreModule(), StoreModule()])
+    [StoreModule(), ConfigModule()])
 
 
 @singleton

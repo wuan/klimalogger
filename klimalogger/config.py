@@ -1,10 +1,13 @@
 import os
 import socket
 
-from injector import singleton, provides, Module, inject
+from injector import singleton, provides, Module, inject, ClassProvider
 from lazy import lazy
 
 import configparser
+
+from .store.client import StoreClient
+from .store.influxdb import InfluxDbStore
 
 
 @singleton
@@ -77,7 +80,7 @@ class ConfigModule(Module):
     @provides(configparser.ConfigParser)
     def provide_config_parser(self):
 
-        config_file_locations = ['/etc/klimalogger/klimalogger.conf', '/etc/klimalogger.conf']
+        config_file_locations = ['klimalogger.conf', '/etc/klimalogger/klimalogger.conf', '/etc/klimalogger.conf']
 
         for config_file_location in config_file_locations:
             if os.path.exists(config_file_location):
@@ -87,3 +90,6 @@ class ConfigModule(Module):
                 return config_parser
 
         raise IOError("config file not found")
+
+    #def configure(self, binder):
+    #    binder.bind(StoreClient, to=ClassProvider(InfluxDbStore))

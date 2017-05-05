@@ -2,12 +2,12 @@ from injector import singleton, inject
 
 from influxdb import InfluxDBClient
 
-from klimalogger import config
+from ..config import Config
 from .client import StoreClient
 
 
 class InfluxDbStore(StoreClient):
-    @inject(configuration=config.Config)
+    @inject(configuration=Config)
     def __init__(self, configuration):
         try:
             self.client = InfluxDBClient(
