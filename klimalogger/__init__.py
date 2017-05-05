@@ -1,13 +1,14 @@
 from injector import singleton, inject, Injector
 
+from .store import StoreClient
+from .config import ConfigModule
+from .data_builder import DataBuilder
 from .data_log import DataLog
 from .sensor_factory import SensorFactory
-from .store_client import StoreClient
-from .data_builder import DataBuilder
-from .config import ConfigModule
+from .store import StoreModule
 
 INJECTOR = Injector(
-    [config.ConfigModule()])
+    [StoreModule(), StoreModule()])
 
 
 @singleton

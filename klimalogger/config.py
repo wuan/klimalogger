@@ -22,6 +22,10 @@ class Config(object):
         return socket.gethostname()
 
     @lazy
+    def store_type(self) -> str:
+        return self.config_parser.get('store', 'type')
+
+    @lazy
     def store_username(self) -> str:
         return self.config_parser.get('store', 'username')
 
@@ -41,6 +45,27 @@ class Config(object):
     def store_port(self) -> int:
         port_string = self.config_parser.get('store', 'port')
         return int(port_string)
+
+    @lazy
+    def queue_username(self) -> str:
+        return self.config_parser.get('queue', 'username')
+
+    @lazy
+    def queue_password(self) -> str:
+        return self.config_parser.get('queue', 'password')
+
+    @lazy
+    def queue_host(self) -> str:
+        return self.config_parser.get('queue', 'host')
+
+    @lazy
+    def queue_port(self) -> int:
+        port_string = self.config_parser.get('queue', 'port')
+        return int(port_string)
+
+    @lazy
+    def queue_virtual_host(self) -> str:
+        return self.config_parser.get('queue', 'virtual_host')
 
     @lazy
     def log_path(self) -> str:

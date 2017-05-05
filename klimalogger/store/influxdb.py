@@ -2,11 +2,11 @@ from injector import singleton, inject
 
 from influxdb import InfluxDBClient
 
-from . import config
+from klimalogger import config
+from .client import StoreClient
 
 
-@singleton
-class StoreClient(object):
+class InfluxDbStore(StoreClient):
     @inject(configuration=config.Config)
     def __init__(self, configuration):
         try:
@@ -28,9 +28,3 @@ class StoreClient(object):
         else:
             print("client not available")
             raise RuntimeError("bla")
-
-
-def client():
-    from . import INJECTOR
-
-    return INJECTOR.get(StoreClient)
