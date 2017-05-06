@@ -5,7 +5,6 @@ from influxdb import InfluxDBClient
 from ..config import Config
 from .client import StoreClient
 
-
 class InfluxDbStore(StoreClient):
     @inject(configuration=Config)
     def __init__(self, configuration):

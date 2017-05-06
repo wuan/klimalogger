@@ -6,8 +6,8 @@ from lazy import lazy
 
 import configparser
 
-from .store.client import StoreClient
-from .store.influxdb import InfluxDbStore
+#from .store.client import StoreClient
+#from .store.influxdb import InfluxDbStore
 
 
 @singleton
