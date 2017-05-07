@@ -26,4 +26,4 @@ class InfluxDbStore(StoreClient):
             self.client.write_points(data)
         else:
             print("client not available")
-            raise RuntimeError("bla")
+            raise RuntimeError("client not available")

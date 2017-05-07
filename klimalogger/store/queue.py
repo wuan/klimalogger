@@ -30,16 +30,16 @@ class QueueStore(StoreClient):
         if self.connection:
 
             print("write data")
-            self.connection.channel() \
-                .basic_publish(exchange='',
-                               routing_key='measurement',
-                               body=json.dumps(data))
+            channel = self.connection.channel()
+            channel.confirm_delivery()
+
+            delivery_confirmed = channel.basic_publish(exchange='', routing_key='measurement', body=json.dumps(data),
+                                                       mandatory=True)
+
+            if not delivery_confirmed:
+                print("message was not confirmed")
+                raise RuntimeError("message was not confirmed")
+
         else:
             print("client not available")
             raise RuntimeError("bla")
-
-
-def client():
-    from . import INJECTOR
-
-    return INJECTOR.get(StoreClient)
