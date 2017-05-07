@@ -26,7 +26,7 @@ class Config(object):
 
     @lazy
     def store_type(self) -> str:
-        return self.config_parser.get('store', 'type')
+        return self.config_parser.get('store', 'type', fallback='direct')
 
     @lazy
     def store_username(self) -> str:

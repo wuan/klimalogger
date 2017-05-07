@@ -1,13 +1,13 @@
 from abc import ABCMeta, abstractmethod
 
-from injector import Module, provides, singleton
+from injector import Module, provider, singleton
 
 from ..config import Config
 from .client import StoreClient
 
 
 class StoreModule(Module):
-    @provides
+    @provider
     @singleton
     def store_provider(self, config: Config) -> StoreClient:
         if config.store_type == 'queue':
