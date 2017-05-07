@@ -6,9 +6,6 @@ from lazy import lazy
 
 import configparser
 
-#from .store.client import StoreClient
-#from .store.influxdb import InfluxDbStore
-
 
 @singleton
 class Config(object):
@@ -84,12 +81,9 @@ class ConfigModule(Module):
 
         for config_file_location in config_file_locations:
             if os.path.exists(config_file_location):
-                print(("reading config file location", config_file_location))
+                print("reading config file location", config_file_location)
                 config_parser = configparser.ConfigParser()
                 config_parser.read(config_file_location)
                 return config_parser
 
         raise IOError("config file not found")
-
-    #def configure(self, binder):
-    #    binder.bind(StoreClient, to=ClassProvider(InfluxDbStore))
