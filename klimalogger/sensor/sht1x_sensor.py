@@ -28,8 +28,11 @@ class Sensor(object):
 
         if temperature > -40.0:
             print("valid values")
-            dew_point = self.sht1x.calculate_dew_point(temperature, humidity)
-            dew_point = round(dew_point, 2)
+            try:
+                dew_point = self.sht1x.calculate_dew_point(temperature, humidity)
+                dew_point = round(dew_point, 2)
+            except ValueError:
+                dew_point = None
 
             temperature = round(temperature, 2)
             humidity = round(humidity, 2)
@@ -38,6 +41,7 @@ class Sensor(object):
             humidity = None
             dew_point = None
 
-        data_builder.add(self.name, "temperature", "°C", temperature),
-        data_builder.add(self.name, "dew point", "°C", dew_point, True),
-        data_builder.add(self.name, "relative humidity", "%", humidity),
+        data_builder.add(self.name, "temperature", "°C", temperature)
+        if dew_point:
+            data_builder.add(self.name, "dew point", "°C", dew_point, True)
+        data_builder.add(self.name, "relative humidity", "%", humidity)

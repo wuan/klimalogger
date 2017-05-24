@@ -7,7 +7,7 @@ import glob
 
 setup(
     name='klimalogger',
-    version='0.2.17',
+    version='0.2.18',
     packages=find_packages(exclude=('tests')),
     scripts=glob.glob('scripts/*'),
     url='https://github.com/wuan/klimalogger',
