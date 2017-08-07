@@ -9,8 +9,8 @@ from .data_builder import DataBuilder
 
 @singleton
 class SensorFactory(object):
-    @inject(configuration=configparser.ConfigParser, current_injector=Injector)
-    def __init__(self, configuration, current_injector):
+    @inject
+    def __init__(self, configuration: configparser.ConfigParser, current_injector : Injector):
         self.sensors = [sensor.strip() for sensor in configuration.get('client', 'sensors').split(',')]
         self.current_injector = current_injector
 

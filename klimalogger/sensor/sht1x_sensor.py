@@ -16,8 +16,8 @@ from sht1x.Sht1x import Sht1x as SHT1x
 class Sensor(object):
     name = "SHT1x"
 
-    @inject(config_parser=configparser.ConfigParser)
-    def __init__(self, config_parser):
+    @inject
+    def __init__(self, config_parser : configparser.ConfigParser):
         data_pin = int(config_parser.get('sht1x_sensor', 'data_pin'))
         sck_pin = int(config_parser.get('sht1x_sensor', 'sck_pin'))
 

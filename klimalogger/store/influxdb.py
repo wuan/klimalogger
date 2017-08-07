@@ -6,8 +6,8 @@ from ..config import Config
 from .client import StoreClient
 
 class InfluxDbStore(StoreClient):
-    @inject(configuration=Config)
-    def __init__(self, configuration):
+    @inject
+    def __init__(self, configuration: Config):
         try:
             self.client = InfluxDBClient(
                 host=configuration.store_host,

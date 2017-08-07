@@ -8,7 +8,7 @@ from .config import Config
 
 @singleton
 class DataBuilder(object):
-    @inject(configuration=Config)
+    @inject
     def __init__(self, configuration: Config):
         self.location = configuration.client_location_name
         self.host_name = configuration.client_host_name

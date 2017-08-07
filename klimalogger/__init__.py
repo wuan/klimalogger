@@ -13,8 +13,8 @@ INJECTOR = Injector(
 
 @singleton
 class Client(object):
-    @inject(data_builder=DataBuilder, sensor_factory=SensorFactory, store_client=StoreClient, data_log=DataLog)
-    def __init__(self, data_builder, sensor_factory, store_client, data_log):
+    @inject
+    def __init__(self, data_builder:DataBuilder, sensor_factory: SensorFactory, store_client: StoreClient, data_log: DataLog):
         self.data_builder = data_builder
         self.sensor_factory = sensor_factory
         self.store_client = store_client

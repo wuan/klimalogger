@@ -10,8 +10,8 @@ from . import config
 
 @singleton
 class DataLog(object):
-    @inject(configuration=config.Config, store_client=StoreClient)
-    def __init__(self, configuration, store_client):
+    @inject
+    def __init__(self, configuration: config.Config, store_client: StoreClient):
         self.log_path = configuration.log_path
         self.store_client = store_client
 

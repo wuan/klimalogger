@@ -16,8 +16,8 @@ from Adafruit_BMP.BMP085 import BMP085
 class Sensor(object):
     name = "BMP085"
 
-    @inject(config_parser=configparser.ConfigParser)
-    def __init__(self, config_parser):
+    @inject
+    def __init__(self, config_parser : configparser.ConfigParser):
         self.elevation = int(config_parser.get('bmp085_sensor', 'elevation'))
 
         self.bmp085 = BMP085()

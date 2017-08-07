@@ -1,7 +1,7 @@
 import os
 import socket
 
-from injector import singleton, provides, Module, inject, ClassProvider
+from injector import singleton, provider, Module, inject, ClassProvider
 from lazy import lazy
 
 import configparser
@@ -9,8 +9,8 @@ import configparser
 
 @singleton
 class Config(object):
-    @inject(config_parser=configparser.ConfigParser)
-    def __init__(self, config_parser):
+    @inject
+    def __init__(self, config_parser: configparser.ConfigParser):
         self.config_parser = config_parser
 
     @lazy
@@ -74,8 +74,8 @@ class Config(object):
 
 class ConfigModule(Module):
     @singleton
-    @provides(configparser.ConfigParser)
-    def provide_config_parser(self):
+    @provider
+    def provide_config_parser(self) -> configparser.ConfigParser:
 
         config_file_locations = ['klimalogger.conf', '/etc/klimalogger/klimalogger.conf', '/etc/klimalogger.conf']
 
