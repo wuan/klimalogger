@@ -1,19 +1,18 @@
 language: python
 
 python:
-    - 3.3
-    - 3.4
     - 3.5
     - 3.6
+    - 3.7
+    - 3.8
 
 install:
   # install deps
   - pip install -r requirements.txt
-  - pip install python-coveralls
   - pip list
 
 script:
   - pytest --cov=klimalogger
 
 after_success:
-  - coveralls
+  - bash <(curl -Ls https://coverage.codacy.com/get.sh)
