@@ -12,7 +12,7 @@ install:
   - pip list
 
 script:
-  - pytest --cov=klimalogger
+  - pytest
 
 after_success:
-  - bash <(curl -Ls https://coverage.codacy.com/get.sh) -r reports/coverage.xml
+  - bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r reports/coverage.xml
