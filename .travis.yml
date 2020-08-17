@@ -15,4 +15,4 @@ script:
   - pytest --cov=klimalogger
 
 after_success:
-  - bash <(curl -Ls https://coverage.codacy.com/get.sh)
+  - bash <(curl -Ls https://coverage.codacy.com/get.sh) -r reports/coverage.xml
