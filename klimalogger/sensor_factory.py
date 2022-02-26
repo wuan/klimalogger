@@ -21,10 +21,10 @@ class SensorFactory(object):
         for sensor in self.sensors:
             try:
                 module = importlib.import_module('klimalogger.sensor.' + sensor + '_sensor')
-                log.info("sensor: {}, module: {}", sensor, module)
+                log.info("sensor: %s, module: %s", sensor, module)
                 sensor = self.current_injector.get(module.Sensor)
                 sensor.measure(data_builder)
                 del(sensor)
             except BaseException as e:
-                log.error("measurement of sensor {} failed", sensor, e)
+                log.error("measurement of sensor %s failed", sensor, e)
 
