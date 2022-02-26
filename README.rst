@@ -14,3 +14,17 @@
     :target: https://coveralls.io/github/wuan/klimalogger?branch=master
 
 Simple python client for logging measured climate data to InfluxDb.
+
+Additional dependencies
+-----------------------
+
+.. list-table:: Dependencies
+   :widths: 20 90
+   :header-rows: 1
+
+   * - Sensor Type
+     - Command
+   * - BME680
+     - pip3 install adafruit-circuitpython-bme680
+   * - BMP3xx
+     - pip3 install adafruit-circuitpython-bmp3xx
