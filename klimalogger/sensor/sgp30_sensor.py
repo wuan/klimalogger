@@ -24,5 +24,5 @@ class Sensor:
     def measure(self, data_builder):
         eCO2, TVOC = self.sensor.iaq_measure()
 
-        data_builder.add(self.name, "eCO2", "ppm", eCO2)
-        data_builder.add(self.name, "TVOC", "ppb", TVOC)
+        data_builder.add(self.name, "eCO2", "ppm", float(eCO2))
+        data_builder.add(self.name, "TVOC", "ppb", float(TVOC))

@@ -39,4 +39,4 @@ class Sensor:
         data_builder.add(self.name, "dew point", "°C", round(dew_point, 2), is_calculated=True)
         data_builder.add(self.name, "pressure", "hPa", round(pressure, 2))
         data_builder.add(self.name, "sea level pressure", "hPa", round(sea_level_pressure, 2))
-        data_builder.add(self.name, "voc gas", "Ohm", voc_gas)
+        data_builder.add(self.name, "voc gas", "Ohm", float(voc_gas))
