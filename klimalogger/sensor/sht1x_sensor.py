@@ -1,7 +1,5 @@
 # -*- coding: utf8 -*-
 
-
-
 from injector import singleton, inject
 
 try:
@@ -13,11 +11,11 @@ from sht1x.Sht1x import Sht1x as SHT1x
 
 
 @singleton
-class Sensor(object):
+class Sensor:
     name = "SHT1x"
 
     @inject
-    def __init__(self, config_parser : configparser.ConfigParser):
+    def __init__(self, config_parser: configparser.ConfigParser):
         data_pin = int(config_parser.get('sht1x_sensor', 'data_pin'))
         sck_pin = int(config_parser.get('sht1x_sensor', 'sck_pin'))
 
