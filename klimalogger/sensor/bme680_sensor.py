@@ -2,8 +2,7 @@
 
 from injector import singleton, inject
 
-from calc.temperature import TemperatureCalc
-from ..calc import PressureCalc
+from ..calc import PressureCalc, TemperatureCalc
 
 try:
     import configparser
