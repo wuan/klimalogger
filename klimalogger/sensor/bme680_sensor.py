@@ -2,6 +2,8 @@
 
 from injector import singleton, inject
 
+from ..calc import PressureCalc
+
 try:
     import configparser
 except ImportError:
@@ -15,7 +17,8 @@ class Sensor:
     name = "BME680"
 
     @inject
-    def __init__(self, config_parser: configparser.ConfigParser):
+    def __init__(self, config_parser: configparser.ConfigParser, pressure_calc: PressureCalc):
+        self.pressure_calc = pressure_calc
         self.elevation = int(config_parser.get('bme680_sensor', 'elevation'))
         i2c = board.I2C()
         self.sensor = adafruit_bme680.Adafruit_BME680_I2C(i2c)
@@ -24,9 +27,11 @@ class Sensor:
         temperature = self.sensor.temperature
         relative_humidity = self.sensor.relative_humidity
         pressure = self.sensor.pressure
+        sea_level_pressure = self.pressure_calc.sea_level_pressure(pressure, temperature, self.elevation)
         voc_gas = self.sensor.gas
 
         data_builder.add(self.name, "temperature", "°C", temperature)
         data_builder.add(self.name, "relative humidity", "%", relative_humidity)
-        data_builder.add(self.name, "pressure", "Pa", pressure)
+        data_builder.add(self.name, "pressure", "hPa", round(pressure, 2))
+        data_builder.add(self.name, "sea level pressure", "hPa", round(sea_level_pressure, 2))
         data_builder.add(self.name, "voc gas", "Ohm", voc_gas)

@@ -29,5 +29,5 @@ class Sensor:
         pressure = self.sensor.pressure
         sea_level_pressure = self.pressure_calc.sea_level_pressure(pressure, temperature, self.elevation)
 
-        data_builder.add(self.name, "pressure", "hPa", pressure)
-        data_builder.add(self.name, "sea_level_pressure", "hPa", sea_level_pressure, is_calculated=True)
+        data_builder.add(self.name, "pressure", "hPa", round(pressure,2))
+        data_builder.add(self.name, "sea_level_pressure", "hPa", round(sea_level_pressure,2), is_calculated=True)
