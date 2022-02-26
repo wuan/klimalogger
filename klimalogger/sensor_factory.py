@@ -1,3 +1,5 @@
+import logging
+
 from injector import singleton, inject, Injector
 
 import importlib
@@ -6,6 +8,7 @@ import configparser
 
 from .data_builder import DataBuilder
 
+log = logging.getLogger(__name__)
 
 @singleton
 class SensorFactory(object):
@@ -16,7 +19,11 @@ class SensorFactory(object):
 
     def measure(self, data_builder: DataBuilder):
         for sensor in self.sensors:
-            module = importlib.import_module('klimalogger.sensor.' + sensor + '_sensor')
-            print("module:", module)
-            sensor = self.current_injector.get(module.Sensor)
-            sensor.measure(data_builder)
+            try:
+                module = importlib.import_module('klimalogger.sensor.' + sensor + '_sensor')
+                log.info("sensor: {}, module: {}", sensor, module)
+                sensor = self.current_injector.get(module.Sensor)
+                sensor.measure(data_builder)
+            except BaseException as e:
+                log.error("measurement of sensor {} failed", sensor, e)
+
