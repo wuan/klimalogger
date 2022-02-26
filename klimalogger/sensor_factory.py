@@ -24,6 +24,7 @@ class SensorFactory(object):
                 log.info("sensor: {}, module: {}", sensor, module)
                 sensor = self.current_injector.get(module.Sensor)
                 sensor.measure(data_builder)
+                del(sensor)
             except BaseException as e:
                 log.error("measurement of sensor {} failed", sensor, e)
 
