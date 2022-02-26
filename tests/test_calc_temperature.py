@@ -1,7 +1,7 @@
 import pytest
 from assertpy import assert_that
 
-from calc.temperature import TemperatureCalc
+from klimalogger.calc import TemperatureCalc
 
 
 class TestCalcTemperature:
