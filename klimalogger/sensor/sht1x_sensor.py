@@ -25,7 +25,6 @@ class Sensor:
         (temperature, humidity) = self.sht1x.read_temperature_C_and_humidity()
 
         if temperature > -40.0:
-            print("valid values")
             try:
                 dew_point = self.sht1x.calculate_dew_point(temperature, humidity)
                 dew_point = round(dew_point, 2)
