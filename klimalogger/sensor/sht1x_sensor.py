@@ -19,7 +19,7 @@ class Sensor:
         data_pin = int(config_parser.get('sht1x_sensor', 'data_pin'))
         sck_pin = int(config_parser.get('sht1x_sensor', 'sck_pin'))
 
-        self.sht1x = SHT1x(dataPin=data_pin, sckPin=sck_pin, gpioMode=SHT1x.GPIO_BOARD)
+        self.sht1x = SHT1x(dataPin=data_pin, sckPin=sck_pin, gpioMode=SHT1x.GPIO_BCM)
 
     def measure(self, data_builder):
         (temperature, humidity) = self.sht1x.read_temperature_C_and_humidity()
