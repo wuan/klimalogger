@@ -28,3 +28,8 @@ Additional dependencies
      - pip3 install adafruit-circuitpython-bme680
    * - BMP3xx
      - pip3 install adafruit-circuitpython-bmp3xx
+   * - SGP30
+     - pip3 install adafruit-circuitpython-sgp30
+   * - SHT1x
+     - pip install
+   * - SHT40

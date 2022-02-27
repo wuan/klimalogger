@@ -38,7 +38,8 @@ class Sensor:
             humidity = None
             dew_point = None
 
-        data_builder.add(self.name, "temperature", "°C", temperature)
-        if dew_point:
-            data_builder.add(self.name, "dew point", "°C", dew_point, True)
-        data_builder.add(self.name, "relative humidity", "%", humidity)
+        if temperature and humidity and dew_point and -30 < temperature < 80 and 5 < humidity <= 100:
+            data_builder.add(self.name, "temperature", "°C", temperature)
+            if dew_point:
+                data_builder.add(self.name, "dew point", "°C", dew_point, True)
+            data_builder.add(self.name, "relative humidity", "%", humidity)
