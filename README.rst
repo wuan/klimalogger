@@ -25,11 +25,14 @@ Additional dependencies
    * - Sensor Type
      - Command
    * - BME680
-     - pip3 install adafruit-circuitpython-bme680
+     - ``pip3 install adafruit-circuitpython-bme680``
+   * - BMP085
+     - ``pip3 install Adafruit_BMP``
    * - BMP3xx
-     - pip3 install adafruit-circuitpython-bmp3xx
+     - ``pip3 install adafruit-circuitpython-bmp3xx``
    * - SGP30
-     - pip3 install adafruit-circuitpython-sgp30
+     - ``pip3 install adafruit-circuitpython-sgp30``
    * - SHT1x
-     - pip install
+     - download and install https://bitbucket.org/lunobili/rpisht1x.git
    * - SHT40
+     - ``pip3 install adafruit-circuitpython-sht4x``
