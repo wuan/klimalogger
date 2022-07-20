@@ -1,10 +1,9 @@
-import os
-import socket
-
-from injector import singleton, provider, Module, inject, ClassProvider
-from lazy import lazy
-
 import configparser
+import socket
+from pathlib import Path
+
+from injector import singleton, provider, Module, inject
+from lazy import lazy
 
 
 @singleton
@@ -76,11 +75,13 @@ class ConfigModule(Module):
     @singleton
     @provider
     def provide_config_parser(self) -> configparser.ConfigParser:
+        etc = Path("/etc")
+        config_filename = "klimalogger.conf"
 
-        config_file_locations = ['klimalogger.conf', '/etc/klimalogger/klimalogger.conf', '/etc/klimalogger.conf']
+        config_file_locations = [Path(config_filename), etc / "klimalogger" / config_filename, etc / config_filename]
 
         for config_file_location in config_file_locations:
-            if os.path.exists(config_file_location):
+            if config_file_location.exists():
                 print("reading config file location", config_file_location)
                 config_parser = configparser.ConfigParser()
                 config_parser.read(config_file_location)

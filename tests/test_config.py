@@ -1,7 +1,7 @@
 import socket
 
 from assertpy import assert_that
-from mock import Mock, PropertyMock, call
+from mock import Mock
 
 import klimalogger
 

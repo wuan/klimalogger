@@ -1,6 +1,5 @@
-import socket
 import datetime
-import pytz
+
 from injector import singleton, inject
 
 from .config import Config
@@ -12,7 +11,7 @@ class DataBuilder(object):
     def __init__(self, configuration: Config):
         self.location = configuration.client_location_name
         self.host_name = configuration.client_host_name
-        self.timestamp = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC).isoformat()
+        self.timestamp = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
         self.data = []
 
     def add(self, sensor: str, measurement_type: str, measurement_unit: str, measurement_value: str,
