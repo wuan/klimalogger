@@ -1,9 +1,9 @@
-from injector import singleton, inject
-
 from influxdb import InfluxDBClient
+from injector import inject
 
-from ..config import Config
 from .client import StoreClient
+from ..config import Config
+
 
 class InfluxDbStore(StoreClient):
     @inject

@@ -1,10 +1,10 @@
 from injector import singleton, inject, Injector
 
-from .store import StoreClient
 from .config import ConfigModule
 from .data_builder import DataBuilder
 from .data_log import DataLog
 from .sensor_factory import SensorFactory
+from .store import StoreClient
 from .store import StoreModule
 
 INJECTOR = Injector(
@@ -14,7 +14,8 @@ INJECTOR = Injector(
 @singleton
 class Client(object):
     @inject
-    def __init__(self, data_builder:DataBuilder, sensor_factory: SensorFactory, store_client: StoreClient, data_log: DataLog):
+    def __init__(self, data_builder: DataBuilder, sensor_factory: SensorFactory, store_client: StoreClient,
+                 data_log: DataLog):
         self.data_builder = data_builder
         self.sensor_factory = sensor_factory
         self.store_client = store_client

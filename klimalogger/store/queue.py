@@ -3,13 +3,13 @@ import json
 import pika
 from injector import inject
 
-from .. import config
 from .client import StoreClient
+from .. import config
 
 
 class QueueStore(StoreClient):
     @inject
-    def __init__(self, configuration : config.Config):
+    def __init__(self, configuration: config.Config):
         try:
             credentials = pika.PlainCredentials(configuration.queue_username, configuration.queue_password)
             self.connection = pika.BlockingConnection(pika.ConnectionParameters(

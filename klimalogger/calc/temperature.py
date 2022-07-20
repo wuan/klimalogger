@@ -16,7 +16,7 @@ class TemperatureCalc:
         c = 257.14  # °C
         d = 234.5  # °C
 
-        gamma = math.log(relative_humidity/100.0 *
+        gamma = math.log(relative_humidity / 100.0 *
                          math.exp((b - temperature / d) * (temperature / (c + temperature))))
 
         return c * gamma / (b - gamma)

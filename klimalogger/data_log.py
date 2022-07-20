@@ -4,8 +4,8 @@ import os
 
 from injector import inject, singleton
 
-from .store import StoreClient
 from . import config
+from .store import StoreClient
 
 
 @singleton

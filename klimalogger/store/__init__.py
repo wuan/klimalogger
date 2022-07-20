@@ -1,9 +1,7 @@
-from abc import ABCMeta, abstractmethod
-
 from injector import Module, provider, singleton
 
-from ..config import Config
 from .client import StoreClient
+from ..config import Config
 
 
 class StoreModule(Module):
