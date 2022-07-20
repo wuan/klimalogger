@@ -1,7 +1,7 @@
-influxdb==4.0.0
-injector==0.11.1
-lazy==1.2
-pytest==3.0.5
-pytest-cov==2.4.0
-mock==2.0.0
-assertpy==0.10
+influxdb==5.3.1
+injector==0.20.1
+lazy==1.4
+pytest==7.1.2
+pytest-cov==3.0.0
+mock==4.0.3
+assertpy==1.1
