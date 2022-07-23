@@ -10,8 +10,10 @@
 .. image:: https://travis-ci.org/wuan/klimalogger.svg?branch=master
     :alt: Build Status
     :target: https://travis-ci.org/wuan/klimalogger
-.. image:: https://coveralls.io/repos/wuan/klimalogger/badge.svg?branch=master&service=github
-    :target: https://coveralls.io/github/wuan/klimalogger?branch=master
+.. image:: https://app.codacy.com/project/badge/Grade/143e5b4f902b4680a2b9fd6464736f6b
+    :target: https://www.codacy.com/gh/wuan/klimalogger/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=wuan/klimalogger&amp;utm_campaign=Badge_Grade
+.. image:: https://app.codacy.com/project/badge/Coverage/143e5b4f902b4680a2b9fd6464736f6b
+    :target: https://www.codacy.com/gh/wuan/klimalogger/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=wuan/klimalogger&amp;utm_campaign=Badge_Coverage
 
 Simple python client for logging measured climate data to InfluxDb.
 
