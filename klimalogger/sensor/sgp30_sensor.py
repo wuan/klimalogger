@@ -1,4 +1,5 @@
 # -*- coding: utf8 -*-
+from typing import Any
 
 from injector import singleton, inject
 
@@ -9,14 +10,21 @@ except ImportError:
 
 import board
 import busio
-from adafruit_sgp30 import Adafruit_SGP30, _SGP30_DEFAULT_I2C_ADDR
+from adafruit_sgp30 import Adafruit_SGP30, _SGP30_DEFAULT_I2C_ADDR, _SGP30_FEATURESETS
 from adafruit_bus_device.i2c_device import I2CDevice
 
 
 class UninitializedAdafruitSGP30(Adafruit_SGP30):
 
-    def __init__(self, i2c, address=_SGP30_DEFAULT_I2C_ADDR):
+    def __init__(self, i2c: Any, address: Any = _SGP30_DEFAULT_I2C_ADDR):
         self._device = I2CDevice(i2c, address)
+
+        # get unique serial, its 48 bits so we store in an array
+        self.serial = self._i2c_read_words_from_cmd([0x36, 0x82], 0.01, 3)
+        # get featureset
+        featureset = self._i2c_read_words_from_cmd([0x20, 0x2F], 0.01, 1)
+        if featureset[0] not in _SGP30_FEATURESETS:
+            raise RuntimeError("SGP30 Not detected")
 
 
 @singleton
