@@ -32,4 +32,4 @@ class Sensor:
 
         self.sensor.stop_periodic_measurement()
 
-        data_builder.add(self.name, "CO2", "", float(CO2))
+        data_builder.add(self.name, "CO2", "ppm", float(CO2))
