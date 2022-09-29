@@ -3,7 +3,7 @@ from injector import singleton, inject, Injector
 from .config import ConfigModule
 from .data_builder import DataBuilder
 from .data_log import DataLog
-from .sensor_factory import SensorFactory
+from .measurement import MeasurementDispatcher
 from .store import StoreClient
 from .store import StoreModule
 
@@ -12,12 +12,12 @@ INJECTOR = Injector(
 
 
 @singleton
-class Client(object):
+class Client:
     @inject
-    def __init__(self, data_builder: DataBuilder, sensor_factory: SensorFactory, store_client: StoreClient,
+    def __init__(self, data_builder: DataBuilder, measurement_dispatcher: MeasurementDispatcher, store_client: StoreClient,
                  data_log: DataLog):
         self.data_builder = data_builder
-        self.sensor_factory = sensor_factory
+        self.measurement_dispatcher = measurement_dispatcher
         self.store_client = store_client
         self.data_log = data_log
 
@@ -34,9 +34,9 @@ class Client(object):
         self.data_log.transmit_stored_data()
 
     def measure(self):
-        self.sensor_factory.measure(self.data_builder)
+        self.measurement_dispatcher.measure(self.data_builder)
 
-        return (self.data_builder.timestamp, self.data_builder.data)
+        return self.data_builder.timestamp, self.data_builder.data
 
 
 def client():

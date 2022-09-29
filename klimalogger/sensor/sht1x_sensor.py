@@ -13,6 +13,7 @@ from sht1x.Sht1x import Sht1x as SHT1x
 @singleton
 class Sensor:
     name = "SHT1x"
+    priority = 1
 
     @inject
     def __init__(self, config_parser: configparser.ConfigParser):
@@ -21,7 +22,7 @@ class Sensor:
 
         self.sht1x = SHT1x(dataPin=data_pin, sckPin=sck_pin, gpioMode=SHT1x.GPIO_BCM)
 
-    def measure(self, data_builder):
+    def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
         (temperature, humidity) = self.sht1x.read_temperature_C_and_humidity()
 
         if temperature > -40.0:
@@ -39,6 +40,9 @@ class Sensor:
             dew_point = None
 
         if temperature and humidity and dew_point and -30 < temperature < 80 and 5 < humidity <= 100:
+            measurements.temperature = temperature
+            measurements.relative_humidity = humidity
+
             data_builder.add(self.name, "temperature", "°C", temperature)
             if dew_point:
                 data_builder.add(self.name, "dew point", "°C", dew_point, True)

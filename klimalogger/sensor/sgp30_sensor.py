@@ -2,6 +2,9 @@
 
 from injector import singleton, inject
 
+from klimalogger import DataBuilder
+from klimalogger.measurement import Measurements
+
 try:
     import configparser
 except ImportError:
@@ -22,6 +25,7 @@ class UninitializedAdafruitSGP30(Adafruit_SGP30):
 @singleton
 class Sensor:
     name = "SGP30"
+    priority = 3
 
     @inject
     def __init__(self, config_parser: configparser.ConfigParser):
@@ -31,7 +35,7 @@ class Sensor:
         i2c_bus = busio.I2C(board.SCL, board.SDA, frequency=100000)
         self.sensor = UninitializedAdafruitSGP30(i2c_bus)
 
-    def measure(self, data_builder):
+    def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
         # self.sensor.set_iaq_baseline(self.baseline_eCO2, self.baseline_TVOC)
         eCO2, TVOC = self.sensor.iaq_measure()
 

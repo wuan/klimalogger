@@ -9,7 +9,7 @@ from .store import StoreClient
 
 
 @singleton
-class DataLog(object):
+class DataLog:
     @inject
     def __init__(self, configuration: config.Config, store_client: StoreClient):
         self.log_path = configuration.log_path

@@ -2,7 +2,9 @@
 
 from injector import singleton, inject
 
+from .. import DataBuilder
 from ..calc import PressureCalc, TemperatureCalc
+from ..measurement import Measurements
 
 try:
     import configparser
@@ -16,6 +18,7 @@ import adafruit_bme680
 @singleton
 class Sensor:
     name = "BME680"
+    priority = 1
 
     @inject
     def __init__(self, config_parser: configparser.ConfigParser, temperature_calc: TemperatureCalc,
@@ -26,7 +29,7 @@ class Sensor:
         i2c = board.I2C()
         self.sensor = adafruit_bme680.Adafruit_BME680_I2C(i2c)
 
-    def measure(self, data_builder):
+    def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
         temperature = self.sensor.temperature
         relative_humidity = self.sensor.relative_humidity
         dew_point = self.temperature_calc.dew_point(temperature, relative_humidity)
@@ -40,3 +43,7 @@ class Sensor:
         data_builder.add(self.name, "pressure", "hPa", round(pressure, 2))
         data_builder.add(self.name, "sea level pressure", "hPa", round(sea_level_pressure, 2))
         data_builder.add(self.name, "voc gas", "Ohm", float(voc_gas))
+
+        measurements.temperature = temperature
+        measurements.relative_humidity = relative_humidity
+
