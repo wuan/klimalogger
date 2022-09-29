@@ -34,7 +34,9 @@ Additional dependencies
      - ``pip3 install adafruit-circuitpython-bmp3xx``
    * - SGP30
      - ``pip3 install adafruit-circuitpython-sgp30``
+   * - SGP40
+     - ``pip3 install adafruit-circuitpython-sgp40``
    * - SHT1x
      - download and install https://bitbucket.org/lunobili/rpisht1x.git
-   * - SHT40
+   * - SHT4x
      - ``pip3 install adafruit-circuitpython-sht4x``

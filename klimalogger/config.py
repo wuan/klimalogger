@@ -7,7 +7,7 @@ from lazy import lazy
 
 
 @singleton
-class Config(object):
+class Config:
     @inject
     def __init__(self, config_parser: configparser.ConfigParser):
         self.config_parser = config_parser

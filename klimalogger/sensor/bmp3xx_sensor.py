@@ -2,7 +2,9 @@
 
 from injector import singleton, inject
 
+from .. import DataBuilder
 from ..calc import PressureCalc
+from ..measurement import Measurements
 
 try:
     import configparser
@@ -16,6 +18,7 @@ import adafruit_bmp3xx
 @singleton
 class Sensor:
     name = "BMP3xx"
+    priority = 2
 
     @inject
     def __init__(self, config_parser: configparser.ConfigParser, pressure_calc: PressureCalc):
@@ -25,7 +28,7 @@ class Sensor:
         i2c = board.I2C()
         self.sensor = adafruit_bmp3xx.BMP3XX_I2C(i2c)
 
-    def measure(self, data_builder):
+    def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
         temperature = self.sensor.temperature
         pressure = self.sensor.pressure
         sea_level_pressure = self.pressure_calc.sea_level_pressure(pressure, temperature, self.elevation)

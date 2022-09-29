@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
-from setuptools import setup, find_packages
-
 import glob
+
+from setuptools import setup, find_packages
 
 setup(
     name='klimalogger',
-    version='0.4.13',
+    version='0.5.0',
     packages=find_packages(exclude=('tests')),
     scripts=glob.glob('scripts/*'),
     url='https://github.com/wuan/klimalogger',
@@ -15,7 +15,7 @@ setup(
     author='Andreas Würl',
     author_email='andreas@wuerl.net',
     description='Simple data logging client for InfluxDB',
-    classifiers=[ 
+    classifiers=[
         'Development Status :: 3 - Alpha',
 
         # Indicate who your project is intended for
@@ -28,10 +28,9 @@ setup(
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     install_requires=['influxdb', 'injector', 'lazy'],
     tests_require=['pytest-cov', 'mock', 'assertpy']
