@@ -2,6 +2,9 @@
 
 from injector import singleton, inject
 
+from .. import DataBuilder
+from ..measurement import Measurements
+
 try:
     import configparser
 except ImportError:
