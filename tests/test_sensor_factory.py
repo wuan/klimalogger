@@ -4,10 +4,16 @@ import mock
 import pytest
 
 from klimalogger import MeasurementDispatcher, DataBuilder
+from klimalogger.data_builder import DataBuilderFactory
 from klimalogger.measurement import SensorFactory, Measurements
 
 
 class TestSensorFactory:
+
+    @pytest.fixture
+    def bus_i2c(self):
+        with mock.patch("busio.I2C") as bus_i2c:
+            yield bus_i2c()
 
     @pytest.fixture
     def configuration(self):
@@ -46,12 +52,14 @@ class TestSensorFactory:
 
         sensor_factory.create_sensor.side_effect = load_module
 
-        uut = MeasurementDispatcher(configuration, sensor_factory)
 
-        data_builder = mock.Mock(spec=DataBuilder)
-        uut.measure(data_builder)
+
+        data_builder_factory = mock.Mock(spec=DataBuilderFactory)
+        uut = MeasurementDispatcher(configuration, sensor_factory, data_builder_factory)
+
+        uut.measure()
 
         assert len(calls) == 3
-        assert calls[0] == ("baz", mock.call(data_builder, Measurements()))
-        assert calls[1] == ("foo", mock.call(data_builder, Measurements()))
-        assert calls[2] == ("bar", mock.call(data_builder, Measurements()))
+        assert calls[0] == ("baz", mock.call(data_builder_factory.get(), Measurements()))
+        assert calls[1] == ("foo", mock.call(data_builder_factory.get(), Measurements()))
+        assert calls[2] == ("bar", mock.call(data_builder_factory.get(), Measurements()))

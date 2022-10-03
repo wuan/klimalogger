@@ -5,8 +5,9 @@ from dataclasses import dataclass
 from typing import Optional
 
 from injector import singleton, inject, Injector
+from lazy import lazy
 
-from .data_builder import DataBuilder
+from .data_builder import DataBuilderFactory, DataBuilder
 
 log = logging.getLogger(__name__)
 
@@ -20,22 +21,29 @@ class Measurements:
 @singleton
 class MeasurementDispatcher:
     @inject
-    def __init__(self, configuration: configparser.ConfigParser, sensor_factory: "SensorFactory"):
+    def __init__(self, configuration: configparser.ConfigParser, sensor_factory: "SensorFactory",
+                 data_builder_factory: DataBuilderFactory):
         self.sensor_factory = sensor_factory
+        self.data_builder_factory = data_builder_factory
         self.sensor_names = [sensor.strip() for sensor in configuration.get('client', 'sensors').split(',')]
 
-    def measure(self, data_builder: DataBuilder):
-        sensors = [self.sensor_factory.create_sensor(sensor_name) for sensor_name in self.sensor_names]
-
-        sorted_sensors = sorted(sensors, key=lambda entry: entry.priority)
-
+    def measure(self) -> DataBuilder:
+        log.info("measure()")
+        data_builder = self.data_builder_factory.get()
         measurements = Measurements()
-        for sensor in sorted_sensors:
+        for sensor in self.sensors:
             try:
                 sensor.measure(data_builder, measurements)
-                del (sensor)
             except BaseException as e:
                 log.error("measurement of sensor %s failed", sensor, e)
+
+        return data_builder
+
+    @lazy
+    def sensors(self):
+        log.info("sensors()")
+        sensors = [self.sensor_factory.create_sensor(sensor_name) for sensor_name in self.sensor_names]
+        return sorted(sensors, key=lambda entry: entry.priority)
 
 
 @singleton

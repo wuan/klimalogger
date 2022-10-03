@@ -1,8 +1,12 @@
+import logging
+
 from influxdb import InfluxDBClient
 from injector import inject
 
 from .client import StoreClient
 from ..config import Config
+
+log = logging.getLogger(__name__)
 
 
 class InfluxDbStore(StoreClient):
@@ -17,13 +21,13 @@ class InfluxDbStore(StoreClient):
                 password=configuration.store_password,
                 timeout=5)
         except Exception as e:
-            print("could not create client", e)
+            log.error("could not create client", e)
             self.client = None
 
     def store(self, data: dict):
         if self.client:
-            print("write data")
+            log.info("write data")
             self.client.write_points(data)
         else:
-            print("client not available")
+            log.error("client not available")
             raise RuntimeError("client not available")

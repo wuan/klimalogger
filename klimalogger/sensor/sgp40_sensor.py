@@ -15,8 +15,7 @@ class Sensor:
     priority = 3
 
     @inject
-    def __init__(self):
-        i2c_bus = busio.I2C(board.SCL, board.SDA, frequency=100000)
+    def __init__(self, i2c_bus: busio.I2C):
         self.sensor = adafruit_sgp40.SGP40(i2c_bus)
 
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
