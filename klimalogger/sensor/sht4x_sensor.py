@@ -1,12 +1,15 @@
 # -*- coding: utf8 -*-
+import logging
+
 import adafruit_sht4x
-import board
+import busio
 from injector import singleton, inject
 
 from .. import DataBuilder
 from ..calc import TemperatureCalc
 from ..measurement import Measurements
 
+log = logging.getLogger(__name__)
 
 @singleton
 class Sensor:
@@ -14,13 +17,13 @@ class Sensor:
     priority = 1
 
     @inject
-    def __init__(self, temperature_calc: TemperatureCalc):
+    def __init__(self, i2c_bus: busio.I2C, temperature_calc: TemperatureCalc):
+        log.info("init")
         self.temperature_calc = temperature_calc
 
-        i2c = board.I2C()  # uses board.SCL and board.SDA
-        self.sensor = adafruit_sht4x.SHT4x(i2c)
+        self.sensor = adafruit_sht4x.SHT4x(i2c_bus)
 
-        self.sensor.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
+        # self.sensor.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
         # Can also set the mode to enable heater
         # sht.mode = adafruit_sht4x.Mode.LOWHEAT_100MS
 

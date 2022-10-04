@@ -5,9 +5,7 @@ from injector import singleton, inject
 from .config import Config
 
 
-@singleton
 class DataBuilder:
-    @inject
     def __init__(self, configuration: Config):
         self.location = configuration.client_location_name
         self.host_name = configuration.client_host_name
@@ -36,3 +34,14 @@ class DataBuilder:
                 "value": measurement_value
             }
         }
+
+
+@singleton
+class DataBuilderFactory:
+
+    @inject
+    def __init__(self, config: Config):
+        self.config = config
+
+    def get(self) -> DataBuilder:
+        return DataBuilder(self.config)
