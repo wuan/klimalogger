@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='klimalogger',
-    version='0.5.4',
+    version='0.5.5',
     packages=find_packages(exclude=('tests')),
     scripts=glob.glob('scripts/*'),
     url='https://github.com/wuan/klimalogger',
@@ -32,6 +32,6 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
     ],
-    install_requires=['influxdb', 'injector', 'lazy'],
+    install_requires=['influxdb', 'injector', 'lazy', 'adafruit-circuitpython-busdevice'],
     tests_require=['pytest-cov', 'mock', 'assertpy']
 )
