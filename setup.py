@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='klimalogger',
-    version='0.5.5',
+    version='0.6.0',
     packages=find_packages(exclude=('tests')),
     scripts=glob.glob('scripts/*'),
     url='https://github.com/wuan/klimalogger',
