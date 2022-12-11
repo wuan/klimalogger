@@ -1,9 +1,12 @@
 import configparser
+import logging
 import socket
 from pathlib import Path
 
 from injector import singleton, provider, Module, inject
 from lazy import lazy
+
+log = logging.getLogger(__name__)
 
 
 @singleton
@@ -59,7 +62,7 @@ class Config:
 
     @lazy
     def queue_port(self) -> int:
-        port_string = self.config_parser.get('queue', 'port')
+        port_string = self.config_parser.get('queue', 'port', fallback='1883')
         return int(port_string)
 
     @lazy
@@ -82,7 +85,7 @@ class ConfigModule(Module):
 
         for config_file_location in config_file_locations:
             if config_file_location.exists():
-                print("reading config file location", config_file_location)
+                log.info("reading config file location %s", config_file_location)
                 config_parser = configparser.ConfigParser()
                 config_parser.read(config_file_location)
                 return config_parser
