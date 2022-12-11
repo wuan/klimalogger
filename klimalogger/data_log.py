@@ -1,5 +1,6 @@
 import glob
 import json
+import logging
 import os
 
 from injector import inject, singleton
@@ -7,7 +8,7 @@ from injector import inject, singleton
 from . import config
 from .store import StoreClient
 
-
+log = logging.getLogger(__name__)
 @singleton
 class DataLog:
     @inject
@@ -28,13 +29,13 @@ class DataLog:
                 try:
                     data = json.loads(input_file.read())
                 except:
-                    print("error loading data {}".format(data_file_name))
+                    log.warning("error loading data %s",data_file_name)
                     continue
-                print("{}: {}".format(data_file_name, data))
+                log.info("%s: %s", data_file_name, data)
                 try:
-                    print("client:", self.store_client)
+                    log.info("client: %s", self.store_client)
                     self.store_client.store(data)
-                except Exception as e:
-                    print("transmission error of archive - skipping", e)
+                except Exception:
+                    log.exception("transmission error of archive - skipping")
                     break
             os.unlink(data_file_name)
