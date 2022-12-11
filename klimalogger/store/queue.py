@@ -51,7 +51,7 @@ class QueueStore(StoreClient):
 
     def __del__(self):
         if self.client:
-            self.client.close()
+            print(dir(self.client))
 
     def store(self, data: dict):
         if self.client:
