@@ -30,6 +30,7 @@ class CombinedStore(StoreClient):
 class QueueStore(StoreClient):
     @inject
     def __init__(self, configuration: config.Config):
+        self.qos = configuration.queue_qos
 
         client_id = f'klimalogger-mqtt-{configuration.client_host_name}-{random.randint(0, 1000)}'
 
@@ -45,6 +46,7 @@ class QueueStore(StoreClient):
             self.client.on_connect = on_connect
             log.info("connect to host %s, port %d", configuration.queue_host, configuration.queue_port)
             self.client.connect(configuration.queue_host, configuration.queue_port)
+            self.client.loop_start()
         except Exception:
             log.exception("could not create client")
             self.client = None
@@ -63,7 +65,7 @@ class QueueStore(StoreClient):
                 json_message.update(entry["fields"])
                 message = json.dumps(json_message)
                 log.info("write data (%d bytes) to topic %s", len(message), topic)
-                result = self.client.publish(topic, message)
+                result = self.client.publish(topic, payload=message, qos=self.qos, )
                 status = result[0]
                 if status != 0:
                     log.warning("Failed to send message to topic %s with status %s", topic, status)

@@ -61,6 +61,11 @@ class Config:
         return self.config_parser.get('queue', 'host')
 
     @lazy
+    def queue_qos(self) -> int:
+        qos_string = self.config_parser.get('queue', 'qos', fallback="1")
+        return int(qos_string)
+
+    @lazy
     def queue_port(self) -> int:
         port_string = self.config_parser.get('queue', 'port', fallback='1883')
         return int(port_string)
