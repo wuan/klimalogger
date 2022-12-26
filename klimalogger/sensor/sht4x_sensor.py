@@ -21,14 +21,14 @@ class Sensor:
         log.info("init")
         self.temperature_calc = temperature_calc
 
-        self.sensor = adafruit_sht4x.SHT4x(i2c_bus)
+        self.driver = adafruit_sht4x.SHT4x(i2c_bus)
 
         # self.sensor.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
         # Can also set the mode to enable heater
         # sht.mode = adafruit_sht4x.Mode.LOWHEAT_100MS
 
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
-        (temperature, relative_humidity) = self.sensor.measurements
+        (temperature, relative_humidity) = self.driver.measurements
 
         if temperature > -40.0:
             try:

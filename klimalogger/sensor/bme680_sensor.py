@@ -30,15 +30,15 @@ class Sensor:
         self.temperature_calc = temperature_calc
         self.pressure_calc = pressure_calc
         self.elevation = int(config_parser.get('bme680_sensor', 'elevation'))
-        self.sensor = adafruit_bme680.Adafruit_BME680_I2C(i2c_bus)
+        self.driver = adafruit_bme680.Adafruit_BME680_I2C(i2c_bus)
 
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
-        temperature = self.sensor.temperature
-        relative_humidity = self.sensor.relative_humidity
+        temperature = self.driver.temperature
+        relative_humidity = self.driver.relative_humidity
         dew_point = self.temperature_calc.dew_point(temperature, relative_humidity)
-        pressure = self.sensor.pressure
+        pressure = self.driver.pressure
         sea_level_pressure = self.pressure_calc.sea_level_pressure(pressure, temperature, self.elevation)
-        voc_gas = self.sensor.gas
+        voc_gas = self.driver.gas
 
         data_builder.add(self.name, "temperature", "°C", round(temperature, 2))
         data_builder.add(self.name, "relative humidity", "%", round(relative_humidity, 2))

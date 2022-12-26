@@ -23,14 +23,14 @@ class Sensor:
         data_pin = int(config_parser.get('sht1x_sensor', 'data_pin'))
         sck_pin = int(config_parser.get('sht1x_sensor', 'sck_pin'))
 
-        self.sht1x = SHT1x(dataPin=data_pin, sckPin=sck_pin, gpioMode=SHT1x.GPIO_BCM)
+        self.driver = SHT1x(dataPin=data_pin, sckPin=sck_pin, gpioMode=SHT1x.GPIO_BCM)
 
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
-        (temperature, humidity) = self.sht1x.read_temperature_C_and_humidity()
+        (temperature, humidity) = self.driver.read_temperature_C_and_humidity()
 
         if temperature > -40.0:
             try:
-                dew_point = self.sht1x.calculate_dew_point(temperature, humidity)
+                dew_point = self.driver.calculate_dew_point(temperature, humidity)
                 dew_point = round(dew_point, 2)
             except ValueError:
                 dew_point = None

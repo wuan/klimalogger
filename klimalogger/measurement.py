@@ -34,8 +34,8 @@ class MeasurementDispatcher:
         for sensor in self.sensors:
             try:
                 sensor.measure(data_builder, measurements)
-            except BaseException as e:
-                log.error("measurement of sensor %s failed", sensor, e)
+            except Exception:
+                log.exception("measurement of sensor %s failed", sensor)
 
         return data_builder
 
@@ -58,5 +58,5 @@ class SensorFactory:
             module = importlib.import_module('klimalogger.sensor.' + sensor_type + '_sensor')
             log.info("sensor: %s, module: %s", sensor_type, module)
             return self.injector.get(module.Sensor)
-        except BaseException as e:
-            log.error("instatiation of sensor %s failed", sensor_type, e)
+        except Exception:
+            log.exception("instatiation of sensor %s failed", sensor_type)

@@ -17,17 +17,17 @@ class Sensor:
 
     @inject
     def __init__(self, i2c_bus: busio.I2C):
-        self.sensor = adafruit_scd4x.SCD4X(i2c_bus)
-        self.sensor.start_periodic_measurement()
+        self.driver = adafruit_scd4x.SCD4X(i2c_bus)
+        self.driver.start_periodic_measurement()
 
     def __del__(self):
-        self.sensor.stop_periodic_measurement()
+        self.driver.stop_periodic_measurement()
 
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
 
         while True:
-            if self.sensor.data_ready:
-                CO2 = self.sensor.CO2
+            if self.driver.data_ready:
+                CO2 = self.driver.CO2
                 break
             time.sleep(1)
 

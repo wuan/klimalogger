@@ -24,11 +24,11 @@ class Sensor:
         self.pressure_calc = pressure_calc
         self.elevation = int(config_parser.get('bmp3xx_sensor', 'elevation'))
 
-        self.sensor = adafruit_bmp3xx.BMP3XX_I2C(i2c_bus)
+        self.driver = adafruit_bmp3xx.BMP3XX_I2C(i2c_bus)
 
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
-        temperature = self.sensor.temperature
-        pressure = self.sensor.pressure
+        temperature = self.driver.temperature
+        pressure = self.driver.pressure
         sea_level_pressure = self.pressure_calc.sea_level_pressure(pressure, temperature, self.elevation)
 
         data_builder.add(self.name, "pressure", "hPa", round(pressure, 2))

@@ -16,18 +16,18 @@ class Sensor:
 
     @inject
     def __init__(self, i2c_bus: busio.I2C):
-        self.sensor = adafruit_sgp40.SGP40(i2c_bus)
+        self.driver = adafruit_sgp40.SGP40(i2c_bus)
 
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
         voc_index = None
         if measurements.temperature is not None and measurements.relative_humidity is not None:
-            raw_gas = self.sensor.measure_raw(
+            raw_gas = self.driver.measure_raw(
                 temperature=measurements.temperature, relative_humidity=measurements.relative_humidity
             )
-            voc_index = self.sensor.measure_index(
+            voc_index = self.driver.measure_index(
                 temperature=measurements.temperature, relative_humidity=measurements.relative_humidity)
         else:
-            raw_gas = self.sensor.raw
+            raw_gas = self.driver.raw
 
         data_builder.add(self.name, "raw gas", "", float(raw_gas))
         if voc_index is not None:
