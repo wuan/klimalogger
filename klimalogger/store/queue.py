@@ -1,6 +1,6 @@
 import json
 import logging
-import random
+import secrets
 
 from injector import inject
 from paho.mqtt import client as mqtt_client
@@ -32,7 +32,7 @@ class QueueStore(StoreClient):
     def __init__(self, configuration: config.Config):
         self.qos = configuration.queue_qos
 
-        client_id = f'klimalogger-mqtt-{configuration.client_host_name}-{random.randint(0, 1000)}'
+        client_id = f'klimalogger-mqtt-{configuration.client_host_name}-{secrets.randbelow(1000)}'
 
         def on_connect(client, userdata, flags, rc):
             if rc == 0:

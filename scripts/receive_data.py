@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import random
+import secrets
 import sys
 
 from paho.mqtt import client as mqtt_client
@@ -8,7 +8,7 @@ from paho.mqtt import client as mqtt_client
 
 def connect_mqtt():
     port = 1883
-    client_id = f'python-mqtt-{random.randint(0, 1000)}'
+    client_id = f'python-mqtt-{secrets.randbelow(1000)}'
 
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
