@@ -31,6 +31,7 @@ jobs:
           pip install -q build
           python -m build -s
       - uses: sonarsource/sonarqube-scan-action@master
+        if: matrix.python-version == '3.8'
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
