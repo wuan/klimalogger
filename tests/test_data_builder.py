@@ -4,8 +4,9 @@ from mock import Mock, PropertyMock
 import klimalogger
 
 
-class TestDataBuilderTest(object):
-    def setup(self):
+class TestDataBuilderTest:
+
+    def setup_method(self):
         self.config = Mock()
         type(self.config).client_location_name = PropertyMock(return_value='<location>')
         type(self.config).client_host_name = PropertyMock(return_value='<host>')
@@ -19,7 +20,8 @@ class TestDataBuilderTest(object):
 
         assert_that(self.uut.data).contains({
             'measurement': 'data',
-            'tags': {'host': '<host>', 'location': '<location>', 'type': '<type>', 'unit': '<unit>', 'sensor': '<sensor>', 'calculated': False},
+            'tags': {'host': '<host>', 'location': '<location>', 'type': '<type>', 'unit': '<unit>',
+                     'sensor': '<sensor>', 'calculated': False},
             'time': self.uut.timestamp,
             'fields': {'value': '<value>'}
         })

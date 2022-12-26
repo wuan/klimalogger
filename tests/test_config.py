@@ -7,7 +7,7 @@ import klimalogger
 
 
 class TestDataBuilderTest(object):
-    def setup(self):
+    def setup_method(self):
         self.config_parser = Mock()
         self.uut = klimalogger.config.Config(self.config_parser)
 
