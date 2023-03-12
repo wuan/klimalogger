@@ -6,7 +6,7 @@ import sys
 from paho.mqtt import client as mqtt_client
 
 
-def connect_mqtt():
+def connect_mqtt(broker: str):
     port = 1883
     client_id = f'python-mqtt-{secrets.randbelow(1000)}'
 
@@ -24,18 +24,20 @@ def connect_mqtt():
     return client
 
 
-def subscribe(client: mqtt_client):
+def subscribe(client: mqtt_client, topic: str):
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
 
     client.subscribe(topic)
     client.on_message = on_message
 
-
-if __name__ == "__main__":
+def main():
     topic = "klimalogger"
 
     broker = sys.argv[1]
-    client = connect_mqtt()
-    subscribe(client)
+    client = connect_mqtt(broker)
+    subscribe(client, topic)
     client.loop_forever()
+
+if __name__ == "__main__":
+    main()
