@@ -1,5 +1,5 @@
 `klimalogger <https://github.com/wuan/klimalogger>`_
-============================================
+====================================================
 
 .. image:: https://badge.fury.io/gh/wuan%2Fklimalogger.svg
     :alt: project on GitHub

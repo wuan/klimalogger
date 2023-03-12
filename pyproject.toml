@@ -1,6 +1,6 @@
 [project]
 name = "klimalogger"
-version = "0.6.0"
+version = "0.6.2"
 authors = [
     { name = "Andreas Würl", email = "andi@tryb.de" },
 ]
@@ -34,6 +34,8 @@ tests = [
     'mock',
     'assertpy'
 ]
+[project.scripts]
+klimalogger = "scripts.klimalogger:main"
 
 [project.urls]
 "Homepage" = "https://github.com/wuan/klimalogger"
