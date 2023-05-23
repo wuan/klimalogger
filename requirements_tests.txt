@@ -67,7 +67,7 @@ pytz==2022.7
     # via influxdb
 pyusb==1.2.1
     # via pyftdi
-requests==2.28.1
+requests==2.31.0
     # via influxdb
 six==1.16.0
     # via
