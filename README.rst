@@ -7,7 +7,7 @@
 .. image:: https://badge.fury.io/py/klimalogger.svg
     :alt: PyPi-Package
     :target: https://badge.fury.io/py/klimalogger
-.. image:: https://travis-ci.org/wuan/klimalogger.svg?branch=master
+.. image:: https://travis-ci.org/wuan/klimalogger.svg?branch=main
     :alt: Build Status
     :target: https://travis-ci.org/wuan/klimalogger
 .. image:: https://app.codacy.com/project/badge/Grade/143e5b4f902b4680a2b9fd6464736f6b
