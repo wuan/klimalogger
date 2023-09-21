@@ -40,3 +40,11 @@ Additional dependencies
      - download and install https://bitbucket.org/lunobili/rpisht1x.git
    * - SHT4x
      - ``pip3 install adafruit-circuitpython-sht4x``
+
+Build and upload
+----------------
+
+.. code-block:: python
+   python3 -m build
+   python3 -m pip install --upgrade twine
+   python3 -m twine upload dist/klimalogger-0.6.8.tar.gz

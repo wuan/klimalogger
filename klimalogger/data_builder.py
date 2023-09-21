@@ -12,12 +12,12 @@ class DataBuilder:
         self.timestamp = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
         self.data = []
 
-    def add(self, sensor: str, measurement_type: str, measurement_unit: str, measurement_value: str,
+    def add(self, sensor: str, measurement_type: str, measurement_unit: str, measurement_value: float,
             is_calculated: bool = False):
         if measurement_value is not None:
             self.data += [self.create(sensor, measurement_type, measurement_unit, measurement_value, is_calculated)]
 
-    def create(self, sensor: str, measurement_type: str, measurement_unit: str, measurement_value: str,
+    def create(self, sensor: str, measurement_type: str, measurement_unit: str, measurement_value: float,
                is_calculated: bool = False):
         return {
             "measurement": "data",

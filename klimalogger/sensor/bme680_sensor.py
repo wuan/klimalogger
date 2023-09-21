@@ -31,6 +31,7 @@ class Sensor:
         self.pressure_calc = pressure_calc
         self.elevation = int(config_parser.get('bme680_sensor', 'elevation'))
         self.driver = adafruit_bme680.Adafruit_BME680_I2C(i2c_bus)
+        self.driver.set_gas_heater(None, None)
 
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
         temperature = self.driver.temperature
