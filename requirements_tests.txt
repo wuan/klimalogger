@@ -79,5 +79,5 @@ tomli==2.0.1
     #   pytest
 typing-extensions==4.4.0
     # via adafruit-circuitpython-typing
-urllib3==1.26.13
+urllib3==1.26.18
     # via requests
