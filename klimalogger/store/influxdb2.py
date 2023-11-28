@@ -1,8 +1,10 @@
 import logging
+import typing
+from collections.abc import Iterable
+from typing import Union, List
 
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.exceptions import InfluxDBError
-from influxdb_client.client.write_api import SYNCHRONOUS
 from injector import inject
 
 from .client import StoreClient
@@ -36,21 +38,19 @@ class InfluxDb2Store(StoreClient):
         self.callbacks = BatchingCallback()
         assert self.client.ping()
 
-
-    def store(self, data: dict):
+    def store(self, data: Union[dict, typing.Iterable[dict]]):
         if self.client:
             assert self.client.ping()
 
             log.info("write data")
-            point = Point.from_dict(data)
+            if isinstance(data, Iterable):
+                record = [Point.from_dict(entry) for entry in data]
+            else:
+                record = Point.from_dict(data)
             with self.client.write_api(
-                                  error_callback=self.callbacks.error,
-                                  retry_callback=self.callbacks.retry) as write_api:
-                write_api.write(self.name, record=point)
+                    error_callback=self.callbacks.error,
+                    retry_callback=self.callbacks.retry) as write_api:
+                write_api.write(self.name, record=record)
         else:
             log.error("client not available")
             raise RuntimeError("client not available")
-
-
-
-
