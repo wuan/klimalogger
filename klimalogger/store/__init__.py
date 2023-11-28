@@ -16,6 +16,9 @@ class StoreModule(Module):
         if config.store_type == 'queue':
             from .queue import CombinedStore
             return CombinedStore(config)
+        elif config.store_org is not None:
+            from .influxdb2 import InfluxDbStore
+            return InfluxDbStore(config)
         else:
             from .influxdb import InfluxDbStore
             return InfluxDbStore(config)

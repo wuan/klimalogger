@@ -28,6 +28,10 @@ class Config:
         return self.config_parser.get('store', 'type', fallback='direct')
 
     @lazy
+    def store_org(self) -> str:
+        return self.config_parser.get('store', 'org', fallback=None)
+
+    @lazy
     def store_username(self) -> str:
         return self.config_parser.get('store', 'username')
 
@@ -42,6 +46,10 @@ class Config:
     @lazy
     def store_host(self) -> str:
         return self.config_parser.get('store', 'host')
+
+    @lazy
+    def store_url(self) -> str:
+        return self.config_parser.get('store', 'url')
 
     @lazy
     def store_port(self) -> int:
