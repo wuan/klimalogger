@@ -5,8 +5,8 @@ import secrets
 from injector import inject
 from paho.mqtt import client as mqtt_client
 
+from . import influxdb_store_factory
 from .client import StoreClient
-from .influxdb import InfluxDbStore
 from .. import config
 
 log = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ class CombinedStore(StoreClient):
     def __init__(self, configuration: config.Config):
         log.info("create combined store")
         self.stores = [
-            InfluxDbStore(configuration),
+            influxdb_store_factory(configuration),
             QueueStore(configuration)
         ]
 
