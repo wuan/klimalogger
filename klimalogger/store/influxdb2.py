@@ -28,13 +28,13 @@ class InfluxDb2Store(StoreClient):
             self.client = InfluxDBClient(
                 url=configuration.store_url,
                 org=configuration.store_org,
-                username=configuration.store_username,
-                password=configuration.store_password,
+                username=configuration.service_username,
+                password=configuration.service_password,
             )
         except Exception as e:
             log.error("could not create client", exc_info=e)
             self.client = None
-        self.name = configuration.store_name
+        self.name = configuration.service_name
         self.callbacks = BatchingCallback()
         assert self.client.ping()
 

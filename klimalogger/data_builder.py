@@ -1,4 +1,5 @@
 import datetime
+import time
 
 from injector import singleton, inject
 
@@ -9,7 +10,7 @@ class DataBuilder:
     def __init__(self, configuration: Config):
         self.location = configuration.client_location_name
         self.host_name = configuration.client_host_name
-        self.timestamp = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
+        self.timestamp = time.time()
         self.data = []
 
     def add(self, sensor: str, measurement_type: str, measurement_unit: str, measurement_value: float,
