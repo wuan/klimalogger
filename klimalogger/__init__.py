@@ -45,7 +45,7 @@ class Client:
         self.data_log = data_log
         self.config = config
 
-    def measure_and_store_periodically(self, period=30):
+    def measure_and_store_periodically(self, period=15):
         log.info("measure_and_store_periodically(%d)", period)
         last_measurement = time.time() - period
         while True:
@@ -75,8 +75,6 @@ class Client:
             log.info("stored data")
         except Exception as e:
             log.error("error during data transmission: create local log entry", e)
-            self.data_log.store(data, timestamp)
-        self.data_log.transmit_stored_data()
 
 
 def client():
