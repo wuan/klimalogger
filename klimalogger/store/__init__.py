@@ -3,6 +3,7 @@ import logging
 from injector import Module, provider, singleton
 
 from .client import StoreClient
+from .queue import QueueStore
 from ..config import Config
 
 log = logging.getLogger(__name__)
@@ -22,7 +23,6 @@ class StoreModule(Module):
         log.info("store provider type: %s", config.store_type)
 
         if config.store_type == 'queue':
-            from .queue import CombinedStore
-            return CombinedStore(config)
+            return QueueStore(config)
         else:
             return influxdb_store_factory(config)

@@ -61,7 +61,7 @@ class TestDataBuilderTest(object):
         self.config_parser.get.return_value = '5'
         result = self.uut.store_port
 
-        self.config_parser.get.assert_called_once_with('store', 'port')
+        self.config_parser.get.assert_called_once_with('store', 'port', fallback='8086')
         assert_that(result).is_equal_to(5)
 
     def test_log_path(self):
