@@ -66,7 +66,7 @@ class QueueStore(StoreClient):
         topic = f"{self.mqtt_prefix}/{measurement_type}"
         print(f"{topic}: {value} {unit} ({sensor})")
         return (topic, {
-            "time": timestamp,
+            "time": int(timestamp),
             "value": value,
             "unit": unit,
             "sensor": sensor,
