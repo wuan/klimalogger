@@ -4,6 +4,7 @@ import time
 from injector import singleton, inject, Injector
 
 from .config import ConfigModule, Config
+from .data_builder import DataBuilder
 from .measurement import MeasurementDispatcher
 from .sensor import SensorModule
 from .store import StoreClient
