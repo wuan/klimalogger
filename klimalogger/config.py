@@ -28,23 +28,31 @@ class Config:
         return self.config_parser.get('store', 'type', fallback='direct')
 
     @lazy
-    def store_username(self) -> str:
+    def store_org(self) -> str:
+        return self.config_parser.get('store', 'org', fallback=None)
+
+    @lazy
+    def service_username(self) -> str:
         return self.config_parser.get('store', 'username')
 
     @lazy
-    def store_password(self) -> str:
+    def service_password(self) -> str:
         return self.config_parser.get('store', 'password')
 
     @lazy
-    def store_name(self) -> str:
+    def service_name(self) -> str:
         return self.config_parser.get('store', 'name')
 
     @lazy
-    def store_host(self) -> str:
+    def service_host(self) -> str:
         return self.config_parser.get('store', 'host')
 
     @lazy
-    def store_port(self) -> int:
+    def store_url(self) -> str:
+        return self.config_parser.get('store', 'url')
+
+    @lazy
+    def service_port(self) -> int:
         port_string = self.config_parser.get('store', 'port')
         return int(port_string)
 
@@ -53,22 +61,13 @@ class Config:
         return self.config_parser.get('queue', 'username')
 
     @lazy
-    def queue_password(self) -> str:
-        return self.config_parser.get('queue', 'password')
-
-    @lazy
-    def queue_host(self) -> str:
-        return self.config_parser.get('queue', 'host')
-
-    @lazy
     def queue_qos(self) -> int:
-        qos_string = self.config_parser.get('queue', 'qos', fallback="1")
+        qos_string = self.config_parser.get('store', 'queue_qos', fallback="1")
         return int(qos_string)
 
     @lazy
-    def queue_port(self) -> int:
-        port_string = self.config_parser.get('queue', 'port', fallback='1883')
-        return int(port_string)
+    def queue_prefix(self) -> str:
+        return self.config_parser.get('store', 'queue_prefix', fallback='sensors')
 
     @lazy
     def queue_virtual_host(self) -> str:

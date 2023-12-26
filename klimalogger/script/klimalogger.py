@@ -35,7 +35,8 @@ def main():
                 client.measure_and_store_periodically()
             else:
                 client.measure_and_store()
-    except Exception:
+    except Exception as e:
+        print("Error", e)
         return 10
     return 0
 

@@ -26,9 +26,11 @@ class Sensor:
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
 
         while True:
-            if self.driver.data_ready:
-                CO2 = self.driver.CO2
+            CO2 = self.driver.CO2
+
+            if CO2 is not None:
                 break
+
             time.sleep(1)
 
         data_builder.add(self.name, "CO2", "ppm", float(CO2))

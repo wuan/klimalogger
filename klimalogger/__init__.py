@@ -5,7 +5,6 @@ from injector import singleton, inject, Injector
 
 from .config import ConfigModule, Config
 from .data_builder import DataBuilder
-from .data_log import DataLog
 from .measurement import MeasurementDispatcher
 from .sensor import SensorModule
 from .store import StoreClient
@@ -38,14 +37,12 @@ class Client:
     @inject
     def __init__(self, measurement_dispatcher: MeasurementDispatcher,
                  store_client: StoreClient,
-                 data_log: DataLog,
                  config: Config):
         self.measurement_dispatcher = measurement_dispatcher
         self.store_client = store_client
-        self.data_log = data_log
         self.config = config
 
-    def measure_and_store_periodically(self, period=30):
+    def measure_and_store_periodically(self, period=15):
         log.info("measure_and_store_periodically(%d)", period)
         last_measurement = time.time() - period
         while True:
@@ -75,8 +72,6 @@ class Client:
             log.info("stored data")
         except Exception as e:
             log.error("error during data transmission: create local log entry", e)
-            self.data_log.store(data, timestamp)
-        self.data_log.transmit_stored_data()
 
 
 def client():

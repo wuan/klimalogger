@@ -1,6 +1,6 @@
 [project]
 name = "klimalogger"
-version = "0.6.8"
+version = "0.7.10"
 authors = [
     { name = "Andreas Würl", email = "andi@tryb.de" },
 ]
@@ -23,6 +23,7 @@ classifiers = [
 ]
 dependencies = [
     'influxdb',
+    'influxdb-client',
     'injector',
     'lazy',
     'adafruit-circuitpython-busdevice'
