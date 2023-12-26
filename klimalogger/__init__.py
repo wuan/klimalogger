@@ -8,6 +8,7 @@ from .measurement import MeasurementDispatcher
 from .sensor import SensorModule
 from .store import StoreClient
 from .store import StoreModule
+from . import logger
 
 INJECTOR = Injector(
     [StoreModule(), ConfigModule(), SensorModule()])
@@ -35,11 +36,9 @@ class Client:
     @inject
     def __init__(self, measurement_dispatcher: MeasurementDispatcher,
                  store_client: StoreClient,
-                 data_log: DataLog,
                  config: Config):
         self.measurement_dispatcher = measurement_dispatcher
         self.store_client = store_client
-        self.data_log = data_log
         self.config = config
 
     def measure_and_store_periodically(self, period=15):
