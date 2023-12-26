@@ -1,6 +1,7 @@
 import configparser
 import importlib
 import logging
+import time
 from dataclasses import dataclass
 from typing import Optional
 
@@ -32,10 +33,13 @@ class MeasurementDispatcher:
         data_builder = self.data_builder_factory.get()
         measurements = Measurements()
         for sensor in self.sensors:
+            start_time = time.time()
             try:
                 sensor.measure(data_builder, measurements)
             except Exception:
                 log.exception("measurement of sensor %s failed", sensor)
+            end_time = time.time()
+            data_builder.add(sensor.name, "time", "ms", (end_time - start_time) * 1e3)
 
         return data_builder
 
