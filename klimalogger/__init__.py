@@ -4,13 +4,10 @@ import time
 from injector import singleton, inject, Injector
 
 from .config import ConfigModule, Config
-from .data_builder import DataBuilder
-from .data_log import DataLog
 from .measurement import MeasurementDispatcher
 from .sensor import SensorModule
 from .store import StoreClient
 from .store import StoreModule
-from . import logger
 
 INJECTOR = Injector(
     [StoreModule(), ConfigModule(), SensorModule()])
