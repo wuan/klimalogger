@@ -13,7 +13,7 @@ class FileStore(StoreClient):
 
     def store(self, data: List[dict]):
         for entry in data:
-            timestamp = datetime.fromisoformat(entry["time"])
+            timestamp = datetime.fromtimestamp(entry["time"])
             value = entry["fields"]["value"]
             tags = entry["tags"]
             measurement_type = tags["type"]

@@ -1,6 +1,6 @@
 [project]
 name = "klimalogger"
-version = "0.7.12"
+version = "0.7.13"
 authors = [
     { name = "Andreas Würl", email = "andi@tryb.de" },
 ]
