@@ -45,10 +45,16 @@ class Client:
     def measure_and_store_periodically(self, period=15):
         log.info("measure_and_store_periodically(%d)", period)
         last_measurement = time.time() - period
+        skip_initial = 2
         while True:
             timestamp = time.time()
             if last_measurement < timestamp - period:
-                self.measure_and_store()
+                if skip_initial == 0:
+                    self.measure_and_store()
+                else:
+                    log.info("skipping initial measurement(%d)", skip_initial)
+                    self.measure()
+                    skip_initial -= 1
                 last_measurement += period
             else:
                 self.measure()
