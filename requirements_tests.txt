@@ -73,7 +73,7 @@ pyusb==1.2.1
     # via pyftdi
 reactivex==4.0.4
     # via influxdb-client
-requests==2.31.0
+requests==2.32.0
     # via influxdb
 six==1.16.0
     # via
