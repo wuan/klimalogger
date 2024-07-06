@@ -23,7 +23,7 @@ adafruit-platformdetect==3.38.0
     # via adafruit-blinka
 adafruit-pureio==1.1.9
     # via adafruit-blinka
-certifi==2023.7.22
+certifi==2024.7.4
     # via
     #   influxdb-client
     #   requests
