@@ -29,8 +29,6 @@ jobs:
 
       - name: Setup Poetry
         uses: abatilo/actions-poetry@v3
-        with:
-          poetry-version: ${{ matrix.poetry-version }}
 
       - name: Setup environment
         run: poetry install
