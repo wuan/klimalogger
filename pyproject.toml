@@ -1,44 +1,44 @@
-[project]
+[tool.poetry]
 name = "klimalogger"
 version = "0.7.14"
-authors = [
-    { name = "Andreas Würl", email = "andi@tryb.de" },
-]
 description = "Simple data logging client for InfluxDB"
+authors = ["Andreas Würl <andi@tryb.de>"]
+license = "Apache-2.0"
 readme = "README.rst"
-requires-python = ">=3.7"
-classifiers = [
-    'Development Status :: 3 - Alpha',
-    # Indicate who your project is intended for
-    'Intended Audience :: Developers',
-    'Topic :: Scientific/Engineering',
-    # Pick your license as you wish (should match "license" above)
-    'License :: OSI Approved :: Apache Software License',
-    # Specify the Python versions you support here. In particular, ensure
-    # that you indicate whether you support Python 2, Python 3 or both.
-    'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.7',
-    'Programming Language :: Python :: 3.8',
-    'Programming Language :: Python :: 3.9',
-]
-dependencies = [
-    'influxdb',
-    'influxdb-client',
-    'injector',
-    'lazy',
-    'adafruit-circuitpython-busdevice'
-]
 
-[project.optional-dependencies]
-tests = [
-    'pytest-cov',
-    'mock',
-    'assertpy'
-]
-[project.scripts]
-klimalogger = "klimalogger.script.klimalogger:main"
-receive_data = "klimalogger.script.receive_data:main"
+[tool.poetry.dependencies]
+python = "^3.9"
+influxdb-client = "^1.46.0"
+injector = "^0.22.0"
+lazy = "^1.6"
+adafruit-circuitpython-busdevice = "^5.2.10"
+paho-mqtt = "^2.1.0"
 
-[project.urls]
-"Homepage" = "https://github.com/wuan/klimalogger"
-"Bug Tracker" = "https://github.com/wuan/klimalogger/issues"
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
+pytest-mock = "^3.14.0"
+pytest-cov = "^5.0.0"
+assertpy = "^1.1"
+
+#dependencies = [
+#    'influxdb',
+#    'influxdb-client',
+#    'injector',
+#    'lazy',
+#    'adafruit-circuitpython-busdevice'
+#]
+
+#[project.optional-dependencies]
+#tests = [
+#    'pytest-cov',
+#    'mock',
+#    'assertpy'
+#]
+#[project.scripts]
+#klimalogger = "klimalogger.script.klimalogger:main"
+#receive_data = "klimalogger.script.receive_data:main"
+#
+#[project.urls]
+#"Homepage" = "https://github.com/wuan/klimalogger"
+#"Bug Tracker" = "https://github.com/wuan/klimalogger/issues"
+mock = "^5.1.0"
