@@ -1,15 +1,8 @@
-import datetime
 import time
-
-from injector import singleton, inject
-
-from .config import Config
 
 
 class DataBuilder:
-    def __init__(self, configuration: Config):
-        self.location = configuration.client_location_name
-        self.host_name = configuration.client_host_name
+    def __init__(self):
         self.timestamp = time.time()
         self.data = []
 
@@ -23,8 +16,6 @@ class DataBuilder:
         return {
             "measurement": "data",
             "tags": {
-                "host": self.host_name,
-                "location": self.location,
                 "type": measurement_type,
                 "unit": measurement_unit,
                 "sensor": sensor,
@@ -37,12 +28,19 @@ class DataBuilder:
         }
 
 
-@singleton
-class DataBuilderFactory:
-
-    @inject
-    def __init__(self, config: Config):
-        self.config = config
-
-    def get(self) -> DataBuilder:
-        return DataBuilder(self.config)
+def map_entry(mqtt_prefix, entry):
+    timestamp = entry["time"]
+    value = entry["fields"]["value"]
+    tags = entry["tags"]
+    measurement_type = tags["type"]
+    unit = tags["unit"]
+    sensor = tags["sensor"]
+    topic = f"{mqtt_prefix}/{measurement_type}"
+    print(f"{topic}: {value} {unit} ({sensor})")
+    return (topic, {
+        "time": timestamp,
+        "value": value,
+        "unit": unit,
+        "sensor": sensor,
+        "calculated": tags["calculated"]
+    })

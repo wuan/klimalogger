@@ -1,35 +1,22 @@
 # -*- coding: utf8 -*-
-import logging
-
-import busio
-from injector import singleton, inject
-
-from .. import DataBuilder
-from ..calc import PressureCalc, TemperatureCalc
-from ..measurement import Measurements
-
-try:
-    import configparser
-except ImportError:
-    import configparser as configparser
 
 import adafruit_bme680
+import busio
 
-log = logging.getLogger(__name__)
+from .. import DataBuilder, Config
+from ..calc import PressureCalc, TemperatureCalc
+from ..measurements import Measurements
 
 
-@singleton
-class Sensor:
+class BME680Sensor:
     name = "BME680"
     priority = 1
 
-    @inject
-    def __init__(self, i2c_bus: busio.I2C, config_parser: configparser.ConfigParser, temperature_calc: TemperatureCalc,
+    def __init__(self, i2c_bus: busio.I2C, config: Config, temperature_calc: TemperatureCalc,
                  pressure_calc: PressureCalc):
-        log.info("init()")
         self.temperature_calc = temperature_calc
         self.pressure_calc = pressure_calc
-        self.elevation = int(config_parser.get('bme680_sensor', 'elevation'))
+        self.elevation = int(config.elevation)
         self.driver = adafruit_bme680.Adafruit_BME680_I2C(i2c_bus)
         self.driver.set_gas_heater(None, None)
 
