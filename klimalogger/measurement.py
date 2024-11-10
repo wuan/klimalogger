@@ -37,7 +37,7 @@ class MeasurementDispatcher:
                 start_time = time.time()
                 sensor.measure(data_builder, measurements)
                 end_time = time.time()
-                data_builder.add(sensor.name, "time", "ms", (end_time - start_time) * 1e3)
+                data_builder.add(sensor.name, "time", "ms", round((end_time - start_time) * 1e3, 1))
             except Exception:
                 log.exception("measurement of sensor %s failed", sensor)
 
