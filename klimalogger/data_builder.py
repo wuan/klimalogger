@@ -10,7 +10,7 @@ class DataBuilder:
     def __init__(self, configuration: Config):
         self.location = configuration.client_location_name
         self.host_name = configuration.client_host_name
-        self.timestamp = time.time()
+        self.timestamp = round(time.time(),1)
         self.data = []
 
     def add(self, sensor: str, measurement_type: str, measurement_unit: str, measurement_value: float,
