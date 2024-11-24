@@ -17,7 +17,6 @@ receive-data = "klimalogger.script.receive_data:main"
 [tool.poetry.dependencies]
 python = "^3.9"
 influxdb-client = "^1.46.0"
-injector = "^0.22.0"
 lazy = "^1.6"
 adafruit-circuitpython-busdevice = "^5.2.10"
 paho-mqtt = "^2.1.0"

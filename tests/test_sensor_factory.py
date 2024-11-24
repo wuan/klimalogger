@@ -5,7 +5,7 @@ import pytest
 
 from klimalogger import MeasurementDispatcher, DataBuilder
 from klimalogger.data_builder import DataBuilderFactory
-from klimalogger.measurement import SensorFactory, Measurements
+from klimalogger.measurements import SensorFactory, Measurements
 
 
 class TestSensorFactory:
