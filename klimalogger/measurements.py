@@ -8,7 +8,7 @@ from typing import Optional
 from injector import singleton, inject, Injector
 from lazy import lazy
 
-from .data_builder import DataBuilderFactory, DataBuilder
+from .data_builder import DataBuilder
 
 log = logging.getLogger(__name__)
 
@@ -19,18 +19,15 @@ class Measurements:
     relative_humidity: Optional[float] = None
 
 
-@singleton
 class MeasurementDispatcher:
-    @inject
-    def __init__(self, configuration: configparser.ConfigParser, sensor_factory: "SensorFactory",
-                 data_builder_factory: DataBuilderFactory):
+    def __init__(self, configuration: configparser.ConfigParser, sensor_factory: "SensorFactory"):
+
         self.sensor_factory = sensor_factory
-        self.data_builder_factory = data_builder_factory
         self.sensor_names = [sensor.strip() for sensor in configuration.get('client', 'sensors').split(',')]
 
     def measure(self) -> DataBuilder:
         log.info("measure()")
-        data_builder = self.data_builder_factory.get()
+        data_builder = DataBuilder()
         measurements = Measurements()
         for sensor in self.sensors:
             try:

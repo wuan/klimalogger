@@ -1,19 +1,36 @@
+import configparser
+import logging
 import os
+from pathlib import Path
+
+log = logging.getLogger(__name__)
 
 
 class Config:
 
-    @property
-    def mqtt_host(self):
-        return os.getenv("MQTT_HOST")
+    def __init__(self):
+        etc = Path("/etc")
+        config_filename = "klimalogger.conf"
+
+        config_file_locations = [Path(config_filename), etc / "klimalogger" / config_filename, etc / config_filename]
+
+        for config_file_location in config_file_locations:
+            if config_file_location.exists():
+                log.info("reading config file location %s", config_file_location)
+                self.config_parser = configparser.ConfigParser()
+                self.config_parser.read(config_file_location)
 
     @property
-    def mqtt_port(self):
-        return int(os.getenv("MQTT_PORT", "1883"))
+    def service_host(self) -> str:
+        return self.config_parser.get('store', 'host') if self.config_parser else os.getenv("MQTT_HOST")
 
     @property
-    def mqtt_prefix(self):
-        return os.getenv("MQTT_PREFIX", "sensors")
+    def service_port(self):
+        return int(self.config_parser.get('store', 'port') if self.config_parser else os.getenv("MQTT_PORT", "1883"))
+
+    @property
+    def queue_prefix(self):
+        return self.config_parser.get('store', 'queue_prefix', fallback='sensors') if self.config_parser else os.getenv("MQTT_PREFIX", "sensors")
 
     @property
     def location_name(self):

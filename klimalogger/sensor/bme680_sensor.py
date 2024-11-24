@@ -4,18 +4,16 @@ import adafruit_bme680
 import busio
 
 from .. import DataBuilder, Config
-from ..calc import PressureCalc, TemperatureCalc
 from ..measurements import Measurements
+from ..calc.pressure import sea_level_pressure
+from ..calc.temperature import dew_point
 
 
 class BME680Sensor:
     name = "BME680"
     priority = 1
 
-    def __init__(self, i2c_bus: busio.I2C, config: Config, temperature_calc: TemperatureCalc,
-                 pressure_calc: PressureCalc):
-        self.temperature_calc = temperature_calc
-        self.pressure_calc = pressure_calc
+    def __init__(self, i2c_bus: busio.I2C, config: Config):
         self.elevation = int(config.elevation)
         self.driver = adafruit_bme680.Adafruit_BME680_I2C(i2c_bus)
         self.driver.set_gas_heater(None, None)
@@ -23,9 +21,9 @@ class BME680Sensor:
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
         temperature = self.driver.temperature
         relative_humidity = self.driver.relative_humidity
-        dew_point = self.temperature_calc.dew_point(temperature, relative_humidity)
+        dew_point = dew_point(temperature, relative_humidity)
         pressure = self.driver.pressure
-        sea_level_pressure = self.pressure_calc.sea_level_pressure(pressure, temperature, self.elevation)
+        sea_level_pressure = sea_level_pressure(pressure, temperature, self.elevation)
         voc_gas = self.driver.gas
 
         data_builder.add(self.name, "temperature", "°C", round(temperature, 2))

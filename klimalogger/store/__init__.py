@@ -14,18 +14,3 @@ def influxdb_store_factory(config: Config):
     else:
         from .influxdb import InfluxDbStore
         return InfluxDbStore(config)
-
-class StoreModule(Module):
-    @provider
-    @singleton
-    def store_provider(self, config: Config) -> StoreClient:
-        log.info("store provider type: %s", config.store_type)
-
-        if config.store_type == "file":
-            from .file import FileStore
-            return FileStore()
-        elif config.store_type == 'queue':
-            from .queue import QueueStore
-            return QueueStore(config)
-        else:
-            return influxdb_store_factory(config)

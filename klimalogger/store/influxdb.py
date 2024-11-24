@@ -11,14 +11,14 @@ log = logging.getLogger(__name__)
 
 class InfluxDbStore(StoreClient):
     @inject
-    def __init__(self, configuration: Config):
+    def __init__(self, config: Config):
         try:
             self.client = InfluxDBClient(
-                host=configuration.service_host,
-                port=configuration.service_port,
-                database=configuration.service_name,
-                username=configuration.service_username,
-                password=configuration.service_password,
+                host=config.service_host,
+                port=config.service_port,
+                database=config.service_name,
+                username=config.service_username,
+                password=config.service_password,
                 timeout=5)
         except Exception as e:
             log.error("could not create client", e)

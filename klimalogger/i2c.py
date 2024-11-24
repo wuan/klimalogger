@@ -28,9 +28,9 @@ class Sensors:
     sensor_map = {
         SCD4xSensor.name: lambda i2c_bus, _: SCD4xSensor(i2c_bus),
         SGP40Sensor.name: lambda i2c_bus, _: SGP40Sensor(i2c_bus),
-        Sht4xSensor.name: lambda i2c_bus, _: Sht4xSensor(i2c_bus, TemperatureCalc()),
-        BMP3xxSensor.name: lambda i2c_bus, config: BMP3xxSensor(i2c_bus, config, PressureCalc()),
-        BME680Sensor.name: lambda i2c_bus, config: BME680Sensor(i2c_bus, config, TemperatureCalc(), PressureCalc()),
+        Sht4xSensor.name: lambda i2c_bus, _: Sht4xSensor(i2c_bus),
+        BMP3xxSensor.name: lambda i2c_bus, config: BMP3xxSensor(i2c_bus, config),
+        BME680Sensor.name: lambda i2c_bus, config: BME680Sensor(i2c_bus, config),
     }
 
     def __init__(self, config: Config, i2c_bus: I2C):

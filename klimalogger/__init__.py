@@ -3,9 +3,9 @@ import time
 
 from injector import singleton, inject, Injector
 
-from .config import ConfigModule, Config
+from .config import Config
 from .data_builder import DataBuilder
-from .measurement import MeasurementDispatcher
+from .measurements import MeasurementDispatcher
 from .sensor import SensorModule
 from .store import StoreClient
 from .store import StoreModule
@@ -32,9 +32,7 @@ def set_parent_logger(logger):
     logger.parent = root_logger
 
 
-@singleton
 class Client:
-    @inject
     def __init__(self, measurement_dispatcher: MeasurementDispatcher,
                  store_client: StoreClient,
                  config: Config):
@@ -81,4 +79,8 @@ class Client:
 
 
 def client():
+    config = Config()
+    i2c_bus = board.STEMMA_I2C()
+    sensors = Sensors(config, i2c_bus)
+
     return INJECTOR.get(Client)

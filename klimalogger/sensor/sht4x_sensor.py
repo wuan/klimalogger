@@ -5,7 +5,7 @@ import adafruit_sht4x
 import busio
 
 from .. import DataBuilder
-from ..calc import TemperatureCalc
+from ..calc.temperature import dew_point
 from ..measurements import Measurements
 
 # log = logging.getLogger(__name__)
@@ -15,10 +15,8 @@ class Sht4xSensor:
     name = "SHT4x"
     priority = 1
 
-    def __init__(self, i2c_bus: busio.I2C, temperature_calc: TemperatureCalc):
+    def __init__(self, i2c_bus: busio.I2C):
         # log.info("init")
-        self.temperature_calc = temperature_calc
-
         self.driver = adafruit_sht4x.SHT4x(i2c_bus)
         print("Found SHT4x with serial number", hex(self.driver.serial_number))
 
@@ -35,7 +33,7 @@ class Sht4xSensor:
 
         if temperature > -40.0:
             try:
-                dew_point = self.temperature_calc.dew_point(temperature, relative_humidity)
+                dew_point = dew_point(temperature, relative_humidity)
                 dew_point = round(dew_point, 2)
             except ValueError:
                 dew_point = None
