@@ -3,7 +3,7 @@ import time
 
 class DataBuilder:
     def __init__(self):
-        self.timestamp = time.time()
+        self.timestamp = round(time.time(),1)
         self.data = []
 
     def add(self, sensor: str, measurement_type: str, measurement_unit: str, measurement_value: float,
