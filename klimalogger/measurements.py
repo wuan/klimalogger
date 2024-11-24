@@ -1,13 +1,12 @@
-import configparser
 import importlib
 import logging
 import time
 from dataclasses import dataclass
 from typing import Optional
 
-from injector import singleton, inject, Injector
 from lazy import lazy
 
+from i2c import Sensors
 from .data_builder import DataBuilder
 
 log = logging.getLogger(__name__)
@@ -20,10 +19,8 @@ class Measurements:
 
 
 class MeasurementDispatcher:
-    def __init__(self, configuration: configparser.ConfigParser, sensor_factory: "SensorFactory"):
-
-        self.sensor_factory = sensor_factory
-        self.sensor_names = [sensor.strip() for sensor in configuration.get('client', 'sensors').split(',')]
+    def __init__(self, sensors: Sensors):
+        self.sensors = sensors
 
     def measure(self) -> DataBuilder:
         log.info("measure()")
@@ -47,18 +44,3 @@ class MeasurementDispatcher:
         sensors = [self.sensor_factory.create_sensor(sensor_name) for sensor_name in self.sensor_names]
         return sorted(sensors, key=lambda entry: entry.priority)
 
-
-@singleton
-class SensorFactory:
-
-    @inject
-    def __init__(self, current_injector: Injector):
-        self.injector = current_injector
-
-    def create_sensor(self, sensor_type: str):
-        try:
-            module = importlib.import_module('klimalogger.sensor.' + sensor_type + '_sensor')
-            log.info("sensor: %s, module: %s", sensor_type, module)
-            return self.injector.get(module.Sensor)
-        except Exception:
-            log.exception("instatiation of sensor %s failed", sensor_type)

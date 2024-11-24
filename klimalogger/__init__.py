@@ -1,18 +1,15 @@
 import logging
 import time
 
-from injector import singleton, inject, Injector
 
+from .i2c import i2c_bus, Sensors
 from .config import Config
 from .data_builder import DataBuilder
 from .measurements import MeasurementDispatcher
 from .sensor import SensorModule
 from .store import StoreClient
-from .store import StoreModule
 from . import logger
 
-INJECTOR = Injector(
-    [StoreModule(), ConfigModule(), SensorModule()])
 
 root_logger = logging.getLogger(__name__)
 root_logger.setLevel(logging.WARN)
@@ -33,10 +30,10 @@ def set_parent_logger(logger):
 
 
 class Client:
-    def __init__(self, measurement_dispatcher: MeasurementDispatcher,
+    def __init__(self, sensors: Sensors,
                  store_client: StoreClient,
                  config: Config):
-        self.measurement_dispatcher = measurement_dispatcher
+        self.sensors = sensors
         self.store_client = store_client
         self.config = config
 
@@ -66,9 +63,7 @@ class Client:
         self.store_data(data, timestamp)
 
     def measure(self):
-        result = self.measurement_dispatcher.measure()
-
-        return result.timestamp, result.data
+        return self.sensors.measure()
 
     def store_data(self, data, timestamp):
         try:
@@ -80,7 +75,9 @@ class Client:
 
 def client():
     config = Config()
-    i2c_bus = board.STEMMA_I2C()
-    sensors = Sensors(config, i2c_bus)
+    i2c_bus = i2c.i2c_bus()
+    sensors = i2c.Sensors(config, i2c_bus)
+    MeasurementDispatcher(sensors)
 
-    return INJECTOR.get(Client)
+    return Client(config, sensors, store_client)
+

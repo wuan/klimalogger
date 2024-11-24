@@ -5,7 +5,6 @@ from typing import Union, List
 
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.exceptions import InfluxDBError
-from injector import inject
 
 from .client import StoreClient
 from ..config import Config
@@ -22,7 +21,6 @@ class BatchingCallback:
 
 
 class InfluxDb2Store(StoreClient):
-    @inject
     def __init__(self, configuration: Config):
         try:
             self.client = InfluxDBClient(

@@ -1,11 +1,9 @@
 # -*- coding: utf8 -*-
 import adafruit_bmp3xx
 import busio
-from setuptools.build_meta import prepare_metadata_for_build_editable
 
 from .. import DataBuilder, Config
 from ..measurements import Measurements
-from ..calc.pressure import sea_level_pressure
 
 
 class BMP3xxSensor:

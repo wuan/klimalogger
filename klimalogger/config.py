@@ -2,6 +2,7 @@ import configparser
 import logging
 import os
 from pathlib import Path
+from typing import Optional
 
 log = logging.getLogger(__name__)
 
@@ -41,6 +42,10 @@ class Config:
         return int(os.getenv("ELEVATION", "0"))
 
     @property
+    def store_org(self) -> Optional[str]:
+        return self.config_parser.get('store', 'org', fallback=None) if self.config_parser else None
+
+    @property
     def device_map(self):
         device_map = os.getenv("DEVICE_MAP", None)
         if device_map is not None:
@@ -50,3 +55,7 @@ class Config:
                 address, name = entry.split("=")
                 device_map[int(address)] = name
         return device_map
+
+    @property
+    def store_type(self):
+        return self.config_parser.get('store', 'type', fallback='direct') if self.config_parser else "queue"

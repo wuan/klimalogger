@@ -1,15 +1,20 @@
 import time
 
+import busio
 from board import I2C
 
 from . import DataBuilder, Config
-from .calc import TemperatureCalc, PressureCalc
 from .measurements import Measurements
 from .sensor.bme680_sensor import BME680Sensor
 from .sensor.bmp3xx_sensor import BMP3xxSensor
 from .sensor.scd4x_sensor import SCD4xSensor
 from .sensor.sgp40_sensor import SGP40Sensor
 from .sensor.sht4x_sensor import Sht4xSensor
+
+
+def i2c_bus(self) -> busio.I2C:
+    import board
+    return busio.I2C(board.SCL, board.SDA, frequency=100000)
 
 
 def scan(i2c_bus: I2C):
@@ -87,4 +92,4 @@ class Sensors:
             end_time = time.monotonic_ns()
             data_builder.add(sensor.name, "time", "ms", (end_time - start_time) / 1e6)
 
-        return data_builder.data
+        return data_builder.timestamp, data_builder.data

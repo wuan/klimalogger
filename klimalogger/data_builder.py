@@ -1,10 +1,11 @@
 import time
+from typing import List, Dict
 
 
 class DataBuilder:
     def __init__(self):
-        self.timestamp = round(time.time(),1)
-        self.data = []
+        self.timestamp = round(time.time(), 1)
+        self.data: List[Dict] = []
 
     def add(self, sensor: str, measurement_type: str, measurement_unit: str, measurement_value: float,
             is_calculated: bool = False):
