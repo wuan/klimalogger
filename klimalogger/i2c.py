@@ -1,7 +1,6 @@
 import time
 
 import busio
-from board import I2C
 
 from . import DataBuilder, Config
 from .measurements import Measurements
@@ -17,7 +16,7 @@ def i2c_bus(self) -> busio.I2C:
     return busio.I2C(board.SCL, board.SDA, frequency=100000)
 
 
-def scan(i2c_bus: I2C):
+def scan(i2c_bus: busio.I2C):
     locked = i2c_bus.try_lock()
 
     if locked:
@@ -43,15 +42,15 @@ class Sensors:
         self.i2c_bus = i2c_bus
         self.sensors = []
 
-        self.device_map = {
+        self.device_by_i2c_address = {
             68: Sht4xSensor.name,
             89: SGP40Sensor.name,
             98: SCD4xSensor.name,
             119: BMP3xxSensor.name,
         }
-        device_map = config.device_map
-        if device_map:
-            self.device_map.update(device_map)
+        device_by_i2c_address = config.device_map
+        if device_by_i2c_address:
+            self.device_by_i2c_address.update(device_by_i2c_address)
 
         self.scan_devices()
 
@@ -59,10 +58,10 @@ class Sensors:
         sensors_in_use = {sensor.name for sensor in self.sensors}
 
         device_addresses = scan(self.i2c_bus)
-        sensors_found = {self.device_map[device_address] for device_address in device_addresses if
-                         device_address in self.device_map}
+        sensors_found = {self.device_by_i2c_address[device_address] for device_address in device_addresses if
+                         device_address in self.device_by_i2c_address}
         unknown_sensors_found = {str(device_address) for device_address in device_addresses if
-                                 device_address not in self.device_map}
+                                 device_address not in self.device_by_i2c_address}
         if unknown_sensors_found:
             print("Could not find sensors for addresses:", ", ".join(unknown_sensors_found))
 

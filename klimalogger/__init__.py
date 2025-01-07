@@ -6,7 +6,6 @@ from .i2c import i2c_bus, Sensors
 from .config import Config
 from .data_builder import DataBuilder
 from .measurements import MeasurementDispatcher
-from .sensor import SensorModule
 from .store import StoreClient
 from . import logger
 

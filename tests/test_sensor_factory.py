@@ -3,9 +3,7 @@ from functools import partial
 import mock
 import pytest
 
-from klimalogger import MeasurementDispatcher, DataBuilder
-from klimalogger.data_builder import DataBuilderFactory
-from klimalogger.measurements import SensorFactory, Measurements
+from measurements import Measurements
 
 
 class TestSensorFactory:
