@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "klimalogger"
-version = "0.7.19"
+version = "0.7.20"
 description = "Simple data logging client for InfluxDB"
 authors = ["Andreas Würl <andi@tryb.de>"]
 license = "Apache-2.0"
@@ -16,10 +16,10 @@ receive-data = "klimalogger.script.receive_data:main"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-influxdb-client = "^1.46.0"
-injector = "^0.22.0"
+influxdb-client = "^1.46"
+injector = "^0.22"
 lazy = "^1.6"
-adafruit-circuitpython-busdevice = "^5.2.10"
+adafruit-circuitpython-busdevice = "^5.2"
 paho-mqtt = "^2.1.0"
 
 [tool.poetry.group.dev.dependencies]
