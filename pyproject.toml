@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "klimalogger"
 version = "0.7.20"
-description = "Simple data logging client for InfluxDB"
+description = "Simple data logging client for InfluxDB/MQTT target"
 authors = ["Andreas Würl <andi@tryb.de>"]
 license = "Apache-2.0"
 readme = "README.rst"
