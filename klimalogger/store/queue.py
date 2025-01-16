@@ -26,11 +26,15 @@ class QueueStore(StoreClient):
             else:
                 log.error("Failed to connect, return code %d", reason_code)
 
+        def on_disconnect(client, userdata, rc):
+            log.warning("Disconnected from MQTT Broker: %d", rc)
+
         try:
             self.client = mqtt_client.Client(client_id=client_id,
                                              callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2)
             # client.username_pw_set(username, password)
             self.client.on_connect = on_connect
+            self.client.on_disconnect = on_disconnect
             log.info("connect to host %s, port %d", configuration.service_host, configuration.service_port)
             self.client.connect(configuration.service_host, configuration.service_port)
             self.client.loop_start()
