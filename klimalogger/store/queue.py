@@ -30,13 +30,22 @@ class QueueStore(StoreClient):
 
         def on_disconnect(client, userdata, rc):
             log.warning("Disconnected from MQTT Broker: %d", rc)
+
+            delay = 5
+            max_delay = 60
+
             while True:
                 try:
                     if not client.reconnect():
+                        log.info("Successful reconnect to MQTT Broker")
                         break
                 except ConnectionRefusedError:
-                    pass
-                time.sleep(5)
+                    log.info("Reconnect to MQTT Broker failed, retry in %d seconds", delay)
+
+                if delay < max_delay:
+                    delay *= 2 + secrets.randbelow(5)
+
+                time.sleep(delay)
 
         try:
             self.client = mqtt_client.Client(client_id=client_id, clean_session=False, callback_api_version = CallbackAPIVersion.VERSION2)
