@@ -1,10 +1,12 @@
 import json
 import logging
 import secrets
+import time
 from typing import List
 
 from injector import inject
 from paho.mqtt import client as mqtt_client
+from paho.mqtt.enums import CallbackAPIVersion
 
 from .client import StoreClient
 from .. import config
@@ -28,10 +30,16 @@ class QueueStore(StoreClient):
 
         def on_disconnect(client, userdata, rc):
             log.warning("Disconnected from MQTT Broker: %d", rc)
+            while True:
+                try:
+                    if not client.reconnect():
+                        break
+                except ConnectionRefusedError:
+                    pass
+                time.sleep(5)
 
         try:
-            self.client = mqtt_client.Client(client_id=client_id,
-                                             callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2)
+            self.client = mqtt_client.Client(client_id=client_id, clean_session=False, callback_api_version = CallbackAPIVersion.VERSION2)
             # client.username_pw_set(username, password)
             self.client.on_connect = on_connect
             self.client.on_disconnect = on_disconnect
