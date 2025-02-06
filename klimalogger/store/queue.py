@@ -28,8 +28,8 @@ class QueueStore(StoreClient):
             else:
                 log.error("Failed to connect, return code %d", reason_code)
 
-        def on_disconnect(client, userdata, rc):
-            log.warning("Disconnected from MQTT Broker: %d", rc)
+        def on_disconnect(client, userdata, reason_code, properties):
+            log.warning("Disconnected from MQTT Broker: %d", reason_code)
 
             delay = 5
             max_delay = 60
