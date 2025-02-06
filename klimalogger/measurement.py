@@ -26,7 +26,7 @@ class MeasurementDispatcher:
                  data_builder_factory: DataBuilderFactory):
         self.sensor_factory = sensor_factory
         self.data_builder_factory = data_builder_factory
-        self.sensor_names = [sensor.strip() for sensor in configuration.get('client', 'sensors').split(',')]
+        self.sensor_names = [sensor.strip() for sensor in configuration.get('client', 'sensors').split(',') if sensor.strip() != ""]
 
     def measure(self) -> DataBuilder:
         log.info("measure()")
