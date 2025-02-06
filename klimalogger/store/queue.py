@@ -1,7 +1,6 @@
 import json
 import logging
 import secrets
-import time
 from typing import List
 
 from injector import inject
@@ -31,24 +30,9 @@ class QueueStore(StoreClient):
         def on_disconnect(client, userdata, flags, reason_code, properties):
             log.warning(f"Disconnected from MQTT Broker: {reason_code}")
 
-            delay = 5
-            max_delay = 60
-
-            while True:
-                try:
-                    if not client.reconnect():
-                        log.info("Successful reconnect to MQTT Broker")
-                        break
-                except ConnectionRefusedError:
-                    log.info("Reconnect to MQTT Broker failed, retry in %d seconds", delay)
-
-                if delay < max_delay:
-                    delay *= 2 + secrets.randbelow(5)
-
-                time.sleep(delay)
-
         try:
-            self.client = mqtt_client.Client(client_id=client_id, clean_session=False, callback_api_version = CallbackAPIVersion.VERSION2)
+            self.client = mqtt_client.Client(client_id=client_id, clean_session=False,
+                                             callback_api_version=CallbackAPIVersion.VERSION2)
             # client.username_pw_set(username, password)
             self.client.on_connect = on_connect
             self.client.on_disconnect = on_disconnect
@@ -68,7 +52,10 @@ class QueueStore(StoreClient):
 
             if not self.client.is_connected():
                 log.warning("client not connected, try to reconnect")
-                self.client.reconnect()
+                try:
+                    self.client.reconnect()
+                except Exception:
+                    log.warning("reconnect failed")
 
             for entry in data:
                 topic, json_message = self.map_entry(entry)
