@@ -65,7 +65,11 @@ class QueueStore(StoreClient):
 
     def store(self, data: List[dict]):
         if self.client:
-            topic = "klimalogger"
+
+            if not self.client.is_connected():
+                log.warning("client not connected, try to reconnect")
+                self.client.reconnect()
+
             for entry in data:
                 topic, json_message = self.map_entry(entry)
                 message = json.dumps(json_message)
