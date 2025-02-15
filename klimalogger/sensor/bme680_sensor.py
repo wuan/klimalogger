@@ -5,9 +5,7 @@ import busio
 
 from .. import DataBuilder, Config
 from ..measurements import Measurements
-from ..calc.pressure import sea_level_pressure
-from ..calc.temperature import dew_point
-
+from .. import calc
 
 class BME680Sensor:
     name = "BME680"
@@ -21,9 +19,9 @@ class BME680Sensor:
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
         temperature = self.driver.temperature
         relative_humidity = self.driver.relative_humidity
-        dew_point = dew_point(temperature, relative_humidity)
+        dew_point = calc.dew_point(temperature, relative_humidity)
         pressure = self.driver.pressure
-        sea_level_pressure = sea_level_pressure(pressure, temperature, self.elevation)
+        sea_level_pressure = calc.sea_level_pressure(pressure, temperature, self.elevation)
         voc_gas = self.driver.gas
 
         data_builder.add(self.name, "temperature", "°C", round(temperature, 2))

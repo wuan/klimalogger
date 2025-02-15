@@ -4,7 +4,7 @@ import busio
 
 from .. import DataBuilder, Config
 from ..measurements import Measurements
-
+from .. import calc
 
 class BMP3xxSensor:
     name = "BMP3xx"
@@ -18,7 +18,7 @@ class BMP3xxSensor:
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
         temperature = self.driver.temperature
         pressure = self.driver.pressure
-        sea_level_pressure = sea_level_pressure(pressure, temperature, self.elevation)
+        sea_level_pressure = calc.sea_level_pressure(pressure, temperature, self.elevation)
 
         data_builder.add(self.name, "pressure", "hPa", round(pressure, 2))
         data_builder.add(self.name, "sea level pressure", "hPa", round(sea_level_pressure, 2), is_calculated=True)

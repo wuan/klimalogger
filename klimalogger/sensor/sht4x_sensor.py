@@ -5,7 +5,7 @@ import adafruit_sht4x
 import busio
 
 from .. import DataBuilder
-from ..calc.temperature import dew_point
+from .. import calc
 from ..measurements import Measurements
 
 # log = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ class Sht4xSensor:
 
         if temperature > -40.0:
             try:
-                dew_point = dew_point(temperature, relative_humidity)
+                dew_point = calc.dew_point(temperature, relative_humidity)
                 dew_point = round(dew_point, 2)
             except ValueError:
                 dew_point = None
