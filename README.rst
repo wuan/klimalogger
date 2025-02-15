@@ -13,6 +13,9 @@
 .. image:: https://sonarcloud.io/api/project_badges/measure?project=wuan_klimalogger&metric=duplicated_lines_density
     :alt: Duplicated lines
     :target: https://sonarcloud.io/project/overview?id=wuan_klimalogger
+.. image:: https://api.scorecard.dev/projects/github.com/wuan/bo-android/badge
+    :alt: OpenSSF Scorecard
+    :target: https://scorecard.dev/viewer/?uri=github.com/wuan/bo-android
 
 Simple python client for logging measured climate data to InfluxDb.
 

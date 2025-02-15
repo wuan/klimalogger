@@ -5,6 +5,7 @@ from typing import List
 
 from injector import inject
 from paho.mqtt import client as mqtt_client
+from paho.mqtt.enums import CallbackAPIVersion
 
 from .client import StoreClient
 from .. import config
@@ -26,11 +27,15 @@ class QueueStore(StoreClient):
             else:
                 log.error("Failed to connect, return code %d", reason_code)
 
+        def on_disconnect(client, userdata, flags, reason_code, properties):
+            log.warning(f"Disconnected from MQTT Broker: {reason_code}")
+
         try:
-            self.client = mqtt_client.Client(client_id=client_id,
-                                             callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2)
+            self.client = mqtt_client.Client(client_id=client_id, clean_session=False,
+                                             callback_api_version=CallbackAPIVersion.VERSION2)
             # client.username_pw_set(username, password)
             self.client.on_connect = on_connect
+            self.client.on_disconnect = on_disconnect
             log.info("connect to host %s, port %d", configuration.service_host, configuration.service_port)
             self.client.connect(configuration.service_host, configuration.service_port)
             self.client.loop_start()
@@ -44,7 +49,14 @@ class QueueStore(StoreClient):
 
     def store(self, data: List[dict]):
         if self.client:
-            topic = "klimalogger"
+
+            if not self.client.is_connected():
+                log.warning("client not connected, try to reconnect")
+                try:
+                    self.client.reconnect()
+                except Exception:
+                    log.warning("reconnect failed")
+
             for entry in data:
                 topic, json_message = self.map_entry(entry)
                 message = json.dumps(json_message)

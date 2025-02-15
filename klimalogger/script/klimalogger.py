@@ -3,6 +3,7 @@
 
 import argparse
 import logging
+from importlib.metadata import metadata
 
 import klimalogger
 
@@ -22,19 +23,19 @@ def main():
     elif args.verbose:
         klimalogger.set_log_level(logging.INFO)
 
-    client = klimalogger.client()
     try:
         if args.version:
-            import pkg_resources
-            package_version = pkg_resources.get_distribution('klimalogger').version
-            print(f"Version {package_version}")
-        if args.check:
-            print(client.measure())
+            import importlib.metadata
+            print(f"Version {metadata('klimalogger')['Version']}")
         else:
-            if args.service:
-                client.measure_and_store_periodically()
+            client = klimalogger.client()
+            if args.check:
+                print(client.measure())
             else:
-                client.measure_and_store()
+                if args.service:
+                    client.measure_and_store_periodically()
+                else:
+                    client.measure_and_store()
     except Exception as e:
         print("Error", e)
         return 10

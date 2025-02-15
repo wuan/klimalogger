@@ -3,7 +3,6 @@ from functools import partial
 import mock
 import pytest
 
-from measurements import Measurements
 
 
 class TestSensorFactory:

@@ -69,7 +69,7 @@ class Client:
             self.store_client.store(data)
             log.info("stored data")
         except Exception as e:
-            log.error("error during data transmission: create local log entry", e)
+            log.error("error during data transmission: create local log entry", exc_info=e)
 
 
 def client():
