@@ -1,17 +1,11 @@
-import datetime
 import time
-
-from injector import singleton, inject
-
-from .config import Config
+from typing import List, Dict
 
 
 class DataBuilder:
-    def __init__(self, configuration: Config):
-        self.location = configuration.client_location_name
-        self.host_name = configuration.client_host_name
-        self.timestamp = round(time.time(),1)
-        self.data = []
+    def __init__(self):
+        self.timestamp = round(time.time(), 1)
+        self.data: List[Dict] = []
 
     def add(self, sensor: str, measurement_type: str, measurement_unit: str, measurement_value: float,
             is_calculated: bool = False):
@@ -23,8 +17,6 @@ class DataBuilder:
         return {
             "measurement": "data",
             "tags": {
-                "host": self.host_name,
-                "location": self.location,
                 "type": measurement_type,
                 "unit": measurement_unit,
                 "sensor": sensor,
@@ -37,12 +29,19 @@ class DataBuilder:
         }
 
 
-@singleton
-class DataBuilderFactory:
-
-    @inject
-    def __init__(self, config: Config):
-        self.config = config
-
-    def get(self) -> DataBuilder:
-        return DataBuilder(self.config)
+def map_entry(mqtt_prefix, entry):
+    timestamp = entry["time"]
+    value = entry["fields"]["value"]
+    tags = entry["tags"]
+    measurement_type = tags["type"]
+    unit = tags["unit"]
+    sensor = tags["sensor"]
+    topic = f"{mqtt_prefix}/{measurement_type}"
+    print(f"{topic}: {value} {unit} ({sensor})")
+    return (topic, {
+        "time": timestamp,
+        "value": value,
+        "unit": unit,
+        "sensor": sensor,
+        "calculated": tags["calculated"]
+    })
