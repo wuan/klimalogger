@@ -6,7 +6,7 @@ from typing import Optional
 
 from lazy import lazy
 
-from i2c import Sensors
+from .i2c import Sensors
 from .data_builder import DataBuilder
 
 log = logging.getLogger(__name__)
