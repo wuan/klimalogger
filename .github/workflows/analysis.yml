@@ -1,4 +1,4 @@
-name: Build
+name: Analysis
 
 on:
   workflow_dispatch:
@@ -12,11 +12,11 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  analysis:
+    name: Sonar Analysis
     permissions:
       contents: read  # for actions/checkout to fetch code
       pull-requests: read  # for SonarSource/sonarcloud-github-action to determine which PR to decorate
-    name: Sonar Analysis
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
