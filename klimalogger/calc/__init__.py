@@ -1,2 +1,2 @@
-from .pressure import PressureCalc
-from .temperature import TemperatureCalc
+from .temperature import dew_point
+from .pressure import sea_level_pressure

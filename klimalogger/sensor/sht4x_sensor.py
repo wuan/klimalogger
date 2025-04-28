@@ -1,28 +1,29 @@
 # -*- coding: utf8 -*-
-import logging
+#import logging
 
 import adafruit_sht4x
 import busio
-from injector import singleton, inject
 
 from .. import DataBuilder
-from ..calc import TemperatureCalc
-from ..measurement import Measurements
+from .. import calc
+from ..measurements import Measurements
 
-log = logging.getLogger(__name__)
+# log = logging.getLogger(__name__)
 
-@singleton
-class Sensor:
+
+class Sht4xSensor:
     name = "SHT4x"
     priority = 1
 
-    @inject
-    def __init__(self, i2c_bus: busio.I2C, temperature_calc: TemperatureCalc):
-        log.info("init")
-        self.temperature_calc = temperature_calc
-
+    def __init__(self, i2c_bus: busio.I2C):
+        # log.info("init")
         self.driver = adafruit_sht4x.SHT4x(i2c_bus)
+        print("Found SHT4x with serial number", hex(self.driver.serial_number))
 
+        self.driver.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
+        # Can also set the mode to enable heater
+        # sht.mode = adafruit_sht4x.Mode.LOWHEAT_100MS
+        print("Current mode is: ", adafruit_sht4x.Mode.string[self.driver.mode])
         # self.sensor.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
         # Can also set the mode to enable heater
         # sht.mode = adafruit_sht4x.Mode.LOWHEAT_100MS
@@ -32,7 +33,7 @@ class Sensor:
 
         if temperature > -40.0:
             try:
-                dew_point = self.temperature_calc.dew_point(temperature, relative_humidity)
+                dew_point = calc.dew_point(temperature, relative_humidity)
                 dew_point = round(dew_point, 2)
             except ValueError:
                 dew_point = None
