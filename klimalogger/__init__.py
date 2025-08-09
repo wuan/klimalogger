@@ -7,11 +7,11 @@ from .config import ConfigModule, Config
 from .data_builder import DataBuilder
 from .measurement import MeasurementDispatcher
 from .sensor import SensorModule
-from .store import StoreModule, StoreClient
+from .store.queue import QueueStore
 from . import logger
 
 INJECTOR = Injector(
-    [StoreModule(), ConfigModule(), SensorModule()])
+    [ConfigModule(), SensorModule()])
 
 root_logger = logging.getLogger(__name__)
 root_logger.setLevel(logging.WARN)
@@ -35,7 +35,7 @@ def set_parent_logger(logger):
 class Client:
     @inject
     def __init__(self, measurement_dispatcher: MeasurementDispatcher,
-                 store_client: StoreClient,
+                 store_client: QueueStore,
                  config: Config):
         self.measurement_dispatcher = measurement_dispatcher
         self.store_client = store_client
