@@ -1,16 +1,10 @@
 import datetime
 import time
 
-from injector import singleton, inject
-
-from .config import Config
-
 
 class DataBuilder:
-    def __init__(self, configuration: Config):
-        self.location = configuration.client_location_name
-        self.host_name = configuration.client_host_name
-        self.timestamp = round(time.time(),1)
+    def __init__(self):
+        self.timestamp = round(time.time(), 1)
         self.data = []
 
     def add(self, sensor: str, measurement_type: str, measurement_unit: str, measurement_value: float,
@@ -23,8 +17,6 @@ class DataBuilder:
         return {
             "measurement": "data",
             "tags": {
-                "host": self.host_name,
-                "location": self.location,
                 "type": measurement_type,
                 "unit": measurement_unit,
                 "sensor": sensor,
@@ -35,14 +27,3 @@ class DataBuilder:
                 "value": measurement_value
             }
         }
-
-
-@singleton
-class DataBuilderFactory:
-
-    @inject
-    def __init__(self, config: Config):
-        self.config = config
-
-    def get(self) -> DataBuilder:
-        return DataBuilder(self.config)
