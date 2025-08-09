@@ -3,12 +3,12 @@ import os
 from datetime import datetime
 from typing import List
 
-from .client import StoreClient
+# StoreClient removed; simple concrete store implementation
 
 log = logging.getLogger(__name__)
 
 
-class FileStore(StoreClient):
+class FileStore:
     target_folder = "/var/lib/klimalogger/data"
 
     def store(self, data: List[dict]):

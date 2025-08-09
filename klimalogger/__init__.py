@@ -7,8 +7,7 @@ from .config import ConfigModule, Config
 from .data_builder import DataBuilder
 from .measurement import MeasurementDispatcher
 from .sensor import SensorModule
-from .store import StoreClient
-from .store import StoreModule
+from .store import StoreModule, StoreClient
 from . import logger
 
 INJECTOR = Injector(
