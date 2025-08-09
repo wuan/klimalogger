@@ -25,7 +25,7 @@ class Config:
 
     @lazy
     def store_type(self) -> str:
-        return self.config_parser.get('store', 'type', fallback='direct')
+        return self.config_parser.get('store', 'type', fallback='queue')
 
     @lazy
     def store_org(self) -> str:

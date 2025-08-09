@@ -7,14 +7,6 @@ from ..config import Config
 
 log = logging.getLogger(__name__)
 
-def influxdb_store_factory(config: Config):
-    if config.store_org is not None:
-        from .influxdb2 import InfluxDb2Store
-        return InfluxDb2Store(config)
-    else:
-        from .influxdb import InfluxDbStore
-        return InfluxDbStore(config)
-
 class StoreModule(Module):
     @provider
     @singleton
@@ -28,4 +20,4 @@ class StoreModule(Module):
             from .queue import QueueStore
             return QueueStore(config)
         else:
-            return influxdb_store_factory(config)
+            raise RuntimeError(f"Unsupported store type: {config.store_type}. Supported types: 'file', 'queue'.")
