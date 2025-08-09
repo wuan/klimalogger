@@ -1,6 +1,5 @@
 # -*- coding: utf8 -*-
 import busio
-from injector import singleton, inject
 
 from .. import DataBuilder
 from ..calc import PressureCalc
@@ -14,12 +13,10 @@ except ImportError:
 import adafruit_bmp3xx
 
 
-@singleton
 class Sensor:
     name = "BMP3xx"
     priority = 2
 
-    @inject
     def __init__(self, i2c_bus: busio.I2C, config_parser: configparser.ConfigParser, pressure_calc: PressureCalc):
         self.pressure_calc = pressure_calc
         self.elevation = int(config_parser.get('bmp3xx_sensor', 'elevation'))

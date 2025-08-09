@@ -2,13 +2,16 @@ import configparser
 import importlib
 import logging
 import time
+import inspect
 from dataclasses import dataclass
 from typing import Optional
 
-from injector import singleton, inject, Injector
 from lazy import lazy
 
 from .data_builder import DataBuilder
+from .calc import TemperatureCalc, PressureCalc
+from .config import load_config_parser
+from .sensor import create_i2c_bus
 
 log = logging.getLogger(__name__)
 
@@ -19,9 +22,7 @@ class Measurements:
     relative_humidity: Optional[float] = None
 
 
-@singleton
 class MeasurementDispatcher:
-    @inject
     def __init__(self, configuration: configparser.ConfigParser, sensor_factory: "SensorFactory"):
         self.sensor_factory = sensor_factory
         self.sensor_names = [sensor.strip() for sensor in configuration.get('client', 'sensors').split(',') if sensor.strip() != ""]
@@ -49,17 +50,37 @@ class MeasurementDispatcher:
         return sorted(sensors, key=lambda entry: entry.priority)
 
 
-@singleton
 class SensorFactory:
 
-    @inject
-    def __init__(self, current_injector: Injector):
-        self.injector = current_injector
+    def __init__(self, configuration: configparser.ConfigParser):
+        self._config_parser = configuration
+        self._i2c_bus = None
+        self._temperature_calc = TemperatureCalc()
+        self._pressure_calc = PressureCalc()
+
+    def _deps(self):
+        # Lazy create i2c bus
+        if self._i2c_bus is None:
+            try:
+                self._i2c_bus = create_i2c_bus()
+            except Exception:
+                log.exception("Failed to create I2C bus")
+                self._i2c_bus = None
+        return {
+            'i2c_bus': self._i2c_bus,
+            'config_parser': self._config_parser,
+            'temperature_calc': self._temperature_calc,
+            'pressure_calc': self._pressure_calc,
+        }
 
     def create_sensor(self, sensor_type: str):
         try:
             module = importlib.import_module('klimalogger.sensor.' + sensor_type + '_sensor')
             log.info("sensor: %s, module: %s", sensor_type, module)
-            return self.injector.get(module.Sensor)
+            SensorCls = module.Sensor
+            sig = inspect.signature(SensorCls.__init__)
+            deps = self._deps()
+            kwargs = {name: value for name, value in deps.items() if name in sig.parameters}
+            return SensorCls(**kwargs)
         except Exception:
             log.exception("instatiation of sensor %s failed", sensor_type)

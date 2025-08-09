@@ -3,7 +3,6 @@ import logging
 import secrets
 from typing import List
 
-from injector import inject
 from paho.mqtt import client as mqtt_client
 from paho.mqtt.enums import CallbackAPIVersion
 
@@ -14,7 +13,6 @@ log = logging.getLogger(__name__)
 
 
 class QueueStore:
-    @inject
     def __init__(self, configuration: config.Config):
         self.qos = configuration.queue_qos
         self.mqtt_prefix = configuration.queue_prefix

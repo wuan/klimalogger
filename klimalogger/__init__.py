@@ -1,17 +1,11 @@
 import logging
 import time
 
-from injector import singleton, inject, Injector
-
-from .config import ConfigModule, Config
 from .data_builder import DataBuilder
-from .measurement import MeasurementDispatcher
-from .sensor import SensorModule
+from .config import Config, load_config_parser
+from .measurement import MeasurementDispatcher, SensorFactory
 from .store.queue import QueueStore
 from . import logger
-
-INJECTOR = Injector(
-    [ConfigModule(), SensorModule()])
 
 root_logger = logging.getLogger(__name__)
 root_logger.setLevel(logging.WARN)
@@ -31,9 +25,7 @@ def set_parent_logger(logger):
     logger.parent = root_logger
 
 
-@singleton
 class Client:
-    @inject
     def __init__(self, measurement_dispatcher: MeasurementDispatcher,
                  store_client: QueueStore,
                  config: Config):
@@ -80,4 +72,10 @@ class Client:
 
 
 def client():
-    return INJECTOR.get(Client)
+    # Manual wiring instead of Injector
+    config_parser = load_config_parser()
+    cfg = Config(config_parser)
+    sensor_factory = SensorFactory(config_parser)
+    measurement_dispatcher = MeasurementDispatcher(config_parser, sensor_factory)
+    store = QueueStore(cfg)
+    return Client(measurement_dispatcher, store, cfg)
