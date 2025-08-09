@@ -4,7 +4,6 @@ import mock
 import pytest
 
 from klimalogger import MeasurementDispatcher, DataBuilder
-from klimalogger.data_builder import DataBuilderFactory
 from klimalogger.measurement import SensorFactory, Measurements
 
 
@@ -53,13 +52,24 @@ class TestSensorFactory:
         sensor_factory.create_sensor.side_effect = load_module
 
 
-
-        data_builder_factory = mock.Mock(spec=DataBuilderFactory)
-        uut = MeasurementDispatcher(configuration, sensor_factory, data_builder_factory)
+        uut = MeasurementDispatcher(configuration, sensor_factory)
 
         uut.measure()
 
         assert len(calls) == 3
-        assert calls[0] == ("baz", mock.call(data_builder_factory.get(), Measurements()))
-        assert calls[1] == ("foo", mock.call(data_builder_factory.get(), Measurements()))
-        assert calls[2] == ("bar", mock.call(data_builder_factory.get(), Measurements()))
+        # Ensure order by priority: baz (1), foo (2), bar (3)
+        assert calls[0][0] == "baz"
+        assert calls[1][0] == "foo"
+        assert calls[2][0] == "bar"
+
+        # All sensors should receive the same DataBuilder instance
+        db0 = calls[0][1].args[0]
+        db1 = calls[1][1].args[0]
+        db2 = calls[2][1].args[0]
+        assert isinstance(db0, DataBuilder)
+        assert db0 is db1 is db2
+
+        # And a default Measurements instance
+        assert calls[0][1].args[1] == Measurements()
+        assert calls[1][1].args[1] == Measurements()
+        assert calls[2][1].args[1] == Measurements()

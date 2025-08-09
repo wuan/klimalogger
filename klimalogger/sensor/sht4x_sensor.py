@@ -3,7 +3,6 @@ import logging
 
 import adafruit_sht4x
 import busio
-from injector import singleton, inject
 
 from .. import DataBuilder
 from ..calc import TemperatureCalc
@@ -11,12 +10,10 @@ from ..measurement import Measurements
 
 log = logging.getLogger(__name__)
 
-@singleton
 class Sensor:
     name = "SHT4x"
     priority = 1
 
-    @inject
     def __init__(self, i2c_bus: busio.I2C, temperature_calc: TemperatureCalc):
         log.info("init")
         self.temperature_calc = temperature_calc

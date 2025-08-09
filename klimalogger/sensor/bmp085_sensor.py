@@ -1,8 +1,5 @@
 # -*- coding: utf8 -*-
 
-
-from injector import singleton, inject
-
 from klimalogger import DataBuilder
 from klimalogger.measurement import Measurements
 
@@ -14,12 +11,10 @@ except ImportError:
 from Adafruit_BMP.BMP085 import BMP085
 
 
-@singleton
 class Sensor:
     name = "BMP085"
     priority = 2
 
-    @inject
     def __init__(self, config_parser: configparser.ConfigParser):
         self.elevation = int(config_parser.get('bmp085_sensor', 'elevation'))
 

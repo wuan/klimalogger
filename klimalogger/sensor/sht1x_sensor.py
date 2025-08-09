@@ -1,7 +1,5 @@
 # -*- coding: utf8 -*-
 
-from injector import singleton, inject
-
 from .. import DataBuilder
 from ..measurement import Measurements
 
@@ -13,12 +11,10 @@ except ImportError:
 from sht1x.Sht1x import Sht1x as SHT1x
 
 
-@singleton
 class Sensor:
     name = "SHT1x"
     priority = 1
 
-    @inject
     def __init__(self, config_parser: configparser.ConfigParser):
         data_pin = int(config_parser.get('sht1x_sensor', 'data_pin'))
         sck_pin = int(config_parser.get('sht1x_sensor', 'sck_pin'))
