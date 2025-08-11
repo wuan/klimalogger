@@ -22,4 +22,5 @@ class Sensor:
                     relative_humidity=measurements.relative_humidity
                 )))
         else:
-            data_builder.add(self.name, "raw gas", "", float(self.driver.raw))
+            value = self.driver.raw
+            data_builder.add(self.name, "raw gas", "", float(value))

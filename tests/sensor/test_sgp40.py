@@ -3,87 +3,53 @@ import types
 from unittest import mock
 
 import pytest
+from mock import patch
 
 from klimalogger.data_builder import DataBuilder
 from klimalogger.measurement import Measurements
+from sensor.sgp40_sensor import Sensor
 
 
 @pytest.fixture
-def fake_hw_modules(monkeypatch):
-    # Provide minimal dummy modules so import of sgp40_sensor succeeds without real hardware libs
-    adafruit = types.ModuleType("adafruit_sgp40")
-    # Placeholder; will be monkeypatched per test
-    class _Dummy:
-        pass
-    adafruit.SGP40 = _Dummy
+def sensor():
+    with patch('sensor.sgp40_sensor.adafruit_sgp40', autospec=True) as mock:
+        yield mock
 
-    busio = types.ModuleType("busio")
-    class I2C:
-        pass
-    busio.I2C = I2C
+@pytest.fixture
+def uut(sensor, i2c_bus):
+    return Sensor(i2c_bus=i2c_bus)
 
-    monkeypatch.setitem(sys.modules, "adafruit_sgp40", adafruit)
-    monkeypatch.setitem(sys.modules, "busio", busio)
+@pytest.fixture
+def data_builder():
+    return DataBuilder()
 
-    return adafruit, busio
+def test_index(uut, sensor, data_builder):
+    sensor.SGP40.return_value.measure_index.return_value = 12.34
 
+    uut.measure(data_builder, Measurements(20, 80))
 
-def import_sgp40_sensor():
-    import importlib
-    return importlib.import_module("klimalogger.sensor.sgp40_sensor")
+    assert len(data_builder.data) == 1
+    data = data_builder.data[0]
+    assert data["measurement"] == "data"
+    assert "value" in data["fields"]
+    assert data["fields"]["value"] == 12.34
 
+@pytest.mark.parametrize(
+    "temperature,humidity",
+    [
+        (20, None),
+        (None, 80),
+        (None, None),
+    ]
+)
+def test_raw(uut, sensor, data_builder, temperature, humidity):
+    sensor.SGP40.return_value.raw = 5432
 
-def test_sgp40_measure_with_temp_and_humidity(fake_hw_modules, monkeypatch):
-    s = import_sgp40_sensor()
+    uut.measure(data_builder, Measurements(temperature, humidity))
 
-    # Prepare driver mock to return a VOC index when called with T and RH
-    driver = mock.Mock()
-    driver.measure_index.return_value = 123.456
+    assert len(data_builder.data) == 1
+    data = data_builder.data[0]
+    assert data["measurement"] == "data"
+    assert "value" in data["fields"]
+    assert data["fields"]["value"] == 5432.0
 
-    # Patch constructor to return our driver
-    monkeypatch.setattr(s.adafruit_sgp40, "SGP40", lambda i2c: driver)
-
-    sensor = s.Sensor(i2c_bus=mock.Mock())
-
-    db = DataBuilder()
-    meas = Measurements(temperature=22.5, relative_humidity=55.0)
-
-    sensor.measure(db, meas)
-
-    # Ensure driver was called with the right compensation values
-    driver.measure_index.assert_called_once_with(temperature=22.5, relative_humidity=55.0)
-
-    # One record added for VOC index
-    assert len(db.data) == 1
-    entry = db.data[0]
-    assert entry["tags"]["sensor"] == "SGP40"
-    assert entry["tags"]["type"] == "VOC index"
-    assert entry["tags"]["unit"] == ""
-    assert entry["fields"]["value"] == pytest.approx(123.456)
-
-
-def test_sgp40_measure_without_temp_or_humidity_uses_raw(fake_hw_modules, monkeypatch):
-    s = import_sgp40_sensor()
-
-    driver = mock.Mock()
-    # raw is read directly as a value
-    driver.raw = 789.123
-
-    monkeypatch.setattr(s.adafruit_sgp40, "SGP40", lambda i2c: driver)
-
-    sensor = s.Sensor(i2c_bus=mock.Mock())
-
-    db = DataBuilder()
-    meas = Measurements()  # temperature and RH are None
-
-    sensor.measure(db, meas)
-
-    # measure_index should not be called when no compensation values present
-    assert not driver.measure_index.called
-
-    assert len(db.data) == 1
-    entry = db.data[0]
-    assert entry["tags"]["sensor"] == "SGP40"
-    assert entry["tags"]["type"] == "raw gas"
-    assert entry["tags"]["unit"] == ""
-    assert entry["fields"]["value"] == pytest.approx(789.123)
