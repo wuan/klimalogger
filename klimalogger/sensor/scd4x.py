@@ -20,7 +20,7 @@ class Sensor:
     def __del__(self):
         self.driver.stop_periodic_measurement()
 
-    def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
+    def measure(self, data_builder: DataBuilder, _: Measurements) -> None:
 
         while True:
             CO2 = self.driver.CO2
