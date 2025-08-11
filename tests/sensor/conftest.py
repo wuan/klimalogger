@@ -16,3 +16,12 @@ def data_builder():
 @pytest.fixture
 def measurements():
     return Measurements()
+
+@pytest.fixture
+def temp_calc():
+    return mock.Mock(name="TemperatureCalc")
+
+
+@pytest.fixture
+def pressure_calc():
+    return mock.Mock(name="PressureCalc")

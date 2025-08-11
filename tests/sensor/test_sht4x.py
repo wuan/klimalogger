@@ -4,24 +4,18 @@ import pytest
 from mock import patch
 
 from klimalogger.measurement import Measurements
-from klimalogger.sensor.sht4x_sensor import Sensor
+from klimalogger.sensor.sht4x import Sensor
 
 
 @pytest.fixture
 def sensor():
-    with patch('klimalogger.sensor.sht4x_sensor.adafruit_sht4x', autospec=True) as mock_module:
+    with patch('klimalogger.sensor.sht4x.adafruit_sht4x', autospec=True) as mock_module:
         yield mock_module
-
-
-@pytest.fixture
-def temp_calc():
-    return mock.Mock(name="TemperatureCalcMock")
 
 
 @pytest.fixture
 def uut(sensor, i2c_bus, temp_calc):
     return Sensor(i2c_bus=i2c_bus, temperature_calc=temp_calc)
-
 
 
 def test_measure_success(uut, sensor, data_builder, temp_calc, measurements):
@@ -54,6 +48,7 @@ def test_measure_success(uut, sensor, data_builder, temp_calc, measurements):
         mock.call(measured_temperature, measured_relative_humidity)
     ]
 
+
 def test_measure_success_failed_dew_point(uut, sensor, data_builder, temp_calc, measurements):
     measured_temperature = 21.234
     measured_relative_humidity = 45.678
@@ -76,6 +71,7 @@ def test_measure_success_failed_dew_point(uut, sensor, data_builder, temp_calc, 
     assert temp_calc.dew_point.call_args_list == [
         mock.call(measured_temperature, measured_relative_humidity)
     ]
+
 
 def test_ignores_invalid_temperature(uut, sensor, data_builder):
     # Temperature below -40 should be treated as invalid leading to no data

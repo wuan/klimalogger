@@ -56,14 +56,14 @@ class Client:
         log.info("measure_and_store()", )
         (timestamp, data) = self.measure()
 
-        self.store_data(data, timestamp)
+        self.store_data(data)
 
     def measure(self):
         result = self.measurement_dispatcher.measure()
 
         return result.timestamp, result.data
 
-    def store_data(self, data, timestamp):
+    def store_data(self, data):
         try:
             self.store_client.store(data)
             log.info("stored data")

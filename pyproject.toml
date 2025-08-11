@@ -22,6 +22,10 @@ adafruit-circuitpython-busdevice = "^5.2"
 paho-mqtt = "^2.1.0"
 adafruit-circuitpython-sht4x = "^1.0.24"
 adafruit-circuitpython-sgp40 = "^1.3.21"
+adafruit-circuitpython-bme680 = "^3.7.13"
+adafruit-circuitpython-bmp3xx = "^1.3.24"
+adafruit-circuitpython-sgp30 = "^3.0.13"
+adafruit-circuitpython-scd4x = "^1.4.8"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"

@@ -30,8 +30,6 @@ Additional dependencies
      - Command
    * - BME680
      - ``pip3 install adafruit-circuitpython-bme680``
-   * - BMP085
-     - ``pip3 install Adafruit_BMP``
    * - BMP3xx
      - ``pip3 install adafruit-circuitpython-bmp3xx``
    * - SGP30

@@ -77,10 +77,10 @@ class SensorFactory:
         try:
             module = importlib.import_module('klimalogger.sensor.' + sensor_type + '_sensor')
             log.info("sensor: %s, module: %s", sensor_type, module)
-            SensorCls = module.Sensor
-            sig = inspect.signature(SensorCls.__init__)
+            sensor_class = module.Sensor
+            sig = inspect.signature(sensor_class.__init__)
             deps = self._deps()
             kwargs = {name: value for name, value in deps.items() if name in sig.parameters}
-            return SensorCls(**kwargs)
+            return sensor_class(**kwargs)
         except Exception:
             log.exception("instatiation of sensor %s failed", sensor_type)
