@@ -72,6 +72,22 @@ Adafruit-Circuitpython-ConnectionManager = "*"
 optional = ["requests"]
 
 [[package]]
+name = "adafruit-circuitpython-sht4x"
+version = "1.0.24"
+description = "Python library for Sensirion SHT4x temperature and humidity sensors"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "adafruit_circuitpython_sht4x-1.0.24-py3-none-any.whl", hash = "sha256:94616b09bb76bcd127a2975f424f5282ce562dd208a5ced313f3001c71dd6cd8"},
+    {file = "adafruit_circuitpython_sht4x-1.0.24.tar.gz", hash = "sha256:e2832ae04a16285f3d59903b61aa5abf1e4b0f4f5f82172c4386680300b84db9"},
+]
+
+[package.dependencies]
+Adafruit-Blinka = "*"
+adafruit-circuitpython-busdevice = "*"
+
+[[package]]
 name = "adafruit-circuitpython-typing"
 version = "1.12.1"
 description = "Types needed for type annotation that are not in `typing`"
@@ -687,4 +703,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9"
-content-hash = "4c50e7c79b0e43548031063d2b192e56ba8f3506ed9e6b3a022e60b98bc9d544"
+content-hash = "089b1279fb1830962faab67acc3d025b08c371843caeb0b1a87eac4589b72676"
