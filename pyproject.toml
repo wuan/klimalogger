@@ -21,6 +21,7 @@ lazy = "^1.6"
 adafruit-circuitpython-busdevice = "^5.2"
 paho-mqtt = "^2.1.0"
 adafruit-circuitpython-sht4x = "^1.0.24"
+adafruit-circuitpython-sgp40 = "^1.3.21"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
