@@ -1,7 +1,5 @@
 # -*- coding: utf8 -*-
 
-from injector import singleton, inject
-
 from klimalogger import DataBuilder
 from klimalogger.measurement import Measurements
 
@@ -15,12 +13,10 @@ import busio
 import adafruit_sgp30
 
 
-@singleton
 class Sensor:
     name = "SGP30"
     priority = 3
 
-    @inject
     def __init__(self, i2c_bus: busio.I2C, config_parser: configparser.ConfigParser):
         self.baseline_eCO2 = int(config_parser.get('sgp30_sensor', 'baseline_eCO2'))
         self.baseline_TVOC = int(config_parser.get('sgp30_sensor', 'baseline_TVOC'))

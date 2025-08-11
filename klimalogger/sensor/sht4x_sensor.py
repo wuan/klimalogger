@@ -3,7 +3,6 @@ import logging
 
 import adafruit_sht4x
 import busio
-from injector import singleton, inject
 
 from .. import DataBuilder
 from ..calc import TemperatureCalc
@@ -11,12 +10,10 @@ from ..measurement import Measurements
 
 log = logging.getLogger(__name__)
 
-@singleton
 class Sensor:
     name = "SHT4x"
     priority = 1
 
-    @inject
     def __init__(self, i2c_bus: busio.I2C, temperature_calc: TemperatureCalc):
         log.info("init")
         self.temperature_calc = temperature_calc
@@ -35,6 +32,7 @@ class Sensor:
                 dew_point = self.temperature_calc.dew_point(temperature, relative_humidity)
                 dew_point = round(dew_point, 2)
             except ValueError:
+                log.warning(f"measure calc_dew_point({temperature}, {relative_humidity}) failed")
                 dew_point = None
 
             temperature = round(temperature, 2)
@@ -44,7 +42,7 @@ class Sensor:
             relative_humidity = None
             dew_point = None
 
-        if temperature and relative_humidity and dew_point and -30 < temperature < 80 and 5 < relative_humidity <= 100:
+        if temperature and relative_humidity and -30 < temperature < 80 and 5 < relative_humidity <= 100:
             measurements.temperature = temperature
             measurements.relative_humidity = relative_humidity
 

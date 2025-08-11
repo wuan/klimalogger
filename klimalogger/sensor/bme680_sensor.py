@@ -2,7 +2,6 @@
 import logging
 
 import busio
-from injector import singleton, inject
 
 from .. import DataBuilder
 from ..calc import PressureCalc, TemperatureCalc
@@ -18,12 +17,10 @@ import adafruit_bme680
 log = logging.getLogger(__name__)
 
 
-@singleton
 class Sensor:
     name = "BME680"
     priority = 1
 
-    @inject
     def __init__(self, i2c_bus: busio.I2C, config_parser: configparser.ConfigParser, temperature_calc: TemperatureCalc,
                  pressure_calc: PressureCalc):
         log.info("init()")

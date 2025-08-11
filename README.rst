@@ -38,8 +38,6 @@ Additional dependencies
      - ``pip3 install adafruit-circuitpython-sgp30``
    * - SGP40
      - ``pip3 install adafruit-circuitpython-sgp40``
-   * - SHT1x (no I2C)
-     - download and install https://bitbucket.org/lunobili/rpisht1x.git
    * - SHT4x
      - ``pip3 install adafruit-circuitpython-sht4x``
 

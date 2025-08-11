@@ -3,15 +3,12 @@ import logging
 import socket
 from pathlib import Path
 
-from injector import singleton, provider, Module, inject
 from lazy import lazy
 
 log = logging.getLogger(__name__)
 
 
-@singleton
 class Config:
-    @inject
     def __init__(self, config_parser: configparser.ConfigParser):
         self.config_parser = config_parser
 
@@ -25,7 +22,7 @@ class Config:
 
     @lazy
     def store_type(self) -> str:
-        return self.config_parser.get('store', 'type', fallback='direct')
+        return self.config_parser.get('store', 'type', fallback='queue')
 
     @lazy
     def store_org(self) -> str:
@@ -78,20 +75,18 @@ class Config:
         return self.config_parser.get('log', 'path')
 
 
-class ConfigModule(Module):
-    @singleton
-    @provider
-    def provide_config_parser(self) -> configparser.ConfigParser:
-        etc = Path("/etc")
-        config_filename = "klimalogger.conf"
+def load_config_parser() -> configparser.ConfigParser:
+    """Load the configuration from standard locations, replacing the Injector-based provider."""
+    etc = Path("/etc")
+    config_filename = "klimalogger.conf"
 
-        config_file_locations = [Path(config_filename), etc / "klimalogger" / config_filename, etc / config_filename]
+    config_file_locations = [Path(config_filename), etc / "klimalogger" / config_filename, etc / config_filename]
 
-        for config_file_location in config_file_locations:
-            if config_file_location.exists():
-                log.info("reading config file location %s", config_file_location)
-                config_parser = configparser.ConfigParser()
-                config_parser.read(config_file_location)
-                return config_parser
+    for config_file_location in config_file_locations:
+        if config_file_location.exists():
+            log.info("reading config file location %s", config_file_location)
+            config_parser = configparser.ConfigParser()
+            config_parser.read(config_file_location)
+            return config_parser
 
-        raise IOError("config file not found")
+    raise IOError("config file not found")
