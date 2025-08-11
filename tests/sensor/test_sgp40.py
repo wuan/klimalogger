@@ -7,12 +7,12 @@ from mock import patch
 
 from klimalogger.data_builder import DataBuilder
 from klimalogger.measurement import Measurements
-from sensor.sgp40_sensor import Sensor
+from klimalogger.sensor.sgp40_sensor import Sensor
 
 
 @pytest.fixture
 def sensor():
-    with patch('sensor.sgp40_sensor.adafruit_sgp40', autospec=True) as mock:
+    with patch('klimalogger.sensor.sgp40_sensor.adafruit_sgp40', autospec=True) as mock:
         yield mock
 
 @pytest.fixture

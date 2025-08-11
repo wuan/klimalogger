@@ -1,16 +1,15 @@
 import configparser
 import importlib
+import inspect
 import logging
 import time
-import inspect
 from dataclasses import dataclass
 from typing import Optional
 
 from lazy import lazy
 
-from .data_builder import DataBuilder
 from .calc import TemperatureCalc, PressureCalc
-from .config import load_config_parser
+from .data_builder import DataBuilder
 from .sensor import create_i2c_bus
 
 log = logging.getLogger(__name__)
@@ -25,7 +24,8 @@ class Measurements:
 class MeasurementDispatcher:
     def __init__(self, configuration: configparser.ConfigParser, sensor_factory: "SensorFactory"):
         self.sensor_factory = sensor_factory
-        self.sensor_names = [sensor.strip() for sensor in configuration.get('client', 'sensors').split(',') if sensor.strip() != ""]
+        self.sensor_names = [sensor.strip() for sensor in configuration.get('client', 'sensors').split(',') if
+                             sensor.strip() != ""]
 
     def measure(self) -> DataBuilder:
         log.info("measure()")
