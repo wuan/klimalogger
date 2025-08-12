@@ -7,7 +7,7 @@ from paho.mqtt import client as mqtt_client
 from paho.mqtt.enums import CallbackAPIVersion
 
 # StoreClient removed; using concrete class
-from .. import config
+from klimalogger import config
 
 log = logging.getLogger(__name__)
 

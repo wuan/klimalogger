@@ -6,6 +6,8 @@ import logging
 from importlib.metadata import metadata
 
 import klimalogger
+import logger
+
 
 def main():
     parser = argparse.ArgumentParser()

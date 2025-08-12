@@ -3,7 +3,7 @@ from functools import partial
 import mock
 import pytest
 
-from klimalogger import MeasurementDispatcher, DataBuilder
+from klimalogger import DataBuilder, MeasurementDispatcher
 from klimalogger.measurement import SensorFactory, Measurements
 
 
