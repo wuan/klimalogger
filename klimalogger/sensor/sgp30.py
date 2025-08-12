@@ -20,7 +20,7 @@ class Sensor(BaseSensor):
 
         self.driver = adafruit_sgp30.Adafruit_SGP30(i2c_bus)
 
-    def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
+    def measure(self, data_builder: DataBuilder, _: Measurements) -> None:
         # self.sensor.set_iaq_baseline(self.baseline_eCO2, self.baseline_TVOC)
         eCO2, TVOC = self.driver.iaq_measure()
 
