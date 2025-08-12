@@ -7,6 +7,7 @@ from importlib.metadata import metadata
 
 import klimalogger
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-v", "--verbose", dest="verbose", action="store_true", help="verbose output")
@@ -40,6 +41,7 @@ def main():
         print("Error", e)
         return 10
     return 0
+
 
 if __name__ == "__main__":
     main()

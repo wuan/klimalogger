@@ -7,9 +7,10 @@ import busio
 
 from klimalogger import DataBuilder
 from klimalogger.measurement import Measurements
+from . import BaseSensor
 
 
-class Sensor:
+class Sensor(BaseSensor):
     name = "SCD4x"
     priority = 3
 

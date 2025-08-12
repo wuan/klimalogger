@@ -7,7 +7,7 @@ from paho.mqtt import client as mqtt_client
 from paho.mqtt.enums import CallbackAPIVersion
 
 # StoreClient removed; using concrete class
-from .. import config
+from klimalogger import config
 
 log = logging.getLogger(__name__)
 
@@ -34,8 +34,8 @@ class QueueStore:
             # client.username_pw_set(username, password)
             self.client.on_connect = on_connect
             self.client.on_disconnect = on_disconnect
-            log.info("connect to host %s, port %d", configuration.service_host, configuration.service_port)
-            self.client.connect(configuration.service_host, configuration.service_port)
+            log.info("connect to host %s, port %d", configuration.queue_host, configuration.queue_port)
+            self.client.connect(configuration.queue_host, configuration.queue_port)
             self.client.loop_start()
         except Exception:
             log.exception("could not create client")

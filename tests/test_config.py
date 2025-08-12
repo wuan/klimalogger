@@ -28,40 +28,32 @@ class TestDataBuilderTest(object):
     def test_username(self):
         self.config_parser.get.return_value = '<username>'
 
-        result = self.uut.service_username
+        result = self.uut.queue_username
 
-        self.config_parser.get.assert_called_once_with('store', 'username')
+        self.config_parser.get.assert_called_once_with('queue', 'username')
         assert_that(result).is_equal_to('<username>')
 
     def test_password(self):
         self.config_parser.get.return_value = '<password>'
 
-        result = self.uut.service_password
+        result = self.uut.queue_password
 
-        self.config_parser.get.assert_called_once_with('store', 'password')
+        self.config_parser.get.assert_called_once_with('queue', 'password')
         assert_that(result).is_equal_to('<password>')
 
-    def test_store_name(self):
-        self.config_parser.get.return_value = '<store_name>'
+    def test_queue_host(self):
+        self.config_parser.get.return_value = '<queue_host>'
 
-        result = self.uut.service_name
+        result = self.uut.queue_host
 
-        self.config_parser.get.assert_called_once_with('store', 'name')
-        assert_that(result).is_equal_to('<store_name>')
+        self.config_parser.get.assert_called_once_with('queue', 'host')
+        assert_that(result).is_equal_to('<queue_host>')
 
-    def test_store_host(self):
-        self.config_parser.get.return_value = '<store_host>'
-
-        result = self.uut.service_host
-
-        self.config_parser.get.assert_called_once_with('store', 'host')
-        assert_that(result).is_equal_to('<store_host>')
-
-    def test_store_port(self):
+    def test_queue_port(self):
         self.config_parser.get.return_value = '5'
-        result = self.uut.service_port
+        result = self.uut.queue_port
 
-        self.config_parser.get.assert_called_once_with('store', 'port')
+        self.config_parser.get.assert_called_once_with('queue', 'port')
         assert_that(result).is_equal_to(5)
 
     def test_log_path(self):
