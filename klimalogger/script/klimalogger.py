@@ -6,7 +6,6 @@ import logging
 from importlib.metadata import metadata
 
 import klimalogger
-import logger
 
 
 def main():
@@ -42,6 +41,7 @@ def main():
         print("Error", e)
         return 10
     return 0
+
 
 if __name__ == "__main__":
     main()
