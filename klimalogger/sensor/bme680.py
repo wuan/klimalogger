@@ -1,23 +1,19 @@
 # -*- coding: utf8 -*-
+import configparser
 import logging
 
+import adafruit_bme680
 import busio
 
+from . import BaseSensor
 from .. import DataBuilder
 from ..calc import PressureCalc, TemperatureCalc
 from ..measurement import Measurements
 
-try:
-    import configparser
-except ImportError:
-    import configparser as configparser
-
-import adafruit_bme680
-
 log = logging.getLogger(__name__)
 
 
-class Sensor:
+class Sensor(BaseSensor):
     name = "BME680"
     priority = 1
 

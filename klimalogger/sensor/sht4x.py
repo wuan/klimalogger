@@ -4,13 +4,15 @@ import logging
 import adafruit_sht4x
 import busio
 
+from . import BaseSensor
 from .. import DataBuilder
 from ..calc import TemperatureCalc
 from ..measurement import Measurements
 
 log = logging.getLogger(__name__)
 
-class Sensor:
+
+class Sensor(BaseSensor):
     name = "SHT4x"
     priority = 1
 

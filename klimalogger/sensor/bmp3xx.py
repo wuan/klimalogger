@@ -1,19 +1,16 @@
 # -*- coding: utf8 -*-
+import configparser
+
+import adafruit_bmp3xx
 import busio
 
+from . import BaseSensor
 from .. import DataBuilder
 from ..calc import PressureCalc
 from ..measurement import Measurements
 
-try:
-    import configparser
-except ImportError:
-    import configparser as configparser
 
-import adafruit_bmp3xx
-
-
-class Sensor:
+class Sensor(BaseSensor):
     name = "BMP3xx"
     priority = 2
 

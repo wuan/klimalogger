@@ -1,19 +1,16 @@
 # -*- coding: utf8 -*-
 
+import configparser
+
+import adafruit_sgp30
+import busio
+
 from klimalogger import DataBuilder
 from klimalogger.measurement import Measurements
-
-try:
-    import configparser
-except ImportError:
-    import configparser as configparser
-
-import board
-import busio
-import adafruit_sgp30
+from . import BaseSensor
 
 
-class Sensor:
+class Sensor(BaseSensor):
     name = "SGP30"
     priority = 3
 
