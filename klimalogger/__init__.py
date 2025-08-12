@@ -4,7 +4,7 @@ import time
 from .config import Config, load_config_parser
 from .data_builder import DataBuilder
 from .measurement import MeasurementDispatcher, SensorFactory
-from .queue import QueueStore
+from .transport import QueueTransport
 from . import logger
 
 root_logger = logging.getLogger(__name__)
@@ -27,10 +27,10 @@ def set_parent_logger(logger):
 
 class Client:
     def __init__(self, measurement_dispatcher: MeasurementDispatcher,
-                 store_client: QueueStore,
+                 transport: QueueTransport,
                  config: Config):
         self.measurement_dispatcher = measurement_dispatcher
-        self.store_client = store_client
+        self.transport = transport
         self.config = config
 
     def measure_and_store_periodically(self, period=15):
@@ -65,7 +65,7 @@ class Client:
 
     def store_data(self, data):
         try:
-            self.store_client.store(data)
+            self.transport.store(data)
             log.info("stored data")
         except Exception as e:
             log.error("error during data transmission: create local log entry", exc_info=e)

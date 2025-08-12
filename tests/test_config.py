@@ -1,64 +1,70 @@
 import socket
 
+import pytest
 from assertpy import assert_that
-from mock import Mock
+from mock import Mock, MagicMock
 
 import klimalogger
 
 
-class TestDataBuilderTest(object):
-    def setup_method(self):
-        self.config_parser = Mock()
-        self.uut = klimalogger.config.Config(self.config_parser)
+class TestDataBuilderTest:
 
-    def test_location_name(self):
-        self.config_parser.get.return_value = '<location>'
+    @pytest.fixture
+    def config_parser(self):
+        return MagicMock(name="ConfigParser", autospec=True)
+    
+    @pytest.fixture
+    def uut(self, config_parser):
+        return klimalogger.config.Config(config_parser)
 
-        result = self.uut.client_location_name
+    def test_location_name(self, config_parser, uut):
+        config_parser.get.return_value = '<location>'
 
-        self.config_parser.get.assert_called_once_with('client', 'location_name')
+        result = uut.client_location_name
+
+        config_parser.get.assert_called_once_with('client', 'location_name')
         assert_that(result).is_equal_to('<location>')
 
-    def test_client_host_name(self):
-        result = self.uut.client_host_name
+    def test_client_host_name(self, config_parser, uut):
+        result = uut.client_host_name
 
-        self.config_parser.assert_not_called()
+        config_parser.assert_not_called()
         assert_that(result).is_equal_to(socket.gethostname())
 
-    def test_username(self):
-        self.config_parser.get.return_value = '<username>'
+    def test_username(self, config_parser, uut):
+        config_parser.get.return_value = '<username>'
 
-        result = self.uut.queue_username
+        result = uut.queue_username
 
-        self.config_parser.get.assert_called_once_with('queue', 'username')
+        config_parser.get.assert_called_once_with('queue', 'username')
         assert_that(result).is_equal_to('<username>')
 
-    def test_password(self):
-        self.config_parser.get.return_value = '<password>'
+    def test_password(self, config_parser, uut):
+        config_parser.get.return_value = '<password>'
 
-        result = self.uut.queue_password
+        result = uut.queue_password
 
-        self.config_parser.get.assert_called_once_with('queue', 'password')
+        config_parser.get.assert_called_once_with('queue', 'password')
         assert_that(result).is_equal_to('<password>')
 
-    def test_queue_host(self):
-        self.config_parser.get.return_value = '<queue_host>'
+    def test_queue_host(self, config_parser, uut):
+        config_parser.get.return_value = '<queue_host>'
 
-        result = self.uut.queue_host
+        result = uut.queue_host
 
-        self.config_parser.get.assert_called_once_with('queue', 'host')
+        config_parser.get.assert_called_once_with('queue', 'host')
         assert_that(result).is_equal_to('<queue_host>')
 
-    def test_queue_port(self):
-        self.config_parser.get.return_value = '5'
-        result = self.uut.queue_port
+    def test_queue_port(self, config_parser, uut):
+        config_parser.get.return_value = '5'
+        result = uut.queue_port
 
-        self.config_parser.get.assert_called_once_with('queue', 'port')
+        config_parser.get.assert_called_once_with('queue', 'port')
         assert_that(result).is_equal_to(5)
 
-    def test_log_path(self):
-        self.config_parser.get.return_value = '<log_path>'
-        result = self.uut.log_path
+    def test_log_path(self, config_parser, uut):
+        config_parser.get.return_value = '<log_path>'
+        result = uut.log_path
 
-        self.config_parser.get.assert_called_once_with('log', 'path')
+        config_parser.get.assert_called_once_with('log', 'path')
         assert_that(result).is_equal_to('<log_path>')

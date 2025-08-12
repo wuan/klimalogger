@@ -4,7 +4,7 @@ import json
 import pytest
 
 from klimalogger.config import Config
-from klimalogger.queue import QueueStore
+from klimalogger.transport import QueueTransport
 
 
 class DummyClient:
@@ -57,7 +57,7 @@ def cfg():
 def patch_client(monkeypatch):
     dummy = DummyClient()
     # Patch the paho client constructor used by our module to return our dummy
-    monkeypatch.setattr('klimalogger.queue.mqtt_client.Client', lambda *a, **k: dummy)
+    monkeypatch.setattr('klimalogger.transport.mqtt_client.Client', lambda *a, **k: dummy)
     return dummy
 
 
@@ -75,7 +75,7 @@ def build_entry(ts=1234567890, value=42.5, unit='C', sensor='foo', type_='temper
 
 
 def test_map_entry_builds_topic_and_json(cfg, patch_client):
-    store = QueueStore(cfg)
+    store = QueueTransport(cfg)
     topic, message = store.map_entry(build_entry(ts=111, value=12.34, unit='%'))
     assert topic == 'my/prefix/temperature'
     assert message == {
@@ -90,7 +90,7 @@ def test_map_entry_builds_topic_and_json(cfg, patch_client):
 def test_store_publishes_and_reconnects_if_needed(cfg, patch_client):
     dummy = patch_client
     dummy._connected = False  # force reconnect path
-    store = QueueStore(cfg)
+    store = QueueTransport(cfg)
 
     entries = [
         build_entry(ts=1, value=1.0, type_='t'),
@@ -120,16 +120,16 @@ def test_store_raises_when_client_unavailable(cfg, monkeypatch):
     def boom(*a, **k):
         raise RuntimeError('no mqtt')
 
-    monkeypatch.setattr('klimalogger.queue.mqtt_client.Client', boom)
+    monkeypatch.setattr('klimalogger.transport.mqtt_client.Client', boom)
 
-    store = QueueStore(cfg)
+    store = QueueTransport(cfg)
     with pytest.raises(RuntimeError):
         store.store([build_entry()])
 
 
 def test_del_disconnects_when_client_present(cfg, patch_client):
     dummy = patch_client
-    store = QueueStore(cfg)
+    store = QueueTransport(cfg)
 
     # Call the destructor explicitly to verify disconnect is triggered
     store.__del__()

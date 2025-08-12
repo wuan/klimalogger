@@ -12,7 +12,7 @@ from klimalogger import config
 log = logging.getLogger(__name__)
 
 
-class QueueStore:
+class QueueTransport:
     def __init__(self, configuration: config.Config):
         self.qos = configuration.queue_qos
         self.mqtt_prefix = configuration.queue_prefix
