@@ -14,7 +14,7 @@ class Config:
 
     @lazy
     def client_location_name(self) -> str:
-        return self.config_parser.get('client', 'location_name')
+        return self.config_parser.get("client", "location_name")
 
     @lazy
     def client_host_name(self) -> str:
@@ -22,33 +22,33 @@ class Config:
 
     @lazy
     def queue_username(self) -> str:
-        return self.config_parser.get('queue', 'username')
+        return self.config_parser.get("queue", "username")
 
     @lazy
     def queue_password(self) -> str:
-        return self.config_parser.get('queue', 'password')
+        return self.config_parser.get("queue", "password")
 
     @lazy
     def queue_host(self) -> str:
-        return self.config_parser.get('queue', 'host')
+        return self.config_parser.get("queue", "host")
 
     @lazy
     def queue_port(self) -> int:
-        port_string = self.config_parser.get('queue', 'port')
+        port_string = self.config_parser.get("queue", "port")
         return int(port_string)
 
     @lazy
     def queue_qos(self) -> int:
-        qos_string = self.config_parser.get('queue', 'queue_qos', fallback="1")
+        qos_string = self.config_parser.get("queue", "queue_qos", fallback="1")
         return int(qos_string)
 
     @lazy
     def queue_prefix(self) -> str:
-        return self.config_parser.get('queue', 'queue_prefix', fallback='sensors')
+        return self.config_parser.get("queue", "queue_prefix", fallback="sensors")
 
     @lazy
     def log_path(self) -> str:
-        return self.config_parser.get('log', 'path')
+        return self.config_parser.get("log", "path")
 
 
 def load_config_parser() -> configparser.ConfigParser:
@@ -56,7 +56,11 @@ def load_config_parser() -> configparser.ConfigParser:
     etc = Path("/etc")
     config_filename = "klimalogger.conf"
 
-    config_file_locations = [Path(config_filename), etc / "klimalogger" / config_filename, etc / config_filename]
+    config_file_locations = [
+        Path(config_filename),
+        etc / "klimalogger" / config_filename,
+        etc / config_filename,
+    ]
 
     for config_file_location in config_file_locations:
         if config_file_location.exists():
@@ -65,4 +69,4 @@ def load_config_parser() -> configparser.ConfigParser:
             config_parser.read(config_file_location)
             return config_parser
 
-    raise IOError("config file not found")
+    raise OSError("config file not found")

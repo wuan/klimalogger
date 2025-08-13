@@ -1,5 +1,3 @@
-# -*- coding: utf8 -*-
-
 import time
 
 import adafruit_scd4x
@@ -7,6 +5,7 @@ import busio
 
 from klimalogger import DataBuilder
 from klimalogger.measurement import Measurements
+
 from . import BaseSensor
 
 

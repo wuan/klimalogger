@@ -8,7 +8,7 @@ from typing import Optional
 
 from lazy import lazy
 
-from .calc import TemperatureCalc, PressureCalc
+from .calc import PressureCalc, TemperatureCalc
 from .data_builder import DataBuilder
 from .sensor import create_i2c_bus
 
@@ -22,10 +22,15 @@ class Measurements:
 
 
 class MeasurementDispatcher:
-    def __init__(self, configuration: configparser.ConfigParser, sensor_factory: "SensorFactory"):
+    def __init__(
+        self, configuration: configparser.ConfigParser, sensor_factory: "SensorFactory"
+    ):
         self.sensor_factory = sensor_factory
-        self.sensor_names = [sensor.strip() for sensor in configuration.get('client', 'sensors').split(',') if
-                             sensor.strip() != ""]
+        self.sensor_names = [
+            sensor.strip()
+            for sensor in configuration.get("client", "sensors").split(",")
+            if sensor.strip() != ""
+        ]
 
     def measure(self) -> DataBuilder:
         log.info("measure()")
@@ -46,7 +51,10 @@ class MeasurementDispatcher:
     @lazy
     def sensors(self):
         log.info("sensors()")
-        sensors = [self.sensor_factory.create_sensor(sensor_name) for sensor_name in self.sensor_names]
+        sensors = [
+            self.sensor_factory.create_sensor(sensor_name)
+            for sensor_name in self.sensor_names
+        ]
         return sorted(sensors, key=lambda entry: entry.priority)
 
 
@@ -67,20 +75,24 @@ class SensorFactory:
                 log.exception("Failed to create I2C bus")
                 self._i2c_bus = None
         return {
-            'i2c_bus': self._i2c_bus,
-            'config_parser': self._config_parser,
-            'temperature_calc': self._temperature_calc,
-            'pressure_calc': self._pressure_calc,
+            "i2c_bus": self._i2c_bus,
+            "config_parser": self._config_parser,
+            "temperature_calc": self._temperature_calc,
+            "pressure_calc": self._pressure_calc,
         }
 
     def create_sensor(self, sensor_type: str):
         try:
-            module = importlib.import_module('klimalogger.sensor.' + sensor_type + '_sensor')
+            module = importlib.import_module(
+                "klimalogger.sensor." + sensor_type + "_sensor"
+            )
             log.info("sensor: %s, module: %s", sensor_type, module)
             sensor_class = module.Sensor
             sig = inspect.signature(sensor_class.__init__)
             deps = self._deps()
-            kwargs = {name: value for name, value in deps.items() if name in sig.parameters}
+            kwargs = {
+                name: value for name, value in deps.items() if name in sig.parameters
+            }
             return sensor_class(**kwargs)
         except Exception:
             log.exception("instatiation of sensor %s failed", sensor_type)

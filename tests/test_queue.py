@@ -45,11 +45,11 @@ class DummyClient:
 @pytest.fixture
 def cfg():
     cp = configparser.ConfigParser()
-    cp.add_section('queue')
-    cp.set('queue', 'host', 'example.local')
-    cp.set('queue', 'port', '1883')
-    cp.set('queue', 'queue_qos', '2')
-    cp.set('queue', 'queue_prefix', 'my/prefix')
+    cp.add_section("queue")
+    cp.set("queue", "host", "example.local")
+    cp.set("queue", "port", "1883")
+    cp.set("queue", "queue_qos", "2")
+    cp.set("queue", "queue_prefix", "my/prefix")
     return Config(cp)
 
 
@@ -57,33 +57,42 @@ def cfg():
 def patch_client(monkeypatch):
     dummy = DummyClient()
     # Patch the paho client constructor used by our module to return our dummy
-    monkeypatch.setattr('klimalogger.transport.mqtt_client.Client', lambda *a, **k: dummy)
+    monkeypatch.setattr(
+        "klimalogger.transport.mqtt_client.Client", lambda *a, **k: dummy
+    )
     return dummy
 
 
-def build_entry(ts=1234567890, value=42.5, unit='C', sensor='foo', type_='temperature', calculated=False):
+def build_entry(
+    ts=1234567890,
+    value=42.5,
+    unit="C",
+    sensor="foo",
+    type_="temperature",
+    calculated=False,
+):
     return {
-        'time': ts,
-        'fields': {'value': value},
-        'tags': {
-            'unit': unit,
-            'sensor': sensor,
-            'type': type_,
-            'calculated': calculated,
+        "time": ts,
+        "fields": {"value": value},
+        "tags": {
+            "unit": unit,
+            "sensor": sensor,
+            "type": type_,
+            "calculated": calculated,
         },
     }
 
 
 def test_map_entry_builds_topic_and_json(cfg, patch_client):
     store = QueueTransport(cfg)
-    topic, message = store.map_entry(build_entry(ts=111, value=12.34, unit='%'))
-    assert topic == 'my/prefix/temperature'
+    topic, message = store.map_entry(build_entry(ts=111, value=12.34, unit="%"))
+    assert topic == "my/prefix/temperature"
     assert message == {
-        'time': 111,
-        'value': 12.34,
-        'unit': '%',
-        'sensor': 'foo',
-        'calculated': False,
+        "time": 111,
+        "value": 12.34,
+        "unit": "%",
+        "sensor": "foo",
+        "calculated": False,
     }
 
 
@@ -93,8 +102,8 @@ def test_store_publishes_and_reconnects_if_needed(cfg, patch_client):
     store = QueueTransport(cfg)
 
     entries = [
-        build_entry(ts=1, value=1.0, type_='t'),
-        build_entry(ts=2, value=2.0, type_='h'),
+        build_entry(ts=1, value=1.0, type_="t"),
+        build_entry(ts=2, value=2.0, type_="h"),
     ]
 
     store.store(entries)
@@ -107,20 +116,20 @@ def test_store_publishes_and_reconnects_if_needed(cfg, patch_client):
     payloads = [p for (t, p, q) in dummy.published]
     qos_values = [q for (t, p, q) in dummy.published]
 
-    assert topics == ['my/prefix/t', 'my/prefix/h']
+    assert topics == ["my/prefix/t", "my/prefix/h"]
     # validate payload JSON round-trip
     decoded = [json.loads(p) for p in payloads]
-    assert decoded[0]['value'] == 1.0 and decoded[0]['time'] == 1
-    assert decoded[1]['value'] == 2.0 and decoded[1]['time'] == 2
+    assert decoded[0]["value"] == 1.0 and decoded[0]["time"] == 1
+    assert decoded[1]["value"] == 2.0 and decoded[1]["time"] == 2
     assert qos_values == [2, 2]
 
 
 def test_store_raises_when_client_unavailable(cfg, monkeypatch):
     # Make client constructor raise so QueueStore.client becomes None
     def boom(*a, **k):
-        raise RuntimeError('no mqtt')
+        raise RuntimeError("no mqtt")
 
-    monkeypatch.setattr('klimalogger.transport.mqtt_client.Client', boom)
+    monkeypatch.setattr("klimalogger.transport.mqtt_client.Client", boom)
 
     store = QueueTransport(cfg)
     with pytest.raises(RuntimeError):

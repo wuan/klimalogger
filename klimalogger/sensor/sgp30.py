@@ -1,5 +1,3 @@
-# -*- coding: utf8 -*-
-
 import configparser
 
 import adafruit_sgp30
@@ -7,6 +5,7 @@ import busio
 
 from klimalogger import DataBuilder
 from klimalogger.measurement import Measurements
+
 from . import BaseSensor
 
 
@@ -15,8 +14,8 @@ class SGP30Sensor(BaseSensor):
     priority = 3
 
     def __init__(self, i2c_bus: busio.I2C, config_parser: configparser.ConfigParser):
-        self.baseline_eCO2 = int(config_parser.get('sgp30_sensor', 'baseline_eCO2'))
-        self.baseline_TVOC = int(config_parser.get('sgp30_sensor', 'baseline_TVOC'))
+        self.baseline_eCO2 = int(config_parser.get("sgp30_sensor", "baseline_eCO2"))
+        self.baseline_TVOC = int(config_parser.get("sgp30_sensor", "baseline_TVOC"))
 
         self.driver = adafruit_sgp30.Adafruit_SGP30(i2c_bus)
 

@@ -1,6 +1,7 @@
-import busio
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
+
+import busio
 
 if TYPE_CHECKING:
     # Imported only for type checking to avoid circular imports at runtime
@@ -22,7 +23,9 @@ class BaseSensor(ABC):
     priority: int = 100
 
     @abstractmethod
-    def measure(self, data_builder: "DataBuilder", measurements: "Measurements") -> None:
+    def measure(
+        self, data_builder: "DataBuilder", measurements: "Measurements"
+    ) -> None:
         """Perform a measurement and add values via the DataBuilder.
 
         Implementations may also read/update `measurements` to share context
@@ -31,7 +34,7 @@ class BaseSensor(ABC):
         raise NotImplementedError
 
 
-
 def create_i2c_bus() -> busio.I2C:
     import board
+
     return busio.I2C(board.SCL, board.SDA, frequency=100000)

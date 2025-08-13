@@ -1,10 +1,10 @@
 from functools import partial
+from unittest import mock
 
-import mock
 import pytest
 
 from klimalogger import DataBuilder, MeasurementDispatcher
-from klimalogger.measurement import SensorFactory, Measurements
+from klimalogger.measurement import Measurements, SensorFactory
 
 
 class TestSensorFactory:
@@ -23,7 +23,7 @@ class TestSensorFactory:
         calls = []
 
         def register_call(*args, **kwargs):
-            calls.append((kwargs.pop('caller', None), mock.call(*args, **kwargs)))
+            calls.append((kwargs.pop("caller", None), mock.call(*args, **kwargs)))
             return mock.DEFAULT
 
         configuration.get.return_value = "foo,bar,baz"
@@ -50,7 +50,6 @@ class TestSensorFactory:
             }[sensor_name]
 
         sensor_factory.create_sensor.side_effect = load_module
-
 
         uut = MeasurementDispatcher(configuration, sensor_factory)
 

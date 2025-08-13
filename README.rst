@@ -112,3 +112,27 @@ and run
    service klimalogger start
 
 to run the service.
+
+Pre-commit hooks
+----------------
+
+This repository includes a pre-commit configuration to automatically run formatting, linting and type checks on each commit.
+
+Setup locally:
+
+.. code-block:: sh
+
+   pip install pre-commit
+   pre-commit install
+
+You can also run all hooks against the full repo:
+
+.. code-block:: sh
+
+   pre-commit run --all-files
+
+The configured tools include:
+
+- black and isort for formatting
+- ruff for linting (auto-fixes enabled)
+- mypy for type checking (configured in mypy.ini)

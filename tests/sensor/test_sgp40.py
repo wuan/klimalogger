@@ -1,9 +1,6 @@
-import sys
-import types
-from unittest import mock
+from unittest.mock import patch
 
 import pytest
-from mock import patch
 
 from klimalogger.data_builder import DataBuilder
 from klimalogger.measurement import Measurements
@@ -12,16 +9,19 @@ from klimalogger.sensor.sgp40 import SGP40Sensor
 
 @pytest.fixture
 def sensor():
-    with patch('klimalogger.sensor.sgp40.adafruit_sgp40', autospec=True) as mock:
+    with patch("klimalogger.sensor.sgp40.adafruit_sgp40", autospec=True) as mock:
         yield mock
+
 
 @pytest.fixture
 def uut(sensor, i2c_bus):
     return SGP40Sensor(i2c_bus=i2c_bus)
 
+
 @pytest.fixture
 def data_builder():
     return DataBuilder()
+
 
 def test_index(uut, sensor, data_builder):
     sensor.SGP40.return_value.measure_index.return_value = 12.34
@@ -34,13 +34,14 @@ def test_index(uut, sensor, data_builder):
     assert "value" in data["fields"]
     assert data["fields"]["value"] == 12.34
 
+
 @pytest.mark.parametrize(
     "temperature,humidity",
     [
         (20, None),
         (None, 80),
         (None, None),
-    ]
+    ],
 )
 def test_raw(uut, sensor, data_builder, temperature, humidity):
     sensor.SGP40.return_value.raw = 5432
@@ -52,4 +53,3 @@ def test_raw(uut, sensor, data_builder, temperature, humidity):
     assert data["measurement"] == "data"
     assert "value" in data["fields"]
     assert data["fields"]["value"] == 5432.0
-
