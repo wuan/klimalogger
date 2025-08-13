@@ -10,7 +10,7 @@ from klimalogger.measurement import Measurements
 from . import BaseSensor
 
 
-class Sensor(BaseSensor):
+class SGP30Sensor(BaseSensor):
     name = "SGP30"
     priority = 3
 

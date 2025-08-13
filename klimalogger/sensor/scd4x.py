@@ -10,7 +10,7 @@ from klimalogger.measurement import Measurements
 from . import BaseSensor
 
 
-class Sensor(BaseSensor):
+class SCD4xSensor(BaseSensor):
     name = "SCD4x"
     priority = 3
 

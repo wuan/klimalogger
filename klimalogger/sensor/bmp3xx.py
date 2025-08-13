@@ -10,7 +10,7 @@ from ..calc import PressureCalc
 from ..measurement import Measurements
 
 
-class Sensor(BaseSensor):
+class BMP3xxSensor(BaseSensor):
     name = "BMP3xx"
     priority = 2
 

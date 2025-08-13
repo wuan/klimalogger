@@ -4,7 +4,7 @@ import pytest
 from mock import patch
 
 from klimalogger.measurement import Measurements
-from klimalogger.sensor.sht4x import Sensor
+from klimalogger.sensor.sht4x import SHT4xSensor
 
 
 @pytest.fixture
@@ -15,7 +15,7 @@ def sensor():
 
 @pytest.fixture
 def uut(sensor, i2c_bus, temp_calc):
-    return Sensor(i2c_bus=i2c_bus, temperature_calc=temp_calc)
+    return SHT4xSensor(i2c_bus=i2c_bus, temperature_calc=temp_calc)
 
 
 def test_measure_success(uut, sensor, data_builder, temp_calc, measurements):

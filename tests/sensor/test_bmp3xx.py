@@ -5,7 +5,7 @@ import pytest
 from mock import patch
 
 from klimalogger.measurement import Measurements
-from klimalogger.sensor.bmp3xx import Sensor
+from klimalogger.sensor.bmp3xx import BMP3xxSensor
 
 
 @pytest.fixture
@@ -25,7 +25,7 @@ def config_parser():
 
 @pytest.fixture
 def uut(sensor_module, i2c_bus, config_parser, pressure_calc):
-    return Sensor(i2c_bus=i2c_bus, config_parser=config_parser, pressure_calc=pressure_calc)
+    return BMP3xxSensor(i2c_bus=i2c_bus, config_parser=config_parser, pressure_calc=pressure_calc)
 
 
 def test_init_constructs_driver(uut, sensor_module, i2c_bus):

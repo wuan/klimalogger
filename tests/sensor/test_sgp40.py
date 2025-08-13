@@ -7,7 +7,7 @@ from mock import patch
 
 from klimalogger.data_builder import DataBuilder
 from klimalogger.measurement import Measurements
-from klimalogger.sensor.sgp40 import Sensor
+from klimalogger.sensor.sgp40 import SGP40Sensor
 
 
 @pytest.fixture
@@ -17,7 +17,7 @@ def sensor():
 
 @pytest.fixture
 def uut(sensor, i2c_bus):
-    return Sensor(i2c_bus=i2c_bus)
+    return SGP40Sensor(i2c_bus=i2c_bus)
 
 @pytest.fixture
 def data_builder():

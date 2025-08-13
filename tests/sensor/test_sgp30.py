@@ -10,7 +10,7 @@ sys.modules.setdefault('board', types.ModuleType('board'))
 
 from klimalogger.data_builder import DataBuilder
 from klimalogger.measurement import Measurements
-from klimalogger.sensor.sgp30 import Sensor
+from klimalogger.sensor.sgp30 import SGP30Sensor
 
 
 @pytest.fixture
@@ -31,7 +31,7 @@ def config_parser():
 
 @pytest.fixture
 def uut(sensor_module, i2c_bus, config_parser):
-    return Sensor(i2c_bus=i2c_bus, config_parser=config_parser)
+    return SGP30Sensor(i2c_bus=i2c_bus, config_parser=config_parser)
 
 
 @pytest.fixture

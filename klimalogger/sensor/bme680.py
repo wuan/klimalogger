@@ -13,7 +13,7 @@ from ..measurement import Measurements
 log = logging.getLogger(__name__)
 
 
-class Sensor(BaseSensor):
+class BME680Sensor(BaseSensor):
     name = "BME680"
     priority = 1
 

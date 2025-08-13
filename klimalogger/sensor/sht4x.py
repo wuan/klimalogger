@@ -12,7 +12,7 @@ from ..measurement import Measurements
 log = logging.getLogger(__name__)
 
 
-class Sensor(BaseSensor):
+class SHT4xSensor(BaseSensor):
     name = "SHT4x"
     priority = 1
 
