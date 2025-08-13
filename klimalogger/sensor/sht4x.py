@@ -1,13 +1,12 @@
-# -*- coding: utf8 -*-
 import logging
 
 import adafruit_sht4x
 import busio
 
-from . import BaseSensor
 from .. import DataBuilder
 from ..calc import TemperatureCalc
 from ..measurement import Measurements
+from . import BaseSensor
 
 log = logging.getLogger(__name__)
 
@@ -31,10 +30,14 @@ class SHT4xSensor(BaseSensor):
 
         if temperature > -40.0:
             try:
-                dew_point = self.temperature_calc.dew_point(temperature, relative_humidity)
+                dew_point = self.temperature_calc.dew_point(
+                    temperature, relative_humidity
+                )
                 dew_point = round(dew_point, 2)
             except ValueError:
-                log.warning(f"measure calc_dew_point({temperature}, {relative_humidity}) failed")
+                log.warning(
+                    f"measure calc_dew_point({temperature}, {relative_humidity}) failed"
+                )
                 dew_point = None
 
             temperature = round(temperature, 2)
@@ -44,7 +47,12 @@ class SHT4xSensor(BaseSensor):
             relative_humidity = None
             dew_point = None
 
-        if temperature and relative_humidity and -30 < temperature < 80 and 5 < relative_humidity <= 100:
+        if (
+            temperature
+            and relative_humidity
+            and -30 < temperature < 80
+            and 5 < relative_humidity <= 100
+        ):
             measurements.temperature = temperature
             measurements.relative_humidity = relative_humidity
 

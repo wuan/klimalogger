@@ -39,7 +39,9 @@ def test_measure_returns_timestamp_and_data(client, dispatcher):
     dispatcher.measure.assert_called_once()
 
 
-def test_measure_and_store_calls_store_with_measured_data(client, dispatcher, transport):
+def test_measure_and_store_calls_store_with_measured_data(
+    client, dispatcher, transport
+):
     # Use a realistic DataBuilder to produce data
     db = klimalogger.DataBuilder()
     db.add("sensorX", "temp", "C", 21.5)
@@ -62,6 +64,7 @@ def test_store_data_handles_exception_without_raising(client, transport, caplog)
 
     # Error should have been logged
     assert any(
-        rec.levelno == logging.ERROR and "error during data transmission" in rec.getMessage()
+        rec.levelno == logging.ERROR
+        and "error during data transmission" in rec.getMessage()
         for rec in caplog.records
     )

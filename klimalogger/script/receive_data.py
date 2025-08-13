@@ -8,7 +8,7 @@ import paho.mqtt.client as mqtt_client
 
 def connect_mqtt(broker: str):
     port = 1883
-    client_id = f'python-mqtt-{secrets.randbelow(1000)}'
+    client_id = f"python-mqtt-{secrets.randbelow(1000)}"
 
     def on_connect(client, userdata, flags, reason_code, properties):
         if reason_code == 0:
@@ -17,7 +17,10 @@ def connect_mqtt(broker: str):
             print("Failed to connect, return code %d\n", reason_code)
 
     # Set Connecting Client ID
-    client = mqtt_client.Client(client_id=client_id, callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2)
+    client = mqtt_client.Client(
+        client_id=client_id,
+        callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2,
+    )
     # client.username_pw_set(username, password)
     client.on_connect = on_connect
     client.connect(broker, port)

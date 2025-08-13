@@ -1,16 +1,15 @@
-from unittest import mock
+from unittest.mock import patch
 
 import pytest
-from mock import patch
 
-from klimalogger.sensor.scd4x import SCD4xSensor
 from klimalogger.measurement import Measurements
+from klimalogger.sensor.scd4x import SCD4xSensor
 
 
 @pytest.fixture
 def sensor_module():
     # Patch the external dependency so tests don't require the hardware library
-    with patch('klimalogger.sensor.scd4x.adafruit_scd4x', autospec=True) as mock_module:
+    with patch("klimalogger.sensor.scd4x.adafruit_scd4x", autospec=True) as mock_module:
         yield mock_module
 
 
@@ -42,7 +41,7 @@ def test_measure_co2_immediate(uut, sensor_module, data_builder):
     sensor_module.SCD4X.return_value.CO2 = 415
 
     meas = Measurements()
-    with patch('klimalogger.sensor.scd4x.time.sleep') as sleep_mock:
+    with patch("klimalogger.sensor.scd4x.time.sleep") as sleep_mock:
         uut.measure(data_builder, meas)
         sleep_mock.assert_not_called()
 
@@ -64,6 +63,7 @@ def test_measure_co2_after_wait(uut, sensor_module, data_builder):
     class CO2Sequence:
         def __iter__(self):
             return self
+
         def __next__(self):
             if not co2_sequence:
                 raise StopIteration
@@ -71,12 +71,14 @@ def test_measure_co2_after_wait(uut, sensor_module, data_builder):
 
     # Simulate property access changing over time via side_effect on attribute access
     values = [None, 999]
+
     def co2_getter():
         return values.pop(0)
+
     type(sensor_module.SCD4X.return_value).CO2 = property(lambda self: co2_getter())
 
     meas = Measurements()
-    with patch('klimalogger.sensor.scd4x.time.sleep') as sleep_mock:
+    with patch("klimalogger.sensor.scd4x.time.sleep") as sleep_mock:
         uut.measure(data_builder, meas)
         # Should sleep exactly once due to first None
         assert sleep_mock.call_count == 1

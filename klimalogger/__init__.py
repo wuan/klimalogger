@@ -1,11 +1,11 @@
 import logging
 import time
 
+from . import logger
 from .config import Config, load_config_parser
 from .data_builder import DataBuilder
 from .measurement import MeasurementDispatcher, SensorFactory
 from .transport import QueueTransport
-from . import logger
 
 root_logger = logging.getLogger(__name__)
 root_logger.setLevel(logging.WARN)
@@ -26,9 +26,12 @@ def set_parent_logger(logger):
 
 
 class Client:
-    def __init__(self, measurement_dispatcher: MeasurementDispatcher,
-                 transport: QueueTransport,
-                 config: Config):
+    def __init__(
+        self,
+        measurement_dispatcher: MeasurementDispatcher,
+        transport: QueueTransport,
+        config: Config,
+    ):
         self.measurement_dispatcher = measurement_dispatcher
         self.transport = transport
         self.config = config
@@ -53,7 +56,9 @@ class Client:
             time.sleep(1)
 
     def measure_and_store(self):
-        log.info("measure_and_store()", )
+        log.info(
+            "measure_and_store()",
+        )
         (timestamp, data) = self.measure()
 
         self.store_data(data)
@@ -68,7 +73,9 @@ class Client:
             self.transport.store(data)
             log.info("stored data")
         except Exception as e:
-            log.error("error during data transmission: create local log entry", exc_info=e)
+            log.error(
+                "error during data transmission: create local log entry", exc_info=e
+            )
 
 
 def client():
@@ -77,8 +84,8 @@ def client():
     cfg = Config(config_parser)
     sensor_factory = SensorFactory(config_parser)
     measurement_dispatcher = MeasurementDispatcher(config_parser, sensor_factory)
-    store = QueueStore(cfg)
+    store = QueueTransport(cfg)
     return Client(measurement_dispatcher, store, cfg)
 
 
-__all__ = ["client", "DataBuilder", "MeasurementDispatcher", "logger" ]
+__all__ = ["client", "DataBuilder", "MeasurementDispatcher", "logger"]

@@ -1,5 +1,4 @@
 from assertpy import assert_that
-from mock import Mock, PropertyMock
 
 import klimalogger
 
@@ -13,11 +12,18 @@ class TestDataBuilderTest:
         assert_that(self.uut.data).is_empty()
 
     def test_create_entry(self):
-        self.uut.add('<sensor>', '<type>', '<unit>', '<value>', is_calculated=False)
+        self.uut.add("<sensor>", "<type>", "<unit>", "<value>", is_calculated=False)
 
-        assert_that(self.uut.data).contains({
-            'measurement': 'data',
-            'tags': {'type': '<type>', 'unit': '<unit>', 'sensor': '<sensor>', 'calculated': False},
-            'time': self.uut.timestamp,
-            'fields': {'value': '<value>'}
-        })
+        assert_that(self.uut.data).contains(
+            {
+                "measurement": "data",
+                "tags": {
+                    "type": "<type>",
+                    "unit": "<unit>",
+                    "sensor": "<sensor>",
+                    "calculated": False,
+                },
+                "time": self.uut.timestamp,
+                "fields": {"value": "<value>"},
+            }
+        )

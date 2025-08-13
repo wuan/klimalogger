@@ -11,12 +11,15 @@ def _no_console_handler(mocker):
     # Avoid touching real logging handlers during CLI tests
     mocker.patch.object(kl, "add_log_handler", side_effect=lambda handler: None)
     if hasattr(kl, "logger"):
-        mocker.patch.object(kl.logger, "create_console_handler", side_effect=lambda: None)
+        mocker.patch.object(
+            kl.logger, "create_console_handler", side_effect=lambda: None
+        )
 
 
 def import_cli_module():
     # Import the CLI module fresh to ensure clean state between tests
     import importlib
+
     return importlib.import_module("klimalogger.script.klimalogger")
 
 
@@ -69,7 +72,13 @@ def test_check_prints_measure_result(mocker, capsys):
 
 def test_version_prints_version(mocker, capsys):
     # Ensure client() is not called in this path
-    mocker.patch.object(kl, "client", side_effect=lambda *a, **k: pytest.fail("client() should not be called for --version"))
+    mocker.patch.object(
+        kl,
+        "client",
+        side_effect=lambda *a, **k: pytest.fail(
+            "client() should not be called for --version"
+        ),
+    )
 
     mod = import_cli_module()
 
