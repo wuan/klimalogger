@@ -40,5 +40,4 @@ repos:
         name: mypy (package code only)
         args:
           - --config-file=mypy.ini
-          - klimalogger
         additional_dependencies: []
