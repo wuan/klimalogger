@@ -2,6 +2,8 @@ import json
 import logging
 import secrets
 
+from typing import Optional
+
 from paho.mqtt import client as mqtt_client
 from paho.mqtt.enums import CallbackAPIVersion
 
@@ -28,7 +30,7 @@ class QueueTransport:
             log.warning(f"Disconnected from MQTT Broker: {reason_code}")
 
         try:
-            self.client = mqtt_client.Client(
+            self.client : Optional[mqtt_client.Client] = mqtt_client.Client(
                 client_id=client_id,
                 clean_session=False,
                 callback_api_version=CallbackAPIVersion.VERSION2,

@@ -4,7 +4,6 @@ import inspect
 import logging
 import time
 from dataclasses import dataclass
-from typing import Optional
 
 from lazy import lazy
 
@@ -17,8 +16,8 @@ log = logging.getLogger(__name__)
 
 @dataclass
 class Measurements:
-    temperature: Optional[float] = None
-    relative_humidity: Optional[float] = None
+    temperature: float | None = None
+    relative_humidity: float | None = None
 
 
 class MeasurementDispatcher:
