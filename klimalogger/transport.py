@@ -13,10 +13,13 @@ log = logging.getLogger(__name__)
 
 class QueueTransport:
     def __init__(self, configuration: config.Config):
-        self.qos = configuration.queue_qos
-        self.mqtt_prefix = configuration.queue_prefix
+        self.qos = configuration.mqtt_qos
+        self.mqtt_prefix = configuration.mqtt_prefix
+        self.client: mqtt_client.Client | None = None
 
-        client_id = f"klimalogger-mqtt-{configuration.client_host_name}-{secrets.randbelow(1000)}"
+        client_id = (
+            f"klimalogger-mqtt-{configuration.host_name}-{secrets.randbelow(1000)}"
+        )
 
         def on_connect(client, userdata, flags, reason_code, properties):
             if reason_code == 0:
@@ -28,7 +31,7 @@ class QueueTransport:
             log.warning(f"Disconnected from MQTT Broker: {reason_code}")
 
         try:
-            self.client: mqtt_client.Client | None = mqtt_client.Client(
+            self.client = mqtt_client.Client(
                 client_id=client_id,
                 clean_session=False,
                 callback_api_version=CallbackAPIVersion.VERSION2,
@@ -38,10 +41,10 @@ class QueueTransport:
             self.client.on_disconnect = on_disconnect
             log.info(
                 "connect to host %s, port %d",
-                configuration.queue_host,
-                configuration.queue_port,
+                configuration.mqtt_host,
+                configuration.mqtt_port,
             )
-            self.client.connect(configuration.queue_host, configuration.queue_port)
+            self.client.connect(configuration.mqtt_host, configuration.mqtt_port)
             self.client.loop_start()
         except Exception:
             log.exception("could not create client")
