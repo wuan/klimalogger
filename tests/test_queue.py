@@ -1,4 +1,3 @@
-import configparser
 import json
 
 import pytest
@@ -44,13 +43,9 @@ class DummyClient:
 
 @pytest.fixture
 def cfg():
-    cp = configparser.ConfigParser()
-    cp.add_section("queue")
-    cp.set("queue", "host", "example.local")
-    cp.set("queue", "port", "1883")
-    cp.set("queue", "queue_qos", "2")
-    cp.set("queue", "queue_prefix", "my/prefix")
-    return Config(cp)
+    return Config(
+        mqtt_host="example.local", mqtt_port=1883, mqtt_prefix="my/prefix", mqtt_qos=2
+    )
 
 
 @pytest.fixture

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import configparser
 import importlib
 import inspect
@@ -22,7 +24,7 @@ class Measurements:
 
 class MeasurementDispatcher:
     def __init__(
-        self, configuration: configparser.ConfigParser, sensor_factory: "SensorFactory"
+        self, configuration: configparser.ConfigParser, sensor_factory: SensorFactory
     ):
         self.sensor_factory = sensor_factory
         self.sensor_names = [
