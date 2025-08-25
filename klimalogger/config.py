@@ -1,54 +1,83 @@
 import configparser
 import logging
+import os
 import socket
+import sys
+from dataclasses import dataclass, field
 from pathlib import Path
-
-from lazy import lazy
+from typing import Any
 
 log = logging.getLogger(__name__)
 
 
+@dataclass(frozen=True)
 class Config:
-    def __init__(self, config_parser: configparser.ConfigParser):
-        self.config_parser = config_parser
+    mqtt_host: str
+    mqtt_port: int
+    mqtt_prefix: str
+    mqtt_qos: int = 1
+    mqtt_username: str | None = None
+    mqtt_password: str | None = None
+    host_name: str = socket.gethostname()
+    location_name: str = ""
+    elevation: int | None = None
+    device_map: dict[int, str] = field(default_factory=dict)
 
-    @lazy
-    def client_location_name(self) -> str:
-        return self.config_parser.get("client", "location_name")
 
-    @lazy
-    def client_host_name(self) -> str:
-        return socket.gethostname()
+def is_circuitpython():
+    return sys.platform == "circuitpython"
 
-    @lazy
-    def queue_username(self) -> str:
-        return self.config_parser.get("queue", "username")
 
-    @lazy
-    def queue_password(self) -> str:
-        return self.config_parser.get("queue", "password")
+def ensure_not_none(value: Any | None, name: str = ""):
+    if value is None:
+        raise ValueError(f"{name} is required")
+    return value
 
-    @lazy
-    def queue_host(self) -> str:
-        return self.config_parser.get("queue", "host")
 
-    @lazy
-    def queue_port(self) -> int:
-        port_string = self.config_parser.get("queue", "port")
-        return int(port_string)
+def build_config() -> Config:
+    if is_circuitpython():
+        return build_env_based_config()
+    else:
+        return build_file_based_config()
 
-    @lazy
-    def queue_qos(self) -> int:
-        qos_string = self.config_parser.get("queue", "queue_qos", fallback="1")
-        return int(qos_string)
 
-    @lazy
-    def queue_prefix(self) -> str:
-        return self.config_parser.get("queue", "queue_prefix", fallback="sensors")
+def build_env_based_config():
+    def device_map(value: str):
+        return {
+            (elements := entry.split("="))[0]: elements[1] for entry in value.split(",")
+        }
 
-    @lazy
-    def log_path(self) -> str:
-        return self.config_parser.get("log", "path")
+    return Config(
+        mqtt_host=ensure_not_none(os.getenv("MQTT_HOST")),
+        mqtt_port=int(os.getenv("MQTT_PORT")),
+        mqtt_prefix=os.getenv("MQTT_PREFIX"),
+        mqtt_username=os.getenv("MQTT_USERNAME", None),
+        mqtt_password=os.getenv("MQTT_PASSWORD", None),
+        location_name=os.getenv("LOCATION_NAME"),
+        elevation=int(os.getenv("ELEVATION", "0")),
+        device_map=device_map(os.getenv("DEVICE_MAP", "")),
+    )
+
+
+def build_file_based_config():
+    config_parser = load_config_parser()
+
+    def device_map(value: str):
+        return {
+            (elements := entry.split("="))[0]: elements[1] for entry in value.split(",")
+        }
+
+    return Config(
+        mqtt_host=ensure_not_none(config_parser.get("queue", "host"), "queue host"),
+        mqtt_port=int(config_parser.get("queue", "port")),
+        mqtt_prefix=config_parser.get("queue", "queue_prefix", fallback="sensors"),
+        mqtt_qos=int(config_parser.get("queue", "queue_qos", fallback="1")),
+        mqtt_username=config_parser.get("queue", "username"),
+        mqtt_password=config_parser.get("queue", "password"),
+        location_name=config_parser.get("client", "location_name"),
+        elevation=int(config_parser.get("client", "elevation", fallback="0")),
+        device_map=device_map(config_parser.get("client", "device_map", fallback="")),
+    )
 
 
 def load_config_parser() -> configparser.ConfigParser:

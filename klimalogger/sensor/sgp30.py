@@ -21,7 +21,11 @@ class SGP30Sensor(BaseSensor):
 
     def measure(self, data_builder: DataBuilder, _: Measurements) -> None:
         # self.sensor.set_iaq_baseline(self.baseline_eCO2, self.baseline_TVOC)
-        eCO2, TVOC = self.driver.iaq_measure()
+        carbon_dioxide_equivalent, total_volatile_organic_compounds = (
+            self.driver.iaq_measure()
+        )
 
-        data_builder.add(self.name, "eCO2", "ppm", float(eCO2))
-        data_builder.add(self.name, "TVOC", "ppb", float(TVOC))
+        data_builder.add(self.name, "eCO2", "ppm", float(carbon_dioxide_equivalent))
+        data_builder.add(
+            self.name, "TVOC", "ppb", float(total_volatile_organic_compounds)
+        )
