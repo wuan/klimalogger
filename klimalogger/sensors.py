@@ -27,10 +27,14 @@ def scan(i2c_bus: busio.I2C):
         print(f"scan() attempts: {lock_attempts}")
 
     devices = []
-    for _ in range(10):
+    iterations = 0
+    for _ in range(20):
         devices = i2c_bus.scan()
         if devices:
             break
+        time.sleep(0.2)
+        iterations += 1
+    print(f"Found {len(devices)} devices after {iterations} iterations.")
 
     i2c_bus.unlock()
 

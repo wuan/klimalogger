@@ -1,8 +1,6 @@
 import logging
 import time
 
-import busio
-
 from . import logger
 from .config import Config, build_config
 from .data_builder import DataBuilder
@@ -73,17 +71,13 @@ class Client:
 
 
 def client():
-    # Manual wiring instead of Injector
-    config = build_config()
-    sensors = Sensors(config, create_i2c_bus())
-    store = QueueTransport(config)
-    return Client(sensors, store)
-
-
-def create_i2c_bus() -> busio.I2C:
     import board
 
-    return busio.I2C(board.SCL, board.SDA, frequency=100000)
+    # Manual wiring instead of Injector
+    config = build_config()
+    sensors = Sensors(config, board.I2C())
+    store = QueueTransport(config)
+    return Client(sensors, store)
 
 
 __all__ = ["client", "Config", "DataBuilder", "logger"]
