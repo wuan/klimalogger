@@ -15,7 +15,6 @@ class TestBuildConfig:
         monkeypatch.setenv("MQTT_PREFIX", "home/sensors")
         monkeypatch.setenv("MQTT_USERNAME", "user")
         monkeypatch.setenv("MQTT_PASSWORD", "pass")
-        monkeypatch.setenv("LOCATION_NAME", "Lab")
         monkeypatch.setenv("ELEVATION", "123")
         monkeypatch.setenv("DEVICE_MAP", "1=sgp30,2=bme680")
 
@@ -26,7 +25,6 @@ class TestBuildConfig:
         assert cfg.mqtt_prefix == "home/sensors"
         assert cfg.mqtt_username == "user"
         assert cfg.mqtt_password == "pass"
-        assert cfg.location_name == "Lab"
         assert cfg.elevation == 123
         assert cfg.device_map == {"1": "sgp30", "2": "bme680"}
 

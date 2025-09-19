@@ -58,7 +58,6 @@ def build_env_based_config():
         mqtt_prefix=os.getenv("MQTT_PREFIX"),
         mqtt_username=os.getenv("MQTT_USERNAME", None),
         mqtt_password=os.getenv("MQTT_PASSWORD", None),
-        location_name=os.getenv("LOCATION_NAME"),
         elevation=int(os.getenv("ELEVATION", "0")),
         device_map=device_map(os.getenv("DEVICE_MAP", "")),
     )
@@ -77,9 +76,8 @@ def build_file_based_config():
         mqtt_port=int(config_parser.get("queue", "port")),
         mqtt_prefix=config_parser.get("queue", "queue_prefix", fallback="sensors"),
         mqtt_qos=int(config_parser.get("queue", "queue_qos", fallback="1")),
-        mqtt_username=config_parser.get("queue", "username"),
-        mqtt_password=config_parser.get("queue", "password"),
-        location_name=config_parser.get("client", "location_name"),
+        mqtt_username=config_parser.get("queue", "username", fallback=None),
+        mqtt_password=config_parser.get("queue", "password", fallback=None),
         elevation=int(config_parser.get("client", "elevation", fallback="0")),
         device_map=device_map(config_parser.get("client", "device_map", fallback="")),
     )
