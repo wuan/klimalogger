@@ -28,6 +28,25 @@ class TestBuildConfig:
         assert cfg.elevation == 123
         assert cfg.device_map == {"1": "sgp30", "2": "bme680"}
 
+    def test_build_config_reads_env_on_circuitpython_empty_devicemap(self, monkeypatch):
+        # Force circuitpython branch
+        monkeypatch.setattr(
+            "klimalogger.config.is_circuitpython", lambda: True, raising=True
+        )
+
+        monkeypatch.setenv("MQTT_HOST", "mqtt.local")
+        monkeypatch.setenv("MQTT_PORT", "1883")
+        monkeypatch.setenv("MQTT_PREFIX", "home/sensors")
+        monkeypatch.setenv("MQTT_USERNAME", "user")
+        monkeypatch.setenv("MQTT_PASSWORD", "pass")
+        monkeypatch.setenv("ELEVATION", "123")
+        monkeypatch.setenv("DEVICE_MAP", "")
+
+        cfg = klimalogger.config.build_config()
+
+        assert isinstance(cfg, klimalogger.config.Config)
+        assert cfg.device_map == {}
+
     def test_build_config_raises_off_circuitpython(self, monkeypatch):
         # Force non-circuitpython branch
         monkeypatch.setattr(

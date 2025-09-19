@@ -49,7 +49,9 @@ def build_config() -> Config:
 def build_env_based_config():
     def device_map(value: str):
         return {
-            (elements := entry.split("="))[0]: elements[1] for entry in value.split(",")
+            elements[0]: elements[1]
+            for entry in value.split(",")
+            if len(elements := entry.split("=")) > 1
         }
 
     return Config(
