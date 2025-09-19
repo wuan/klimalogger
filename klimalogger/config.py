@@ -46,14 +46,15 @@ def build_config() -> Config:
         return cfg
 
 
-def build_env_based_config():
-    def device_map(value: str):
-        return {
-            elements[0]: elements[1]
-            for entry in value.split(",")
-            if len(elements := entry.split("=")) > 1
-        }
+def device_map(value: str):
+    return {
+        elements[0]: elements[1]
+        for entry in value.split(",")
+        if len(elements := entry.split("=")) > 1
+    }
 
+
+def build_env_based_config():
     return Config(
         mqtt_host=ensure_not_none(os.getenv("MQTT_HOST")),
         mqtt_port=int(os.getenv("MQTT_PORT")),
@@ -67,11 +68,6 @@ def build_env_based_config():
 
 def build_file_based_config():
     config_parser = load_config_parser()
-
-    def device_map(value: str):
-        return {
-            (elements := entry.split("="))[0]: elements[1] for entry in value.split(",")
-        }
 
     return Config(
         mqtt_host=ensure_not_none(config_parser.get("queue", "host"), "queue host"),
