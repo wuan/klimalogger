@@ -26,7 +26,11 @@ def scan(i2c_bus: busio.I2C):
     if lock_attempts > 1:
         print(f"scan() attempts: {lock_attempts}")
 
-    devices = i2c_bus.scan()
+    devices = []
+    for _ in range(10):
+        devices = i2c_bus.scan()
+        if devices:
+            break
 
     i2c_bus.unlock()
 
