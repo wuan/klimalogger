@@ -32,7 +32,7 @@ class DataBuilder:
         measurement_unit: str,
         measurement_value: float,
         is_calculated: bool = False,
-    ):
+    ) -> dict:
         return {
             "measurement": "data",
             "tags": {

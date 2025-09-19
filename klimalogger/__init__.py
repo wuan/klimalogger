@@ -4,9 +4,8 @@ import time
 import busio
 
 from . import logger
-from .config import build_config
+from .config import Config, build_config
 from .data_builder import DataBuilder
-from .measurement import MeasurementDispatcher
 from .sensors import Sensors
 from .transport import QueueTransport
 
@@ -56,9 +55,9 @@ class Client:
         log.info(
             "measure_and_store()",
         )
-        (timestamp, data) = self.measure()
+        data_builder = self.measure()
 
-        self.store_data(data)
+        self.store_data(data_builder.data)
 
     def measure(self):
         return self.sensors.measure()
@@ -87,4 +86,4 @@ def create_i2c_bus() -> busio.I2C:
     return busio.I2C(board.SCL, board.SDA, frequency=100000)
 
 
-__all__ = ["client", "DataBuilder", "MeasurementDispatcher", "logger"]
+__all__ = ["client", "Config", "DataBuilder", "logger"]

@@ -1,13 +1,13 @@
 import time
 
 import busio
-from sensor import BaseSensor
 
 from klimalogger import DataBuilder
 
 from .calc import PressureCalc, TemperatureCalc
 from .config import Config
 from .measurement import Measurements
+from .sensor import BaseSensor
 from .sensor.bh1750 import BH1750Sensor
 from .sensor.bme680 import BME680Sensor
 from .sensor.bmp3xx import BMP3xxSensor
@@ -107,7 +107,7 @@ class Sensors:
 
             self.sensors = sensors
 
-    def measure(self, data_builder=None):
+    def measure(self, data_builder=None) -> DataBuilder:
         if data_builder is None:
             data_builder = DataBuilder()
         measurements = Measurements()
@@ -118,4 +118,4 @@ class Sensors:
             end_time = time.monotonic_ns()
             data_builder.add(sensor.name, "time", "ms", (end_time - start_time) / 1e6)
 
-        return data_builder.data
+        return data_builder
