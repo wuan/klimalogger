@@ -30,8 +30,8 @@ def config_parser():
 
 
 @pytest.fixture
-def uut(sensor_module, i2c_bus, config_parser):
-    return SGP30Sensor(i2c_bus=i2c_bus, config_parser=config_parser)
+def uut(sensor_module, i2c_bus, config):
+    return SGP30Sensor(i2c_bus=i2c_bus, config=config)
 
 
 @pytest.fixture
@@ -39,15 +39,23 @@ def data_builder():
     return DataBuilder()
 
 
+@pytest.fixture
+def config(config):
+    config.baselines["eCO2"] = 12.34
+    config.baselines["TVOC"] = 56.78
+    return config
+
+
 def test_init_constructs_driver_and_parses_baselines(
     uut, sensor_module, i2c_bus, config_parser
 ):
+
     # Driver constructed with given bus
     sensor_module.Adafruit_SGP30.assert_called_once_with(i2c_bus)
 
     # Baselines parsed as ints from configuration
-    assert uut.baseline_eCO2 == int(config_parser.get("sgp30_sensor", "baseline_eCO2"))
-    assert uut.baseline_TVOC == int(config_parser.get("sgp30_sensor", "baseline_TVOC"))
+    assert uut.baseline_eCO2 == 12.34
+    assert uut.baseline_TVOC == 56.78
 
 
 def test_measure_adds_eCO2_and_TVOC(uut, sensor_module, data_builder):

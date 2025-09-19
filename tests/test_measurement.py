@@ -6,11 +6,8 @@ from klimalogger.measurement import MeasurementDispatcher, SensorFactory
 
 
 class TestMeasurementDispatcher:
-    def test_measure_adds_time_entries_and_handles_sensor_errors(self, mocker):
+    def test_measure_adds_time_entries_and_handles_sensor_errors(self, mocker, config):
         # Configuration lists three sensors (one will fail)
-        cfg = configparser.ConfigParser()
-        cfg.add_section("client")
-        cfg.set("client", "sensors", "foo, bad , bar")
 
         # Prepare three fake sensors with different priorities
         foo = mock.Mock()

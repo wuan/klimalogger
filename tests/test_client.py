@@ -24,7 +24,7 @@ def cfg():
 
 @pytest.fixture()
 def client(dispatcher, transport, cfg):
-    return klimalogger.Client(dispatcher, transport, cfg)
+    return klimalogger.Client(dispatcher, transport)
 
 
 def test_measure_returns_timestamp_and_data(client, dispatcher):

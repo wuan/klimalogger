@@ -26,10 +26,8 @@ def config_parser():
 
 
 @pytest.fixture
-def uut(sensor_module, i2c_bus, config_parser, pressure_calc):
-    return BMP3xxSensor(
-        i2c_bus=i2c_bus, config_parser=config_parser, pressure_calc=pressure_calc
-    )
+def uut(sensor_module, i2c_bus, config, pressure_calc):
+    return BMP3xxSensor(i2c_bus=i2c_bus, config=config, pressure_calc=pressure_calc)
 
 
 def test_init_constructs_driver(uut, sensor_module, i2c_bus):

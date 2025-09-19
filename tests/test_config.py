@@ -35,5 +35,8 @@ class TestBuildConfig:
         monkeypatch.setattr(
             "klimalogger.config.is_circuitpython", lambda: False, raising=True
         )
+        monkeypatch.setattr(
+            "klimalogger.config.build_file_based_config", lambda: False, raising=True
+        )
         with pytest.raises(RuntimeError):
             klimalogger.config.build_config()

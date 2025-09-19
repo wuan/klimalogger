@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import configparser
 import importlib
 import inspect
 import logging
@@ -10,6 +9,7 @@ from dataclasses import dataclass
 from lazy import lazy
 
 from .calc import PressureCalc, TemperatureCalc
+from .config import Config
 from .data_builder import DataBuilder
 from .sensor import create_i2c_bus
 
@@ -23,15 +23,13 @@ class Measurements:
 
 
 class MeasurementDispatcher:
-    def __init__(
-        self, configuration: configparser.ConfigParser, sensor_factory: SensorFactory
-    ):
+    def __init__(self, configuration: Config, sensor_factory: SensorFactory):
         self.sensor_factory = sensor_factory
-        self.sensor_names = [
-            sensor.strip()
-            for sensor in configuration.get("client", "sensors").split(",")
-            if sensor.strip() != ""
-        ]
+        # Derive sensor names from the device_map values (preserve insertion order, unique)
+        values = (
+            list(configuration.device_map.values()) if configuration.device_map else []
+        )
+        self.sensor_names = list(dict.fromkeys(values))
 
     def measure(self) -> DataBuilder:
         log.info("measure()")
@@ -61,8 +59,8 @@ class MeasurementDispatcher:
 
 class SensorFactory:
 
-    def __init__(self, configuration: configparser.ConfigParser):
-        self._config_parser = configuration
+    def __init__(self, configuration: Config):
+        self._config = configuration
         self._i2c_bus = None
         self._temperature_calc = TemperatureCalc()
         self._pressure_calc = PressureCalc()
@@ -77,7 +75,7 @@ class SensorFactory:
                 self._i2c_bus = None
         return {
             "i2c_bus": self._i2c_bus,
-            "config_parser": self._config_parser,
+            "config": self._config,
             "temperature_calc": self._temperature_calc,
             "pressure_calc": self._pressure_calc,
         }

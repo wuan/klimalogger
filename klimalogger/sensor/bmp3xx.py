@@ -1,10 +1,9 @@
-import configparser
-
 import adafruit_bmp3xx
 import busio
 
 from .. import DataBuilder
 from ..calc import PressureCalc
+from ..config import Config
 from ..measurement import Measurements
 from . import BaseSensor
 
@@ -16,11 +15,11 @@ class BMP3xxSensor(BaseSensor):
     def __init__(
         self,
         i2c_bus: busio.I2C,
-        config_parser: configparser.ConfigParser,
+        config: Config,
         pressure_calc: PressureCalc,
     ):
         self.pressure_calc = pressure_calc
-        self.elevation = int(config_parser.get("bmp3xx_sensor", "elevation"))
+        self.elevation = int(config.elevation or 0)
 
         self.driver = adafruit_bmp3xx.BMP3XX_I2C(i2c_bus)
 

@@ -1,10 +1,13 @@
 import logging
 import time
 
+import busio
+
+from . import config as config_module
 from . import logger
-from .config import Config, load_config_parser
 from .data_builder import DataBuilder
 from .measurement import MeasurementDispatcher, SensorFactory
+from .sensors import Sensors
 from .transport import QueueTransport
 
 root_logger = logging.getLogger(__name__)
@@ -26,15 +29,9 @@ def set_parent_logger(logger):
 
 
 class Client:
-    def __init__(
-        self,
-        measurement_dispatcher: MeasurementDispatcher,
-        transport: QueueTransport,
-        config: Config,
-    ):
-        self.measurement_dispatcher = measurement_dispatcher
+    def __init__(self, sensors: Sensors, transport: QueueTransport):
+        self.sensors = sensors
         self.transport = transport
-        self.config = config
 
     def measure_and_store_periodically(self, period=15):
         log.info("measure_and_store_periodically(%d)", period)
@@ -64,9 +61,7 @@ class Client:
         self.store_data(data)
 
     def measure(self):
-        result = self.measurement_dispatcher.measure()
-
-        return result.timestamp, result.data
+        return self.sensors.measure()
 
     def store_data(self, data):
         try:
@@ -80,12 +75,17 @@ class Client:
 
 def client():
     # Manual wiring instead of Injector
-    config_parser = load_config_parser()
-    cfg = Config(config_parser)
-    sensor_factory = SensorFactory(config_parser)
-    measurement_dispatcher = MeasurementDispatcher(config_parser, sensor_factory)
-    store = QueueTransport(cfg)
-    return Client(measurement_dispatcher, store, cfg)
+    config = config_module.build_config()
+    sensors = Sensors(config, create_i2c_bus())
+    sensor_factory = SensorFactory(config)
+    store = QueueTransport(config)
+    return Client(sensors, store)
+
+
+def create_i2c_bus() -> busio.I2C:
+    import board
+
+    return busio.I2C(board.SCL, board.SDA, frequency=100000)
 
 
 __all__ = ["client", "DataBuilder", "MeasurementDispatcher", "logger"]

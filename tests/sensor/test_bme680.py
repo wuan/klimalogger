@@ -1,4 +1,3 @@
-import configparser
 from unittest import mock
 from unittest.mock import patch
 
@@ -18,18 +17,10 @@ def sensor_module():
 
 
 @pytest.fixture
-def config_parser():
-    cp = configparser.ConfigParser()
-    cp.add_section("bme680_sensor")
-    cp.set("bme680_sensor", "elevation", "123")
-    return cp
-
-
-@pytest.fixture
-def uut(sensor_module, i2c_bus, config_parser, temp_calc, pressure_calc):
+def uut(sensor_module, i2c_bus, config, temp_calc, pressure_calc):
     return BME680Sensor(
         i2c_bus=i2c_bus,
-        config_parser=config_parser,
+        config=config,
         temperature_calc=temp_calc,
         pressure_calc=pressure_calc,
     )

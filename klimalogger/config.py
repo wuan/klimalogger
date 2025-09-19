@@ -21,6 +21,7 @@ class Config:
     host_name: str = socket.gethostname()
     location_name: str = ""
     elevation: int | None = None
+    baselines: dict[str, float] = field(default_factory=dict)
     device_map: dict[int, str] = field(default_factory=dict)
 
 
@@ -38,7 +39,11 @@ def build_config() -> Config:
     if is_circuitpython():
         return build_env_based_config()
     else:
-        return build_file_based_config()
+        cfg = build_file_based_config()
+        # Ensure we always return a valid Config instance
+        if not isinstance(cfg, Config):
+            raise RuntimeError("Invalid configuration")
+        return cfg
 
 
 def build_env_based_config():

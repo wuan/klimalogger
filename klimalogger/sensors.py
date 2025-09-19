@@ -1,6 +1,5 @@
 import time
 
-from board import I2C
 from sensor import BaseSensor
 
 from . import Config, DataBuilder
