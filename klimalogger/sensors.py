@@ -1,10 +1,13 @@
 import time
 
+import busio
 from sensor import BaseSensor
 
-from . import Config, DataBuilder
+from klimalogger import DataBuilder
+
 from .calc import PressureCalc, TemperatureCalc
-from .measurements import Measurements
+from .config import Config
+from .measurement import Measurements
 from .sensor.bh1750 import BH1750Sensor
 from .sensor.bme680 import BME680Sensor
 from .sensor.bmp3xx import BMP3xxSensor
@@ -15,7 +18,7 @@ from .sensor.sht4x import SHT4xSensor
 from .sensor.veml7700 import VEML7700Sensor
 
 
-def scan(i2c_bus: I2C):
+def scan(i2c_bus: busio.I2C):
     lock_attempts = 0
     while not i2c_bus.try_lock():
         lock_attempts += 1
@@ -46,7 +49,7 @@ class Sensors:
         BH1750Sensor.name: lambda i2c_bus, _: BH1750Sensor(i2c_bus),
     }
 
-    def __init__(self, config: Config, i2c_bus: I2C):
+    def __init__(self, config: Config, i2c_bus: busio.I2C):
         self.config = config
         self.i2c_bus = i2c_bus
         self.sensors: list[BaseSensor] = []

@@ -3,10 +3,10 @@ import time
 
 import busio
 
-from . import config as config_module
 from . import logger
+from .config import build_config
 from .data_builder import DataBuilder
-from .measurement import MeasurementDispatcher, SensorFactory
+from .measurement import MeasurementDispatcher
 from .sensors import Sensors
 from .transport import QueueTransport
 
@@ -75,9 +75,8 @@ class Client:
 
 def client():
     # Manual wiring instead of Injector
-    config = config_module.build_config()
+    config = build_config()
     sensors = Sensors(config, create_i2c_bus())
-    sensor_factory = SensorFactory(config)
     store = QueueTransport(config)
     return Client(sensors, store)
 

@@ -1,6 +1,6 @@
 import pytest
 
-from klimalogger import Config
+from klimalogger.config import Config
 
 
 @pytest.fixture

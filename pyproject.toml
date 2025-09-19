@@ -26,6 +26,9 @@ adafruit-circuitpython-bme680 = "^3.7.13"
 adafruit-circuitpython-bmp3xx = "^1.3.24"
 adafruit-circuitpython-sgp30 = "^3.0.13"
 adafruit-circuitpython-scd4x = "^1.4.8"
+adafruit-circuitpython-bh1750 = "^1.1.16"
+adafruit-circuitpython-mmc56x3 = "^1.0.13"
+adafruit-circuitpython-veml7700 = "^2.1.5"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.2"
