@@ -6,7 +6,7 @@ class DataBuilder:
         self.timestamp = round(time.time(), 1)
         self.data = []
 
-    def __str__(self):
+    def __repr__(self):
         return f"@{self.timestamp}: {self.data}"
 
     def add(
