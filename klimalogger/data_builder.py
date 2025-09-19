@@ -6,6 +6,9 @@ class DataBuilder:
         self.timestamp = round(time.time(), 1)
         self.data = []
 
+    def __str__(self):
+        return f"@{self.timestamp}: {self.data}"
+
     def add(
         self,
         sensor: str,
