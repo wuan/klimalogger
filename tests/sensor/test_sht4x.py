@@ -15,7 +15,7 @@ def sensor():
 
 @pytest.fixture
 def uut(sensor, i2c_bus, temp_calc):
-    return SHT4xSensor(i2c_bus=i2c_bus, temperature_calc=temp_calc)
+    return SHT4xSensor(i2c_bus=i2c_bus, address=14, temperature_calc=temp_calc)
 
 
 def test_measure_success(uut, sensor, data_builder, temp_calc, measurements):

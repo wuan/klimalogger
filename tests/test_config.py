@@ -26,7 +26,7 @@ class TestBuildConfig:
         assert cfg.mqtt_username == "user"
         assert cfg.mqtt_password == "pass"
         assert cfg.elevation == 123
-        assert cfg.device_map == {"1": "sgp30", "2": "bme680"}
+        assert cfg.device_map == {1: "sgp30", 2: "bme680"}
 
     def test_build_config_reads_env_on_circuitpython_empty_devicemap(self, monkeypatch):
         # Force circuitpython branch

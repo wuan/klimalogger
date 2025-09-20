@@ -88,7 +88,10 @@ class Sensors:
     def scan_devices(self):
         sensors_in_use = {sensor.name for sensor in self.sensors}
 
-        device_addresses = scan(self.i2c_bus)
+        device_addresses = (
+            scan(self.i2c_bus) if not self.config.sensors else self.config.sensors
+        )
+
         sensors_found = {
             self.device_map[device_address]
             for device_address in device_addresses
@@ -134,7 +137,9 @@ class Sensors:
                 start_time = time.monotonic_ns()
                 sensor.measure(data_builder, measurements)
                 end_time = time.monotonic_ns()
-                data_builder.add(sensor.name, "time", "ms", (end_time - start_time) / 1e6)
+                data_builder.add(
+                    sensor.name, "time", "ms", (end_time - start_time) / 1e6
+                )
             except OSError:
                 pass
 

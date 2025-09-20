@@ -15,7 +15,7 @@ def sensor():
 
 @pytest.fixture
 def uut(sensor, i2c_bus):
-    return SGP40Sensor(i2c_bus=i2c_bus)
+    return SGP40Sensor(i2c_bus=i2c_bus, address=25)
 
 
 @pytest.fixture

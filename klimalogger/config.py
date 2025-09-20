@@ -19,7 +19,7 @@ class Config:
     mqtt_username: str | None = None
     mqtt_password: str | None = None
     host_name: str = socket.gethostname()
-    location_name: str = ""
+    sensors: list[int] | None = None
     elevation: int | None = None
     baselines: dict[str, float] = field(default_factory=dict)
     device_map: dict[int, str] = field(default_factory=dict)
@@ -46,12 +46,20 @@ def build_config() -> Config:
         return cfg
 
 
-def device_map(value: str):
+def device_map(value: str) -> dict[int, str]:
     return {
-        elements[0]: elements[1]
+        int(elements[0]): elements[1]
         for entry in value.split(",")
         if len(elements := entry.split("=")) > 1
     }
+
+
+def sensors(value: str | None) -> list[int] | None:
+    return (
+        [int(address, 10) for address in value.split(",")]
+        if value is not None
+        else None
+    )
 
 
 def build_env_based_config():
@@ -77,6 +85,7 @@ def build_file_based_config():
         mqtt_username=config_parser.get("queue", "username", fallback=None),
         mqtt_password=config_parser.get("queue", "password", fallback=None),
         elevation=int(config_parser.get("client", "elevation", fallback="0")),
+        sensors=sensors(config_parser.get("client", "sensors", fallback=None)),
         device_map=device_map(config_parser.get("client", "device_map", fallback="")),
     )
 

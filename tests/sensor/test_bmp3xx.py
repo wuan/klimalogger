@@ -27,12 +27,14 @@ def config_parser():
 
 @pytest.fixture
 def uut(sensor_module, i2c_bus, config, pressure_calc):
-    return BMP3xxSensor(i2c_bus=i2c_bus, config=config, pressure_calc=pressure_calc)
+    return BMP3xxSensor(
+        i2c_bus=i2c_bus, address=43, config=config, pressure_calc=pressure_calc
+    )
 
 
 def test_init_constructs_driver(uut, sensor_module, i2c_bus):
     # Driver constructed with given bus
-    sensor_module.BMP3XX_I2C.assert_called_once_with(i2c_bus)
+    sensor_module.BMP3XX_I2C.assert_called_once_with(i2c_bus, 43)
 
 
 def test_measure_adds_pressure_and_sea_level_pressure(
