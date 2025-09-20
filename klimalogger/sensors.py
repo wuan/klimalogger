@@ -1,3 +1,4 @@
+import logging
 import time
 from collections.abc import Callable
 
@@ -18,6 +19,8 @@ from .sensor.sgp40 import SGP40Sensor
 from .sensor.sht4x import SHT4xSensor
 from .sensor.veml7700 import VEML7700Sensor
 
+log = logging.getLogger(__name__)
+
 
 def scan(i2c_bus: busio.I2C):
     lock_attempts = 0
@@ -25,7 +28,7 @@ def scan(i2c_bus: busio.I2C):
         lock_attempts += 1
 
     if lock_attempts > 1:
-        print(f"scan() attempts: {lock_attempts}")
+        log.debug(f"scan() attempts: {lock_attempts}")
 
     devices = []
     iterations = 0
@@ -35,7 +38,7 @@ def scan(i2c_bus: busio.I2C):
             break
         time.sleep(0.2)
         iterations += 1
-    print(f"Found {len(devices)} devices after {iterations} iterations.")
+    log.info(f"Found {len(devices)} devices after {iterations} iterations.")
 
     i2c_bus.unlock()
 
@@ -103,9 +106,8 @@ class Sensors:
             if device_address not in self.device_map
         }
         if unknown_sensors_found:
-            print(
-                "Could not find sensors for addresses:",
-                ", ".join(unknown_sensors_found),
+            log.warning(
+                f"Could not find sensors for addresses: {', '.join(unknown_sensors_found)}"
             )
 
         if sensors_in_use != sensors_found:
@@ -121,9 +123,9 @@ class Sensors:
 
             sensors.sort(key=lambda sensor: sensor.priority)
 
-            print("updated sensors:")
+            log.info("updated sensors:")
             for sensor in sensors:
-                print("  ", sensor.name, sensor.priority)
+                log.info(f"  {sensor.name} {sensor.priority}")
 
             self.sensors = sensors
 

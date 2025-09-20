@@ -92,7 +92,6 @@ class QueueTransport:
         unit = tags["unit"]
         sensor = tags["sensor"]
         topic = f"{self.mqtt_prefix}/{measurement_type}"
-        print(f"{topic}: {value} {unit} ({sensor})")
         return (
             topic,
             {
