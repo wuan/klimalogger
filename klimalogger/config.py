@@ -56,7 +56,7 @@ def device_map(value: str) -> dict[int, str]:
 
 def sensors(value: str | None) -> list[int] | None:
     return (
-        [int(address, 10) for address in value.split(",")]
+        [int(address, 16) for address in value.split(",")]
         if value is not None
         else None
     )
