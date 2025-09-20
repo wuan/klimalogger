@@ -130,9 +130,12 @@ class Sensors:
         measurements = Measurements()
 
         for sensor in self.sensors:
-            start_time = time.monotonic_ns()
-            sensor.measure(data_builder, measurements)
-            end_time = time.monotonic_ns()
-            data_builder.add(sensor.name, "time", "ms", (end_time - start_time) / 1e6)
+            try:
+                start_time = time.monotonic_ns()
+                sensor.measure(data_builder, measurements)
+                end_time = time.monotonic_ns()
+                data_builder.add(sensor.name, "time", "ms", (end_time - start_time) / 1e6)
+            except OSError:
+                pass
 
         return data_builder
