@@ -9,8 +9,8 @@ class BH1750Sensor:
     name = "BH1750"
     priority = 1
 
-    def __init__(self, i2c_bus: busio.I2C):
-        self.driver = adafruit_bh1750.BH1750(i2c_bus)
+    def __init__(self, i2c_bus: busio.I2C, address: int):
+        self.driver = adafruit_bh1750.BH1750(i2c_bus, address)
 
     def __del__(self):
         self.driver.stop_periodic_measurement()

@@ -1,4 +1,5 @@
 import time
+from collections.abc import Callable
 
 import busio
 
@@ -42,19 +43,23 @@ def scan(i2c_bus: busio.I2C):
 
 
 class Sensors:
-    sensor_map = {
-        SCD4xSensor.name: lambda i2c_bus, _: SCD4xSensor(i2c_bus),
-        SGP40Sensor.name: lambda i2c_bus, _: SGP40Sensor(i2c_bus),
-        SHT4xSensor.name: lambda i2c_bus, _: SHT4xSensor(i2c_bus, TemperatureCalc()),
-        BMP3xxSensor.name: lambda i2c_bus, config: BMP3xxSensor(
-            i2c_bus, config, PressureCalc()
+    sensor_map: dict[str, Callable] = {
+        SCD4xSensor.name: lambda i2c_bus, address, _: SCD4xSensor(i2c_bus, address),
+        SGP40Sensor.name: lambda i2c_bus, address, _: SGP40Sensor(i2c_bus, address),
+        SHT4xSensor.name: lambda i2c_bus, address, _: SHT4xSensor(
+            i2c_bus, address, TemperatureCalc()
         ),
-        BME680Sensor.name: lambda i2c_bus, config: BME680Sensor(
-            i2c_bus, config, TemperatureCalc(), PressureCalc()
+        BMP3xxSensor.name: lambda i2c_bus, address, config: BMP3xxSensor(
+            i2c_bus, address, config, PressureCalc()
         ),
-        MMC56x3Sensor.name: lambda i2c_bus, _: MMC56x3Sensor(i2c_bus),
-        VEML7700Sensor.name: lambda i2c_bus, _: VEML7700Sensor(i2c_bus),
-        BH1750Sensor.name: lambda i2c_bus, _: BH1750Sensor(i2c_bus),
+        BME680Sensor.name: lambda i2c_bus, address, config: BME680Sensor(
+            i2c_bus, address, config, TemperatureCalc(), PressureCalc()
+        ),
+        MMC56x3Sensor.name: lambda i2c_bus, address, _: MMC56x3Sensor(i2c_bus, address),
+        VEML7700Sensor.name: lambda i2c_bus, address, _: VEML7700Sensor(
+            i2c_bus, address
+        ),
+        BH1750Sensor.name: lambda i2c_bus, address, _: BH1750Sensor(i2c_bus, address),
     }
 
     def __init__(self, config: Config, i2c_bus: busio.I2C):
@@ -62,7 +67,7 @@ class Sensors:
         self.i2c_bus = i2c_bus
         self.sensors: list[BaseSensor] = []
 
-        self.device_map = {
+        self.device_map: dict[int, str] = {
             16: VEML7700Sensor.name,
             35: BH1750Sensor.name,
             48: MMC56x3Sensor.name,
@@ -74,6 +79,9 @@ class Sensors:
         device_map = config.device_map
         if device_map:
             self.device_map.update(device_map)
+        self.address_map: dict[str, int] = {
+            sensor_name: address for address, sensor_name in self.device_map.items()
+        }
 
         self.scan_devices()
 
@@ -105,7 +113,8 @@ class Sensors:
             for sensor_name in sensors_found.difference(sensors_in_use):
                 if sensor_name in self.sensor_map:
                     sensor = self.sensor_map[sensor_name]
-                    sensors.append(sensor(self.i2c_bus, self.config))
+                    address = self.address_map[sensor_name]
+                    sensors.append(sensor(self.i2c_bus, address, self.config))
 
             sensors.sort(key=lambda sensor: sensor.priority)
 

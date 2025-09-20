@@ -13,8 +13,8 @@ class SCD4xSensor(BaseSensor):
     name = "SCD4x"
     priority = 3
 
-    def __init__(self, i2c_bus: busio.I2C):
-        self.driver = adafruit_scd4x.SCD4X(i2c_bus)
+    def __init__(self, i2c_bus: busio.I2C, address: int):
+        self.driver = adafruit_scd4x.SCD4X(i2c_bus, address)
         self.driver.start_periodic_measurement()
 
     def __del__(self):

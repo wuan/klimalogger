@@ -11,8 +11,8 @@ class MMC56x3Sensor:
     name = "MMC56x3"
     priority = 1
 
-    def __init__(self, i2c_bus: busio.I2C):
-        self.driver = adafruit_mmc56x3.MMC5603(i2c_bus)
+    def __init__(self, i2c_bus: busio.I2C, address: int):
+        self.driver = adafruit_mmc56x3.MMC5603(i2c_bus, address)
         # self.driver.data_rate = 10  # in Hz, from 1-255 or 1000
         # self.driver.continuous_mode = True
 

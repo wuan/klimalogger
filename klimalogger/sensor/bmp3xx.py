@@ -15,13 +15,14 @@ class BMP3xxSensor(BaseSensor):
     def __init__(
         self,
         i2c_bus: busio.I2C,
+        address: int,
         config: Config,
         pressure_calc: PressureCalc,
     ):
         self.pressure_calc = pressure_calc
         self.elevation = int(config.elevation or 0)
 
-        self.driver = adafruit_bmp3xx.BMP3XX_I2C(i2c_bus)
+        self.driver = adafruit_bmp3xx.BMP3XX_I2C(i2c_bus, address)
 
     def measure(self, data_builder: DataBuilder, _: Measurements) -> None:
         temperature = self.driver.temperature
