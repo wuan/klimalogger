@@ -8,7 +8,7 @@ import klimalogger
 
 
 @pytest.fixture()
-def dispatcher():
+def sensors():
     return mock.Mock()
 
 
@@ -23,29 +23,27 @@ def cfg():
 
 
 @pytest.fixture()
-def client(dispatcher, transport, cfg):
-    return klimalogger.Client(dispatcher, transport, cfg)
+def client(sensors, transport, cfg):
+    return klimalogger.Client(sensors, transport)
 
 
-def test_measure_returns_timestamp_and_data(client, dispatcher):
+def test_measure_returns_timestamp_and_data(client, sensors):
     # Fake result from dispatcher.measure()
     result = SimpleNamespace(timestamp=123.4, data=[{"k": "v"}])
-    dispatcher.measure.return_value = result
+    sensors.measure.return_value = result
 
-    ts, data = client.measure()
+    data_builder = client.measure()
 
-    assert ts == 123.4
-    assert data == [{"k": "v"}]
-    dispatcher.measure.assert_called_once()
+    assert data_builder.timestamp == 123.4
+    assert data_builder.data == [{"k": "v"}]
+    sensors.measure.assert_called_once()
 
 
-def test_measure_and_store_calls_store_with_measured_data(
-    client, dispatcher, transport
-):
+def test_measure_and_store_calls_store_with_measured_data(client, sensors, transport):
     # Use a realistic DataBuilder to produce data
     db = klimalogger.DataBuilder()
     db.add("sensorX", "temp", "C", 21.5)
-    dispatcher.measure.return_value = db
+    sensors.measure.return_value = db
 
     client.measure_and_store()
 

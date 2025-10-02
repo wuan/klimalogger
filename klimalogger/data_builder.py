@@ -6,6 +6,9 @@ class DataBuilder:
         self.timestamp = round(time.time(), 1)
         self.data = []
 
+    def __repr__(self):
+        return f"@{self.timestamp}: {self.data}"
+
     def add(
         self,
         sensor: str,
@@ -32,7 +35,7 @@ class DataBuilder:
         measurement_unit: str,
         measurement_value: float,
         is_calculated: bool = False,
-    ):
+    ) -> dict:
         return {
             "measurement": "data",
             "tags": {

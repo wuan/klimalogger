@@ -1,4 +1,3 @@
-import configparser
 import logging
 
 import adafruit_bme680
@@ -6,6 +5,7 @@ import busio
 
 from .. import DataBuilder
 from ..calc import PressureCalc, TemperatureCalc
+from ..config import Config
 from ..measurement import Measurements
 from . import BaseSensor
 
@@ -19,15 +19,16 @@ class BME680Sensor(BaseSensor):
     def __init__(
         self,
         i2c_bus: busio.I2C,
-        config_parser: configparser.ConfigParser,
+        address: int,
+        config: Config,
         temperature_calc: TemperatureCalc,
         pressure_calc: PressureCalc,
     ):
         log.info("init()")
         self.temperature_calc = temperature_calc
         self.pressure_calc = pressure_calc
-        self.elevation = int(config_parser.get("bme680_sensor", "elevation"))
-        self.driver = adafruit_bme680.Adafruit_BME680_I2C(i2c_bus)
+        self.elevation = int(config.elevation or 0)
+        self.driver = adafruit_bme680.Adafruit_BME680_I2C(i2c_bus, address)
         self.driver.set_gas_heater(None, None)
 
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
