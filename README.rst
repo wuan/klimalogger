@@ -17,27 +17,37 @@
     :alt: OpenSSF Scorecard
     :target: https://scorecard.dev/viewer/?uri=github.com/wuan/bo-android
 
-Simple python client for logging measured climate data to InfluxDb.
+Simple python client for logging measured climate data to MQTT targets.
 
-Additional dependencies
------------------------
+Sensor support
+--------------
 
-.. list-table:: Dependencies
+As of now the following sensors are supported
+
+.. list-table:: Supported Sensors
    :widths: 20 90
    :header-rows: 1
 
    * - Sensor Type
-     - Command
+     - Measurement
    * - BME680
-     - ``pip3 install adafruit-circuitpython-bme680``
+     - Barometric pressure, Temperature, Relative humidity, Air quality
    * - BMP3xx
-     - ``pip3 install adafruit-circuitpython-bmp3xx``
+     - Temperature, Barometric Pressure
    * - SGP30
-     - ``pip3 install adafruit-circuitpython-sgp30``
+     - Air quality
    * - SGP40
-     - ``pip3 install adafruit-circuitpython-sgp40``
+     - Air quality
    * - SHT4x
-     - ``pip3 install adafruit-circuitpython-sht4x``
+     - Temperature, Relative Humidity
+   * - SCD4x
+     - CO2 concentration
+   * - PM25
+     - particle concentration
+   * - BH1750, VEML7700, TSL2591,
+     - Illumination
+   * - MMC56x3
+     - Magnetic Field
 
 Build and upload
 ----------------

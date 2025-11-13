@@ -13,10 +13,13 @@ from .sensor import BaseSensor
 from .sensor.bh1750 import BH1750Sensor
 from .sensor.bme680 import BME680Sensor
 from .sensor.bmp3xx import BMP3xxSensor
+from .sensor.dps310 import DPS310Sensor
 from .sensor.mmc56x3 import MMC56x3Sensor
+from .sensor.pm25 import PM25Sensor
 from .sensor.scd4x import SCD4xSensor
 from .sensor.sgp40 import SGP40Sensor
 from .sensor.sht4x import SHT4xSensor
+from .sensor.tsl2591 import TSL2591Sensor
 from .sensor.veml7700 import VEML7700Sensor
 
 log = logging.getLogger(__name__)
@@ -62,7 +65,12 @@ class Sensors:
         VEML7700Sensor.name: lambda i2c_bus, address, _: VEML7700Sensor(
             i2c_bus, address
         ),
-        BH1750Sensor.name: lambda i2c_bus, address, _: BH1750Sensor(i2c_bus, address),
+        BH1750Sensor.name: lambda i2c_bus, _1, _2: BH1750Sensor(i2c_bus),
+        PM25Sensor.name: lambda i2c_bus, _1, _2: PM25Sensor(i2c_bus),
+        TSL2591Sensor.name: lambda i2c_bus, _1, _2: TSL2591Sensor(i2c_bus),
+        DPS310Sensor.name: lambda i2c_bus, _, config: DPS310Sensor(
+            i2c_bus, config, PressureCalc()
+        ),
     }
 
     def __init__(self, config: Config, i2c_bus: busio.I2C):
@@ -72,7 +80,9 @@ class Sensors:
 
         self.device_map: dict[int, str] = {
             16: VEML7700Sensor.name,
+            18: PM25Sensor.name,
             35: BH1750Sensor.name,
+            41: TSL2591Sensor.name,
             48: MMC56x3Sensor.name,
             68: SHT4xSensor.name,
             89: SGP40Sensor.name,
