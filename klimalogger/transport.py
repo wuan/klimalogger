@@ -1,14 +1,17 @@
 import json
-import logging
-import secrets
+import random
 
-from paho.mqtt import client as mqtt_client
-from paho.mqtt.enums import CallbackAPIVersion
+try:
+    from paho.mqtt import client as mqtt_client
+    from paho.mqtt.enums import CallbackAPIVersion
+except ImportError:
+    pass
 
 # StoreClient removed; using concrete class
-from klimalogger import config
+from . import config
+from .logger import create_logger
 
-log = logging.getLogger(__name__)
+log = create_logger(__name__)
 
 
 class QueueTransport:
@@ -18,7 +21,7 @@ class QueueTransport:
         self.client: mqtt_client.Client | None = None
 
         client_id = (
-            f"klimalogger-mqtt-{configuration.host_name}-{secrets.randbelow(1000)}"
+            f"klimalogger-mqtt-{configuration.host_name}-{random.randrange(1,1000)}"
         )
 
         def on_connect(client, userdata, flags, reason_code, properties):

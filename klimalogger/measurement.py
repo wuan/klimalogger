@@ -1,12 +1,14 @@
-from __future__ import annotations
+from .logger import create_logger
 
-import logging
-from dataclasses import dataclass
-
-log = logging.getLogger(__name__)
+log = create_logger(__name__)
 
 
-@dataclass
 class Measurements:
-    temperature: float | None = None
-    relative_humidity: float | None = None
+    def __init__(
+        self, temperature: float | None = None, relative_humidity: float | None = None
+    ):
+        self.temperature = temperature
+        self.relative_humidity = relative_humidity
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__

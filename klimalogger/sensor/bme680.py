@@ -1,15 +1,14 @@
-import logging
-
 import adafruit_bme680
 import busio
 
 from .. import DataBuilder
 from ..calc import PressureCalc, TemperatureCalc
 from ..config import Config
+from ..logger import create_logger
 from ..measurement import Measurements
 from . import BaseSensor
 
-log = logging.getLogger(__name__)
+log = create_logger(__name__)
 
 
 class BME680Sensor(BaseSensor):

@@ -1,14 +1,13 @@
-import logging
-
 import adafruit_sht4x
 import busio
 
 from .. import DataBuilder
 from ..calc import TemperatureCalc
+from ..logger import create_logger
 from ..measurement import Measurements
 from . import BaseSensor
 
-log = logging.getLogger(__name__)
+log = create_logger(__name__)
 
 
 class SHT4xSensor(BaseSensor):

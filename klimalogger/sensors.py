@@ -1,6 +1,9 @@
-import logging
 import time
-from collections.abc import Callable
+
+try:
+    from collections.abc import Callable
+except ImportError:
+    pass
 
 import busio
 
@@ -8,6 +11,7 @@ from klimalogger import DataBuilder
 
 from .calc import PressureCalc, TemperatureCalc
 from .config import Config
+from .logger import create_logger
 from .measurement import Measurements
 from .sensor import BaseSensor
 from .sensor.bh1750 import BH1750Sensor
@@ -22,7 +26,7 @@ from .sensor.sht4x import SHT4xSensor
 from .sensor.tsl2591 import TSL2591Sensor
 from .sensor.veml7700 import VEML7700Sensor
 
-log = logging.getLogger(__name__)
+log = create_logger(__name__)
 
 
 def scan(i2c_bus: busio.I2C):
@@ -76,7 +80,7 @@ class Sensors:
     def __init__(self, config: Config, i2c_bus: busio.I2C):
         self.config = config
         self.i2c_bus = i2c_bus
-        self.sensors: list[BaseSensor] = []
+        self.active_sensors: list[BaseSensor] = []
 
         self.device_map: dict[int, str] = {
             16: VEML7700Sensor.name,
@@ -87,7 +91,7 @@ class Sensors:
             68: SHT4xSensor.name,
             89: SGP40Sensor.name,
             98: SCD4xSensor.name,
-            119: BMP3xxSensor.name,
+            119: BME680Sensor.name,
         }
         device_map = config.device_map
         if device_map:
@@ -99,7 +103,7 @@ class Sensors:
         self.scan_devices()
 
     def scan_devices(self):
-        sensors_in_use = {sensor.name for sensor in self.sensors}
+        active_sensors = {sensor.name for sensor in self.active_sensors}
 
         device_addresses = (
             scan(self.i2c_bus) if not self.config.sensors else self.config.sensors
@@ -120,12 +124,12 @@ class Sensors:
                 f"Could not find sensors for addresses: {', '.join(unknown_sensors_found)}"
             )
 
-        if sensors_in_use != sensors_found:
+        if active_sensors != sensors_found:
 
             sensors = [
-                sensor for sensor in self.sensors if sensor.name in sensors_found
+                sensor for sensor in self.active_sensors if sensor.name in sensors_found
             ]
-            for sensor_name in sensors_found.difference(sensors_in_use):
+            for sensor_name in sensors_found.difference(active_sensors):
                 if sensor_name in self.sensor_map:
                     sensor = self.sensor_map[sensor_name]
                     address = self.address_map[sensor_name]
@@ -137,14 +141,14 @@ class Sensors:
             for sensor in sensors:
                 log.info(f"  {sensor.name} {sensor.priority}")
 
-            self.sensors = sensors
+            self.active_sensors = sensors
 
     def measure(self, data_builder=None) -> DataBuilder:
         if data_builder is None:
             data_builder = DataBuilder()
         measurements = Measurements()
 
-        for sensor in self.sensors:
+        for sensor in self.active_sensors:
             try:
                 start_time = time.monotonic_ns()
                 sensor.measure(data_builder, measurements)
