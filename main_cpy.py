@@ -85,8 +85,8 @@ try:
     print("start measurement")
     time_sync_period = 60 * 60
     last_time_sync = time.monotonic()
-    last_time = 0
-    last_second = 0
+    last_time: float = 0
+    last_second: float = 0
 
     data_builder = DataBuilder()
     end_time = time.monotonic_ns()
@@ -120,8 +120,8 @@ try:
 
             data_builder = DataBuilder()
             api_info = wifi.radio.ap_info
-            data_builder.add("wifi", "rssi", None, api_info.rssi)
-            data_builder.add("wifi", "channel", None, api_info.channel)
+            data_builder.add("wifi", "rssi", "", api_info.rssi)
+            data_builder.add("wifi", "channel", "", api_info.channel)
             data_builder.add("cpu", "system", "°C", microcontroller.cpu.temperature)
             data = sensors.measure(data_builder)
 
@@ -152,7 +152,7 @@ try:
         time.sleep(0.25)
 except KeyboardInterrupt:
     raise
-except:
+except Exception:
     import supervisor
 
     supervisor.reload()
