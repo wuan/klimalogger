@@ -61,7 +61,7 @@ class MQTTClient:
             try:
                 reconnect = self.mqtt_client.reconnect(False)
                 print(f"Reconnecting to MQTT: {reconnect}")
-            except:
+            except Exception:
                 pass
         except MQTT.MMQTTException as e:
             print("Exception:", type(e), e)
