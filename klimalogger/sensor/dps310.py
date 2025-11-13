@@ -3,7 +3,7 @@ from adafruit_dps310.advanced import DPS310_Advanced as DPS310
 
 from .. import Config, DataBuilder
 from ..calc import PressureCalc
-from ..measurements import Measurements
+from ..measurement import Measurements
 
 # from adafruit_dps310.basic import DPS310
 

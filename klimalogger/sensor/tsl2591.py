@@ -2,7 +2,7 @@ import adafruit_tsl2591
 import busio
 
 from .. import DataBuilder
-from ..measurements import Measurements
+from ..measurement import Measurements
 
 
 class TSL2591Sensor:

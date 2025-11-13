@@ -2,7 +2,7 @@ import busio
 from adafruit_pm25.i2c import PM25_I2C
 
 from .. import DataBuilder
-from ..measurements import Measurements
+from ..measurement import Measurements
 
 
 class PM25Sensor:
