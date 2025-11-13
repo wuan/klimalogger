@@ -1,15 +1,11 @@
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
-
 import busio
 
-if TYPE_CHECKING:
-    # Imported only for type checking to avoid circular imports at runtime
-    from ..data_builder import DataBuilder
-    from ..measurement import Measurements
+# Imported only for type checking to avoid circular imports at runtime
+from ..data_builder import DataBuilder
+from ..measurement import Measurements
 
 
-class BaseSensor(ABC):
+class BaseSensor:
     """Common base class for all sensors.
 
     Provides a shared interface and common attributes that all sensors expose.
@@ -22,7 +18,6 @@ class BaseSensor(ABC):
     # Lower numbers run earlier; subclasses should override
     priority: int = 100
 
-    @abstractmethod
     def measure(
         self, data_builder: "DataBuilder", measurements: "Measurements"
     ) -> None:

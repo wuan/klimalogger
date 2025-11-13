@@ -81,7 +81,7 @@ def test_sensors_init_uses_config_sensors_and_priority_sort(
     uut = Sensors(config=cfg, i2c_bus=i2c_bus)
 
     # Two sensors are created and sorted by priority (S2 has priority 1, S1 has 2)
-    names_in_order = [s.name for s in uut.sensors]
+    names_in_order = [s.name for s in uut.active_sensors]
     assert names_in_order == ["S2", "S1"]
 
     # measure() runs each sensor and adds a timing entry per successful sensor

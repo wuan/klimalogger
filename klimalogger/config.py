@@ -1,35 +1,33 @@
-import configparser
-import logging
 import os
-import socket
 import sys
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any
 
-log = logging.getLogger(__name__)
+from .logger import create_logger
+
+log = create_logger(__name__)
 
 
-@dataclass(frozen=True)
 class Config:
-    mqtt_host: str
-    mqtt_port: int
-    mqtt_prefix: str
-    mqtt_qos: int = 1
-    mqtt_username: str | None = None
-    mqtt_password: str | None = None
-    host_name: str = socket.gethostname()
-    sensors: list[int] | None = None
-    elevation: int | None = None
-    baselines: dict[str, float] = field(default_factory=dict)
-    device_map: dict[int, str] = field(default_factory=dict)
+
+    def __init__(self, **kwargs):
+        self.mqtt_prefix: str = kwargs["mqtt_host"]
+        self.mqtt_host: str = kwargs["mqtt_host"]
+        self.mqtt_port: int = int(kwargs["mqtt_port"])
+        self.mqtt_prefix: str = kwargs["mqtt_prefix"]
+        self.mqtt_qos: int = kwargs.get("mqtt_qos", 1)
+        self.mqtt_username: str | None = kwargs.get("mqtt_username")
+        self.mqtt_password: str | None = kwargs.get("mqtt_password")
+        self.host_name: str | None = kwargs.get("host_name")
+        self.sensors: list[int] | None = kwargs.get("sensors")
+        self.elevation: int | None = kwargs.get("elevation")
+        self.baselines: dict[str, float] = kwargs.get("baselines", {})
+        self.device_map: dict[int, str] = kwargs.get("device_map", {})
 
 
 def is_circuitpython():
-    return sys.platform == "circuitpython"
+    return sys.implementation.name == "circuitpython"
 
 
-def ensure_not_none(value: Any | None, name: str = ""):
+def ensure_not_none(value, name: str = ""):
     if value is None:
         raise ValueError(f"{name} is required")
     return value
@@ -65,7 +63,7 @@ def sensors(value: str | None) -> list[int] | None:
 def build_env_based_config():
     return Config(
         mqtt_host=ensure_not_none(os.getenv("MQTT_HOST")),
-        mqtt_port=int(os.getenv("MQTT_PORT")),
+        mqtt_port=int(os.getenv("MQTT_PORT", 1883)),
         mqtt_prefix=os.getenv("MQTT_PREFIX"),
         mqtt_username=os.getenv("MQTT_USERNAME", None),
         mqtt_password=os.getenv("MQTT_PASSWORD", None),
@@ -75,9 +73,12 @@ def build_env_based_config():
 
 
 def build_file_based_config():
+    import socket
+
     config_parser = load_config_parser()
 
     return Config(
+        host_name=socket.gethostname(),
         mqtt_host=ensure_not_none(config_parser.get("queue", "host"), "queue host"),
         mqtt_port=int(config_parser.get("queue", "port")),
         mqtt_prefix=config_parser.get("queue", "queue_prefix", fallback="sensors"),
@@ -90,7 +91,10 @@ def build_file_based_config():
     )
 
 
-def load_config_parser() -> configparser.ConfigParser:
+def load_config_parser():
+    import configparser
+    from pathlib import Path
+
     """Load the configuration from standard locations, replacing the Injector-based provider."""
     etc = Path("/etc")
     config_filename = "klimalogger.conf"

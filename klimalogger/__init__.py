@@ -1,16 +1,21 @@
-import logging
+try:
+    import logging
+
+    root_logger = logging.getLogger(__name__)
+    root_logger.setLevel(logging.WARN)
+
+    log = root_logger
+except ImportError:
+    import adafruit_logging
+
+    log = adafruit_logging.Logger(__name__)
+
 import time
 
-from . import logger
 from .config import Config, build_config
 from .data_builder import DataBuilder
 from .sensors import Sensors
 from .transport import QueueTransport
-
-root_logger = logging.getLogger(__name__)
-root_logger.setLevel(logging.WARN)
-
-log = root_logger
 
 
 def set_log_level(log_level):
@@ -80,4 +85,4 @@ def client():
     return Client(sensors, store)
 
 
-__all__ = ["client", "Config", "DataBuilder", "logger"]
+__all__ = ["client", "Config", "DataBuilder"]
