@@ -8,9 +8,6 @@ from ..measurement import Measurements
 # from adafruit_dps310.basic import DPS310
 
 
-# log = logging.getLogger(__name__)
-
-
 class DPS310Sensor:
     name = "DPS310"
     priority = 1
