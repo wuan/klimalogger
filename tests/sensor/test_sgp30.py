@@ -58,7 +58,7 @@ def test_init_constructs_driver_and_parses_baselines(
     assert uut.baseline_TVOC == 56.78
 
 
-def test_measure_adds_eCO2_and_TVOC(uut, sensor_module, data_builder):
+def test_measure_adds_eCO2_and_TVOC(uut, sensor_module, data_builder, tuv):
     # Given hardware returns values
     sensor_module.Adafruit_SGP30.return_value.iaq_measure.return_value = (401, 7)
 
@@ -69,10 +69,7 @@ def test_measure_adds_eCO2_and_TVOC(uut, sensor_module, data_builder):
     assert len(data_builder.data) == 2
 
     # Collect types/units/values for assertions
-    types_units_values = [
-        (e["tags"]["type"], e["tags"]["unit"], e["fields"]["value"])
-        for e in data_builder.data
-    ]
+    types_units_values = tuv(data_builder.data)
 
     assert ("eCO2", "ppm", 401.0) in types_units_values
     assert ("TVOC", "ppb", 7.0) in types_units_values
