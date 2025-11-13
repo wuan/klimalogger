@@ -15,7 +15,7 @@ klimalogger = "klimalogger.script.klimalogger:main"
 receive-data = "klimalogger.script.receive_data:main"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 influxdb-client = "^1.46"
 lazy = "^1.6"
 adafruit-circuitpython-busdevice = "^5.2"
