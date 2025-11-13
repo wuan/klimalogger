@@ -2,7 +2,7 @@ import adafruit_bh1750
 import busio
 
 from ..data_builder import DataBuilder
-from ..measurements import Measurements
+from ..measurement import Measurements
 
 
 class BH1750Sensor:
