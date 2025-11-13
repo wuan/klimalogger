@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
+import logging
 import os.path
 import pathlib
 import shutil
 
 base_path = "./"
-
-import logging
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
