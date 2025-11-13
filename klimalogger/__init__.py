@@ -46,7 +46,7 @@ class Client:
                 last_measurement += period
             else:
                 self.measure()
-            log.info("time taken: %d", time.time() - last_measurement)
+            log.debug("time taken: %d", time.time() - last_measurement)
             time.sleep(1)
 
     def measure_and_store(self):
