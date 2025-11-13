@@ -15,15 +15,15 @@ def sensor_module():
 
 @pytest.fixture
 def uut(sensor_module, i2c_bus):
-    return SCD4xSensor(i2c_bus=i2c_bus)
+    return SCD4xSensor(i2c_bus=i2c_bus, address=21)
 
 
 def test_init_starts_periodic_measurement(sensor_module, i2c_bus):
     # When creating the sensor
-    s = SCD4xSensor(i2c_bus=i2c_bus)
+    s = SCD4xSensor(i2c_bus=i2c_bus, address=11)
 
     # Then driver is constructed with given bus and periodic measurement started
-    sensor_module.SCD4X.assert_called_once_with(i2c_bus)
+    sensor_module.SCD4X.assert_called_once_with(i2c_bus, 11)
     sensor_module.SCD4X.return_value.start_periodic_measurement.assert_called_once_with()
 
     # Cleanup to avoid side effects (call __del__ deterministically)
@@ -36,7 +36,7 @@ def test_del_stops_periodic_measurement(uut, sensor_module):
     sensor_module.SCD4X.return_value.stop_periodic_measurement.assert_called_once_with()
 
 
-def test_measure_co2_immediate(uut, sensor_module, data_builder):
+def test_measure_co2_immediate(uut, sensor_module, data_builder, tuv):
     # Given sensor returns CO2 immediately
     sensor_module.SCD4X.return_value.CO2 = 415
 
@@ -45,6 +45,7 @@ def test_measure_co2_immediate(uut, sensor_module, data_builder):
         uut.measure(data_builder, meas)
         sleep_mock.assert_not_called()
 
+    assert [("CO2", "ppm", 415.0)] == tuv(data_builder.data)
     # Then one CO2 record was added with expected tags/values
     assert len(data_builder.data) == 1
     entry = data_builder.data[0]

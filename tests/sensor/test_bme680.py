@@ -1,4 +1,3 @@
-import configparser
 from unittest import mock
 from unittest.mock import patch
 
@@ -18,18 +17,11 @@ def sensor_module():
 
 
 @pytest.fixture
-def config_parser():
-    cp = configparser.ConfigParser()
-    cp.add_section("bme680_sensor")
-    cp.set("bme680_sensor", "elevation", "123")
-    return cp
-
-
-@pytest.fixture
-def uut(sensor_module, i2c_bus, config_parser, temp_calc, pressure_calc):
+def uut(sensor_module, i2c_bus, config, temp_calc, pressure_calc):
     return BME680Sensor(
         i2c_bus=i2c_bus,
-        config_parser=config_parser,
+        address=75,
+        config=config,
         temperature_calc=temp_calc,
         pressure_calc=pressure_calc,
     )
@@ -37,7 +29,7 @@ def uut(sensor_module, i2c_bus, config_parser, temp_calc, pressure_calc):
 
 def test_init_constructs_driver_and_sets_heater(uut, sensor_module, i2c_bus):
     # Driver constructed with given bus
-    sensor_module.Adafruit_BME680_I2C.assert_called_once_with(i2c_bus)
+    sensor_module.Adafruit_BME680_I2C.assert_called_once_with(i2c_bus, 75)
     # Gas heater disabled
     sensor_module.Adafruit_BME680_I2C.return_value.set_gas_heater.assert_called_once_with(
         None, None

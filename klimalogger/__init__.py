@@ -2,9 +2,9 @@ import logging
 import time
 
 from . import logger
-from .config import Config, load_config_parser
+from .config import Config, build_config
 from .data_builder import DataBuilder
-from .measurement import MeasurementDispatcher, SensorFactory
+from .sensors import Sensors
 from .transport import QueueTransport
 
 root_logger = logging.getLogger(__name__)
@@ -26,15 +26,9 @@ def set_parent_logger(logger):
 
 
 class Client:
-    def __init__(
-        self,
-        measurement_dispatcher: MeasurementDispatcher,
-        transport: QueueTransport,
-        config: Config,
-    ):
-        self.measurement_dispatcher = measurement_dispatcher
+    def __init__(self, sensors: Sensors, transport: QueueTransport):
+        self.sensors = sensors
         self.transport = transport
-        self.config = config
 
     def measure_and_store_periodically(self, period=15):
         log.info("measure_and_store_periodically(%d)", period)
@@ -52,21 +46,19 @@ class Client:
                 last_measurement += period
             else:
                 self.measure()
-            log.info("time taken: %d", time.time() - last_measurement)
+            log.debug("time taken: %d", time.time() - last_measurement)
             time.sleep(1)
 
     def measure_and_store(self):
         log.info(
             "measure_and_store()",
         )
-        (timestamp, data) = self.measure()
+        data_builder = self.measure()
 
-        self.store_data(data)
+        self.store_data(data_builder.data)
 
     def measure(self):
-        result = self.measurement_dispatcher.measure()
-
-        return result.timestamp, result.data
+        return self.sensors.measure()
 
     def store_data(self, data):
         try:
@@ -79,13 +71,13 @@ class Client:
 
 
 def client():
+    import board
+
     # Manual wiring instead of Injector
-    config_parser = load_config_parser()
-    cfg = Config(config_parser)
-    sensor_factory = SensorFactory(config_parser)
-    measurement_dispatcher = MeasurementDispatcher(config_parser, sensor_factory)
-    store = QueueTransport(cfg)
-    return Client(measurement_dispatcher, store, cfg)
+    config = build_config()
+    sensors = Sensors(config, board.I2C())
+    store = QueueTransport(config)
+    return Client(sensors, store)
 
 
-__all__ = ["client", "DataBuilder", "MeasurementDispatcher", "logger"]
+__all__ = ["client", "Config", "DataBuilder", "logger"]

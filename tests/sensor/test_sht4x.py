@@ -15,10 +15,10 @@ def sensor():
 
 @pytest.fixture
 def uut(sensor, i2c_bus, temp_calc):
-    return SHT4xSensor(i2c_bus=i2c_bus, temperature_calc=temp_calc)
+    return SHT4xSensor(i2c_bus=i2c_bus, address=14, temperature_calc=temp_calc)
 
 
-def test_measure_success(uut, sensor, data_builder, temp_calc, measurements):
+def test_measure_success(uut, sensor, data_builder, temp_calc, measurements, tuv):
     measured_temperature = 21.234
     measured_relative_humidity = 45.678
     calculated_dew_point = 12.3456
@@ -36,10 +36,7 @@ def test_measure_success(uut, sensor, data_builder, temp_calc, measurements):
 
     # Three records: temperature, dew point (calculated), relative humidity
     assert len(data_builder.data) == 3
-    types_units_values = [
-        (e["tags"]["type"], e["tags"]["unit"], e["fields"]["value"])
-        for e in data_builder.data
-    ]
+    types_units_values = tuv(data_builder.data)
 
     assert ("temperature", "°C", 21.23) in types_units_values
     assert ("dew point", "°C", 12.35) in types_units_values
@@ -56,7 +53,7 @@ def test_measure_success(uut, sensor, data_builder, temp_calc, measurements):
 
 
 def test_measure_success_failed_dew_point(
-    uut, sensor, data_builder, temp_calc, measurements
+    uut, sensor, data_builder, temp_calc, measurements, tuv
 ):
     measured_temperature = 21.234
     measured_relative_humidity = 45.678
@@ -74,10 +71,7 @@ def test_measure_success_failed_dew_point(
 
     # Three records: temperature, dew point (calculated), relative humidity
     assert len(data_builder.data) == 2
-    types_units_values = [
-        (e["tags"]["type"], e["tags"]["unit"], e["fields"]["value"])
-        for e in data_builder.data
-    ]
+    types_units_values = tuv(data_builder.data)
 
     assert ("temperature", "°C", 21.23) in types_units_values
     assert ("relative humidity", "%", 45.68) in types_units_values

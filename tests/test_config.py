@@ -1,70 +1,59 @@
-import socket
-from unittest.mock import MagicMock
-
 import pytest
-from assertpy import assert_that
 
 import klimalogger
 
 
-class TestDataBuilderTest:
+class TestBuildConfig:
+    def test_build_config_reads_env_on_circuitpython(self, monkeypatch):
+        # Force circuitpython branch
+        monkeypatch.setattr(
+            "klimalogger.config.is_circuitpython", lambda: True, raising=True
+        )
 
-    @pytest.fixture
-    def config_parser(self):
-        return MagicMock(name="ConfigParser", autospec=True)
+        monkeypatch.setenv("MQTT_HOST", "mqtt.local")
+        monkeypatch.setenv("MQTT_PORT", "1883")
+        monkeypatch.setenv("MQTT_PREFIX", "home/sensors")
+        monkeypatch.setenv("MQTT_USERNAME", "user")
+        monkeypatch.setenv("MQTT_PASSWORD", "pass")
+        monkeypatch.setenv("ELEVATION", "123")
+        monkeypatch.setenv("DEVICE_MAP", "1=sgp30,2=bme680")
 
-    @pytest.fixture
-    def uut(self, config_parser):
-        return klimalogger.config.Config(config_parser)
+        cfg = klimalogger.config.build_config()
+        assert isinstance(cfg, klimalogger.config.Config)
+        assert cfg.mqtt_host == "mqtt.local"
+        assert cfg.mqtt_port == 1883
+        assert cfg.mqtt_prefix == "home/sensors"
+        assert cfg.mqtt_username == "user"
+        assert cfg.mqtt_password == "pass"
+        assert cfg.elevation == 123
+        assert cfg.device_map == {1: "sgp30", 2: "bme680"}
 
-    def test_location_name(self, config_parser, uut):
-        config_parser.get.return_value = "<location>"
+    def test_build_config_reads_env_on_circuitpython_empty_devicemap(self, monkeypatch):
+        # Force circuitpython branch
+        monkeypatch.setattr(
+            "klimalogger.config.is_circuitpython", lambda: True, raising=True
+        )
 
-        result = uut.client_location_name
+        monkeypatch.setenv("MQTT_HOST", "mqtt.local")
+        monkeypatch.setenv("MQTT_PORT", "1883")
+        monkeypatch.setenv("MQTT_PREFIX", "home/sensors")
+        monkeypatch.setenv("MQTT_USERNAME", "user")
+        monkeypatch.setenv("MQTT_PASSWORD", "pass")
+        monkeypatch.setenv("ELEVATION", "123")
+        monkeypatch.setenv("DEVICE_MAP", "")
 
-        config_parser.get.assert_called_once_with("client", "location_name")
-        assert_that(result).is_equal_to("<location>")
+        cfg = klimalogger.config.build_config()
 
-    def test_client_host_name(self, config_parser, uut):
-        result = uut.client_host_name
+        assert isinstance(cfg, klimalogger.config.Config)
+        assert cfg.device_map == {}
 
-        config_parser.assert_not_called()
-        assert_that(result).is_equal_to(socket.gethostname())
-
-    def test_username(self, config_parser, uut):
-        config_parser.get.return_value = "<username>"
-
-        result = uut.queue_username
-
-        config_parser.get.assert_called_once_with("queue", "username")
-        assert_that(result).is_equal_to("<username>")
-
-    def test_password(self, config_parser, uut):
-        config_parser.get.return_value = "<password>"
-
-        result = uut.queue_password
-
-        config_parser.get.assert_called_once_with("queue", "password")
-        assert_that(result).is_equal_to("<password>")
-
-    def test_queue_host(self, config_parser, uut):
-        config_parser.get.return_value = "<queue_host>"
-
-        result = uut.queue_host
-
-        config_parser.get.assert_called_once_with("queue", "host")
-        assert_that(result).is_equal_to("<queue_host>")
-
-    def test_queue_port(self, config_parser, uut):
-        config_parser.get.return_value = "5"
-        result = uut.queue_port
-
-        config_parser.get.assert_called_once_with("queue", "port")
-        assert_that(result).is_equal_to(5)
-
-    def test_log_path(self, config_parser, uut):
-        config_parser.get.return_value = "<log_path>"
-        result = uut.log_path
-
-        config_parser.get.assert_called_once_with("log", "path")
-        assert_that(result).is_equal_to("<log_path>")
+    def test_build_config_raises_off_circuitpython(self, monkeypatch):
+        # Force non-circuitpython branch
+        monkeypatch.setattr(
+            "klimalogger.config.is_circuitpython", lambda: False, raising=True
+        )
+        monkeypatch.setattr(
+            "klimalogger.config.build_file_based_config", lambda: False, raising=True
+        )
+        with pytest.raises(RuntimeError):
+            klimalogger.config.build_config()

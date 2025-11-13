@@ -12,14 +12,16 @@ log = logging.getLogger(__name__)
 
 
 class SHT4xSensor(BaseSensor):
-    name = "SHT4x"
-    priority = 1
+    name: str = "SHT4x"
+    priority: int = 1
 
-    def __init__(self, i2c_bus: busio.I2C, temperature_calc: TemperatureCalc):
+    def __init__(
+        self, i2c_bus: busio.I2C, address: int, temperature_calc: TemperatureCalc
+    ):
         log.info("init")
         self.temperature_calc = temperature_calc
 
-        self.driver = adafruit_sht4x.SHT4x(i2c_bus)
+        self.driver = adafruit_sht4x.SHT4x(i2c_bus, address)
 
         # self.sensor.mode = adafruit_sht4x.Mode.NOHEAT_HIGHPRECISION
         # Can also set the mode to enable heater

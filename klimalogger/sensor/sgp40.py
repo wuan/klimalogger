@@ -8,11 +8,11 @@ from . import BaseSensor
 
 
 class SGP40Sensor(BaseSensor):
-    name = "SGP40"
-    priority = 3
+    name: str = "SGP40"
+    priority: int = 3
 
-    def __init__(self, i2c_bus: busio.I2C):
-        self.driver = adafruit_sgp40.SGP40(i2c_bus)
+    def __init__(self, i2c_bus: busio.I2C, address: int):
+        self.driver = adafruit_sgp40.SGP40(i2c_bus, address)
 
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
         if (
