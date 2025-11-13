@@ -9,8 +9,8 @@ from . import BaseSensor
 
 
 class BMP3xxSensor(BaseSensor):
-    name = "BMP3xx"
-    priority = 2
+    name: str = "BMP3xx"
+    priority: int = 2
 
     def __init__(
         self,

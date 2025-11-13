@@ -13,8 +13,8 @@ log = logging.getLogger(__name__)
 
 
 class BME680Sensor(BaseSensor):
-    name = "BME680"
-    priority = 1
+    name: str = "BME680"
+    priority: int = 1
 
     def __init__(
         self,

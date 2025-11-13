@@ -10,8 +10,8 @@ from . import BaseSensor
 
 
 class SCD4xSensor(BaseSensor):
-    name = "SCD4x"
-    priority = 3
+    name: str = "SCD4x"
+    priority: int = 3
 
     def __init__(self, i2c_bus: busio.I2C, address: int):
         self.driver = adafruit_scd4x.SCD4X(i2c_bus, address)

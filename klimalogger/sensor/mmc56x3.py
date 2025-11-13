@@ -8,8 +8,8 @@ from ..measurement import Measurements
 
 
 class MMC56x3Sensor:
-    name = "MMC56x3"
-    priority = 1
+    name: str = "MMC56x3"
+    priority: int = 1
 
     def __init__(self, i2c_bus: busio.I2C, address: int):
         self.driver = adafruit_mmc56x3.MMC5603(i2c_bus, address)
