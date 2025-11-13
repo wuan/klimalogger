@@ -3,11 +3,12 @@ from adafruit_pm25.i2c import PM25_I2C
 
 from .. import DataBuilder
 from ..measurement import Measurements
+from . import BaseSensor
 
 
-class PM25Sensor:
-    name = "PM25"
-    priority = 1
+class PM25Sensor(BaseSensor):
+    name: str = "PM25"
+    priority: int = 1
 
     def __init__(self, i2c_bus: busio.I2C):
         reset_pin = None

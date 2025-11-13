@@ -4,13 +4,14 @@ from adafruit_dps310.advanced import DPS310_Advanced as DPS310
 from .. import Config, DataBuilder
 from ..calc import PressureCalc
 from ..measurement import Measurements
+from . import BaseSensor
 
 # from adafruit_dps310.basic import DPS310
 
 
-class DPS310Sensor:
-    name = "DPS310"
-    priority = 1
+class DPS310Sensor(BaseSensor):
+    name: str = "DPS310"
+    priority: int = 1
 
     def __init__(
         self,

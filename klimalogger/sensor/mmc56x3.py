@@ -5,9 +5,10 @@ import busio
 
 from ..data_builder import DataBuilder
 from ..measurement import Measurements
+from . import BaseSensor
 
 
-class MMC56x3Sensor:
+class MMC56x3Sensor(BaseSensor):
     name: str = "MMC56x3"
     priority: int = 1
 

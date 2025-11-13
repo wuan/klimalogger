@@ -3,11 +3,12 @@ import busio
 
 from ..data_builder import DataBuilder
 from ..measurement import Measurements
+from . import BaseSensor
 
 
-class BH1750Sensor:
-    name = "BH1750"
-    priority = 1
+class BH1750Sensor(BaseSensor):
+    name: str = "BH1750"
+    priority: int = 1
 
     def __init__(self, i2c_bus: busio.I2C):
         self.driver = adafruit_bh1750.BH1750(i2c_bus)

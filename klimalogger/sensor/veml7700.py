@@ -3,11 +3,12 @@ import busio
 
 from ..data_builder import DataBuilder
 from ..measurement import Measurements
+from . import BaseSensor
 
 
-class VEML7700Sensor:
-    name = "VEML7700"
-    priority = 1
+class VEML7700Sensor(BaseSensor):
+    name: str = "VEML7700"
+    priority: int = 1
 
     def __init__(self, i2c_bus: busio.I2C, address: int):
         self.driver = adafruit_veml7700.VEML7700(i2c_bus, address)

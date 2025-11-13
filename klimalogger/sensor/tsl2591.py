@@ -3,11 +3,12 @@ import busio
 
 from .. import DataBuilder
 from ..measurement import Measurements
+from . import BaseSensor
 
 
-class TSL2591Sensor:
-    name = "TSL2591"
-    priority = 1
+class TSL2591Sensor(BaseSensor):
+    name: str = "TSL2591"
+    priority: int = 1
 
     def __init__(self, i2c_bus: busio.I2C):
         self.driver = adafruit_tsl2591.TSL2591(i2c_bus)
