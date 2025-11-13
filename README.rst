@@ -1,5 +1,6 @@
-`klimalogger <https://github.com/wuan/klimalogger>`_
-====================================================
+***************************************************
+`klimalogger <https://github.com/wuan/klimalogger>`
+***************************************************
 
 .. image:: https://badge.fury.io/py/klimalogger.svg
     :alt: PyPi-Package
@@ -13,19 +14,19 @@
 .. image:: https://sonarcloud.io/api/project_badges/measure?project=wuan_klimalogger&metric=duplicated_lines_density
     :alt: Duplicated lines
     :target: https://sonarcloud.io/project/overview?id=wuan_klimalogger
-.. image:: https://api.scorecard.dev/projects/github.com/wuan/bo-android/badge
+.. image:: https://api.scorecard.dev/projects/github.com/wuan/klimalogger/badge
     :alt: OpenSSF Scorecard
-    :target: https://scorecard.dev/viewer/?uri=github.com/wuan/bo-android
+    :target: https://scorecard.dev/viewer/?uri=github.com/wuan/klimalogger
 
 Simple python client for logging measured climate data to MQTT targets.
 
 Sensor support
---------------
+==============
 
 As of now the following sensors are supported
 
 .. list-table:: Supported Sensors
-   :widths: 20 90
+   :widths: 40 60
    :header-rows: 1
 
    * - Sensor Type
@@ -44,25 +45,38 @@ As of now the following sensors are supported
      - CO2 concentration
    * - PM25
      - particle concentration
-   * - BH1750, VEML7700, TSL2591,
+   * - BH1750, VEML7700, TSL2591
      - Illumination
    * - MMC56x3
      - Magnetic Field
 
+The following I2C addresses are matched by default:
+
+.. csv-table:: I2C address mapping
+   :widths: 50 50
+   :header-rows: 1
+
+   I2C address, Sensor name
+   16, VEML7700
+   35, BH1750
+   48, MMC56x3
+   68, SHT4x
+   89, SGP40
+   98, SCD4x
+   119, BME680
+
 Build and upload
-----------------
+================
 
 .. code-block:: sh
 
-   python3 -m build
-   python3 -m pip install --upgrade twine
-   python3 -m twine upload dist/klimalogger-0.6.8.tar.gz
+   poetry publish --build
 
 Install on server
------------------
+=================
 
 Software
-........
+--------
 
 It is recommended to use a virtual environment.
 
@@ -71,12 +85,6 @@ It is recommended to use a virtual environment.
    virtualenv /usr/local/share/klimalogger
    . /usr/local/share/klimalogger/bin/activate
    pip install klimalogger
-
-Then install hardware specific drivers e. g.
-
-.. code-block:: sh
-
-   pip3 install adafruit-circuitpython-sht4x
 
 Then setup the configuration file ``/etc/klimalogger.conf``.
 
@@ -95,7 +103,7 @@ In order to run the service for debugging use the following command line
    /usr/local/share/klimalogger/bin/klimalogger --service --debug
 
 Setup Service
-.............
+-------------
 
 Create a service configuration, for example ``/etc/systemd/system/klimalogger.service`` with the following content:
 
@@ -122,6 +130,67 @@ and run
    service klimalogger start
 
 to run the service.
+
+Run on Circuitpython targets
+============================
+
+This version should be compatible with Circuitpython 9.x and 10.x.
+
+Example config
+--------------
+
+Set the following values in the `settings.toml` on the device.
+
+.. code-block:: toml
+
+   WIFI_SSID = "SSDF"
+   WIFI_PASSWORD = "XZCXCZXC"
+   MQTT_HOST = "mqtt"
+   MQTT_PREFIX = "sensors/test"
+   ELEVATION = "530"
+
+Internal LED Color coding
+-------------------------
+
+.. csv-table:: LED color coding
+   :widths: 50 50
+   :header-rows: 1
+
+   Step,Color
+   WLAN connect, yellow
+   NTP update, magenta
+   MQTT connect / update, white
+   Sensor detection, cyan
+   Sensor readout, blue
+   Operation, green -> red
+
+Install
+-------
+
+Connect a Circuitpython device so that `/Volumes/CIRCUITPY` is mounted.
+
+Update Circuitpython
+^^^^^^^^^^^^^^^^^^^^
+
+Press and hold BOOT button and press reset to get into bootloader mode.
+
+Run
+
+.. code-block:: sh
+
+   esptool write-flash -e 0 ~/Downloads/adafruit-circuitpython-adafruit_qtpy_esp32s2-en_US-10.0.3.bin
+
+Update dependencies
+^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: sh
+
+   circup install -r requirements_cpy.txt
+
+Install software
+^^^^^^^^^^^^^^^^
+
+Run `./install.py` which will copy the sources
 
 Pre-commit hooks
 ----------------
