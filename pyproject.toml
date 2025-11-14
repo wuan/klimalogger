@@ -4,7 +4,7 @@ version = "0.8.7"
 description = "Simple data logging client for InfluxDB/MQTT target"
 authors = ["Andreas Würl <andi@tryb.de>"]
 license = "Apache-2.0"
-readme = "README.rst"
+readme = "README.md"
 
 [tool.poetry.urls]
 "Homepage" = "https://github.com/wuan/klimalogger"
