@@ -68,7 +68,7 @@ class QueueTransport:
                     log.warning("reconnect failed")
 
             for entry in data:
-                topic, json_message = self.map_entry(entry)
+                topic, json_message = map_entry(self.mqtt_prefix, entry)
                 message = json.dumps(json_message)
                 log.info("write data (%d bytes) to topic %s", len(message), topic)
                 result = self.client.publish(
@@ -87,21 +87,22 @@ class QueueTransport:
             log.warning("client not available")
             raise RuntimeError("bla")
 
-    def map_entry(self, entry: dict):
-        timestamp = entry["time"]
-        value = entry["fields"]["value"]
-        tags = entry["tags"]
-        measurement_type = tags["type"]
-        unit = tags["unit"]
-        sensor = tags["sensor"]
-        topic = f"{self.mqtt_prefix}/{measurement_type}"
-        return (
-            topic,
-            {
-                "time": int(timestamp),
-                "value": value,
-                "unit": unit,
-                "sensor": sensor,
-                "calculated": tags["calculated"],
-            },
-        )
+
+def map_entry(mqtt_prefix: str, entry: dict):
+    timestamp = entry["time"]
+    value = entry["fields"]["value"]
+    tags = entry["tags"]
+    measurement_type = tags["type"]
+    unit = tags["unit"]
+    sensor = tags["sensor"]
+    topic = f"{mqtt_prefix}/{measurement_type}"
+    return (
+        topic,
+        {
+            "time": int(timestamp),
+            "value": value,
+            "unit": unit,
+            "sensor": sensor,
+            "calculated": tags["calculated"],
+        },
+    )

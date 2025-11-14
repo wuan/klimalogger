@@ -2,17 +2,17 @@ import json
 import os
 import time
 
-import board
 import microcontroller
 import socketpool
 import wifi
 
 from klimalogger import DataBuilder, build_config
+from klimalogger.cpy.i2c import i2c_bus_factory
 from klimalogger.cpy.mqtt import MQTTClient
 from klimalogger.cpy.ntp import Ntp
 from klimalogger.cpy.pixel import Pixel
-from klimalogger.data_builder import map_entry
 from klimalogger.sensors import Sensors
+from klimalogger.transport import map_entry
 
 
 def create_watchdog():
@@ -25,20 +25,20 @@ def create_watchdog():
 
 
 def wifi_connect(wifi):
-    print("connect to WLAN")
+    print("Connect to WLAN")
     try:
         wifi.radio.connect(os.getenv("WIFI_SSID"), os.getenv("WIFI_PASSWORD"))
-        print(f"IP address: {wifi.radio.ipv4_address}")
+        print(f"  IP address: {wifi.radio.ipv4_address}")
     except Exception as e:
-        print("wifi_connect() failed:", e)
+        print("  wifi_connect() failed:", e)
 
 
-def mqtt_connect(mqtt):
-    print("connect to MQTT")
+def mqtt_connect(mqtt: MQTTClient):
+    print("Connect to MQTT")
     try:
         mqtt.connect()
     except Exception as e:
-        print("mqtt reconnect failed:", e)
+        print("  mqtt reconnect failed:", e)
 
 
 try:
@@ -55,7 +55,7 @@ try:
     pool = socketpool.SocketPool(wifi.radio)
 
     pixel.ntp()
-    print("fetch network time")
+    print("Fetch network time")
     ntp = Ntp(pool)
     ntp.update_time()
 
@@ -66,23 +66,21 @@ try:
     try:
         mqtt = MQTTClient(pool, config)
     except Exception as e:
-        print("mqtt setup failed:", e)
+        print("  mqtt setup failed:", e)
         microcontroller.reset()
     mqtt_connect(mqtt)
 
     pixel.sensors()
-    print("setup I2C sensors")
+    print("Setup I2C sensors")
 
-    def i2c_bus_factory():
-        try:
-            return board.STEMMA_I2C()
-        except Exception as e:
-            print("i2c setup failed:", e)
-            return None
+    i2c_bus = i2c_bus_factory()
+    if i2c_bus is None:
+        print("  no I2C bus found")
+        microcontroller.reset()
+    else:
+        sensors = Sensors(config, i2c_bus)
 
-    sensors = Sensors(config, i2c_bus_factory())
-
-    print("start measurement")
+    print("Start measurement")
     time_sync_period = 60 * 60
     last_time_sync = time.monotonic()
     last_time: float = 0
@@ -123,15 +121,16 @@ try:
             data_builder.add("wifi", "rssi", "", api_info.rssi)
             data_builder.add("wifi", "channel", "", api_info.channel)
             data_builder.add("cpu", "system", "°C", microcontroller.cpu.temperature)
-            data = sensors.measure(data_builder)
+            sensors.measure(data_builder)
 
             if ignore_count == 0:
                 pixel.mqtt()
                 for entry in data_builder.data:
                     topic, data = map_entry(config.mqtt_prefix, entry)
+                    print(f"{topic}: {data["value"]} {data["unit"]} ({data["sensor"]})")
                     mqtt.publish(topic, json.dumps(data))
             else:
-                print(f"skipping {ignore_count}")
+                print(f"  skipping {ignore_count}")
                 ignore_count -= 1
 
             print()
@@ -142,7 +141,7 @@ try:
             if current_second - last_second > 0:
                 value = int(seconds_difference)
                 pixel.progress(value)
-                data = sensors.measure()
+                sensors.measure()
                 last_second = current_second
 
         if monotonic_time - last_time_sync > time_sync_period:

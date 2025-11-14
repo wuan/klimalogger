@@ -5,32 +5,32 @@ from .. import Config
 
 
 def connect(mqtt_client, userdata, flags, rc):
-    print(f"Connected to MQTT Broker. flags {flags}, RC: {rc}")
+    print(f"  Connected to MQTT Broker. flags {flags}, RC: {rc}")
 
 
 def disconnect(mqtt_client, userdata, rc):
     # This method is called when the mqtt_client disconnects
     # from the broker.
-    print("Disconnected from MQTT Broker!")
+    print("  Disconnected from MQTT Broker!")
 
 
 def subscribe(mqtt_client, userdata, topic, granted_qos):
     # This method is called when the mqtt_client subscribes to a new feed.
-    print(f"Subscribed to {topic} with QOS level {granted_qos}")
+    print(f"  Subscribed to {topic} with QOS level {granted_qos}")
 
 
 def unsubscribe(mqtt_client, userdata, topic, pid):
     # This method is called when the mqtt_client unsubscribes from a feed.
-    print(f"Unsubscribed from {topic} with PID {pid}")
+    print(f"  Unsubscribed from {topic} with PID {pid}")
 
 
 def publish(mqtt_client, userdata, topic, pid):
     # This method is called when the mqtt_client publishes data to a feed.
-    print(f"Published to {topic} with PID {pid}")
+    print(f"  Published to {topic} with PID {pid}")
 
 
 def message(client, topic, message):
-    print(f"New message on topic {topic}: {message}")
+    print(f"  New message on topic {topic}: {message}")
 
 
 class MQTTClient:
@@ -50,8 +50,6 @@ class MQTTClient:
         self.mqtt_client.on_subscribe = subscribe
         self.mqtt_client.on_unsubscribe = unsubscribe
         self.mqtt_client.on_message = message
-
-        # self.io = IO_MQTT(mqtt_client)
 
     def publish(self, topic: str, message: str):
         try:

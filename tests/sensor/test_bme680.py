@@ -43,13 +43,11 @@ def test_measure_adds_all_fields_and_updates_measurements(
     measured_temperature = 21.2345
     measured_relative_humidity = 55.555
     measured_pressure = 1001.234
-    measured_gas = 45678
 
     drv = sensor_module.Adafruit_BME680_I2C.return_value
     drv.temperature = measured_temperature
     drv.relative_humidity = measured_relative_humidity
     drv.pressure = measured_pressure
-    drv.gas = measured_gas
 
     # And calculated values
     calc_dew_point = 10.5555
@@ -67,7 +65,7 @@ def test_measure_adds_all_fields_and_updates_measurements(
     assert meas.relative_humidity == measured_relative_humidity
 
     # And 6 records added with proper rounding
-    assert len(data_builder.data) == 6
+    assert len(data_builder.data) == 5
     types_units_values = [
         (e["tags"]["type"], e["tags"]["unit"], e["fields"]["value"])
         for e in data_builder.data
@@ -86,7 +84,6 @@ def test_measure_adds_all_fields_and_updates_measurements(
         "hPa",
         round(calc_sea_level_pressure, 2),
     ) in types_units_values
-    assert ("voc gas", "Ohm", float(measured_gas)) in types_units_values
 
     # Check sensor tag and calculated flag on dew point
     dew_entries = [e for e in data_builder.data if e["tags"]["type"] == "dew point"]

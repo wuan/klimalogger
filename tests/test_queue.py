@@ -3,7 +3,7 @@ import json
 import pytest
 
 from klimalogger.config import Config
-from klimalogger.transport import QueueTransport
+from klimalogger.transport import QueueTransport, map_entry
 
 
 class DummyClient:
@@ -79,8 +79,7 @@ def build_entry(
 
 
 def test_map_entry_builds_topic_and_json(cfg, patch_client):
-    store = QueueTransport(cfg)
-    topic, message = store.map_entry(build_entry(ts=111, value=12.34, unit="%"))
+    topic, message = map_entry("my/prefix", build_entry(ts=111, value=12.34, unit="%"))
     assert topic == "my/prefix/temperature"
     assert message == {
         "time": 111,

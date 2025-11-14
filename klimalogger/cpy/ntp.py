@@ -21,11 +21,11 @@ class Ntp:
         try:
             ntp_datetime = self.ntp.datetime
         except Exception as e:
-            print("Ntp.update_time() failed:", e)
+            print("  Ntp.update_time() failed:", e)
             raise e
 
         difference = mktime(ntp_datetime) - mktime(self.rtc.datetime)
-        print(f"### updating time (with difference: {difference})")
+        print(f"  updating time (with difference: {difference})")
         self.rtc.datetime = ntp_datetime
 
     @staticmethod

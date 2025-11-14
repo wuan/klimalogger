@@ -38,7 +38,6 @@ class BME680Sensor(BaseSensor):
         sea_level_pressure = self.pressure_calc.sea_level_pressure(
             pressure, temperature, self.elevation
         )
-        voc_gas = self.driver.gas
 
         data_builder.add(self.name, "temperature", "°C", round(temperature, 2))
         data_builder.add(
@@ -51,7 +50,6 @@ class BME680Sensor(BaseSensor):
         data_builder.add(
             self.name, "sea level pressure", "hPa", round(sea_level_pressure, 2)
         )
-        data_builder.add(self.name, "voc gas", "Ohm", float(voc_gas))
 
         measurements.temperature = temperature
         measurements.relative_humidity = relative_humidity
