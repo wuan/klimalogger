@@ -46,10 +46,10 @@ It is recommended to use a virtual environment:
 
 ```sh
 # Create virtual environment
-virtualenv /usr/local/share/klimalogger
+virtualenv /opt/klimalogger
 
 # Activate virtual environment
-. /usr/local/share/klimalogger/bin/activate
+. /opt/klimalogger/bin/activate
 
 # Install klimalogger
 pip install klimalogger
@@ -91,7 +91,7 @@ Alternate config locations (checked in order):
 Validate sensor detection and readout:
 
 ```sh
-/usr/local/share/klimalogger/bin/klimalogger --check
+/opt/klimalogger/bin/klimalogger --check
 ```
 
 This outputs JSON-formatted measurement data.
@@ -99,7 +99,7 @@ This outputs JSON-formatted measurement data.
 For debugging with verbose output:
 
 ```sh
-/usr/local/share/klimalogger/bin/klimalogger --service --debug
+/opt/klimalogger/bin/klimalogger --service --debug
 ```
 
 #### 4. Setup systemd Service
@@ -114,7 +114,7 @@ After=multi-user.target
 [Service]
 Type=simple
 Restart=always
-ExecStart=/usr/local/share/klimalogger/bin/klimalogger --service
+ExecStart=/opt/klimalogger/bin/klimalogger --service
 
 [Install]
 WantedBy=multi-user.target
@@ -161,6 +161,8 @@ Download firmware from [circuitpython.org/downloads](https://circuitpython.org/d
 
 #### 3. Install Dependencies
 
+Wait for the hardware to reboot. You should have the mount `/Volumes/CIRCUITPY` visible.
+
 Install required CircuitPython libraries using `circup`:
 
 ```sh
@@ -191,7 +193,10 @@ MQTT_PASSWORD = "mqtt_password"  # Optional
 ELEVATION = "100"
 
 # Optional: Device mapping (address=SensorName)
-DEVICE_MAP = "0x44=SHT4x,0x62=SCD4x"
+DEVICE_MAP = "119=BMP3xx"
+
+# Local NTP server
+NTP_SERVER = "192.168.2.119"
 ```
 
 #### 5. Deploy Software
@@ -275,12 +280,7 @@ Configured tools:
 ### Building and Publishing
 
 ```sh
-# Build distribution packages
-python3 -m build
-
-# Upload to PyPI
-python3 -m pip install --upgrade twine
-python3 -m twine upload dist/*
+poetry publish --build
 ```
 
 ## Project Structure

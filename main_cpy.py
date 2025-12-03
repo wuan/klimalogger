@@ -151,7 +151,9 @@ try:
         time.sleep(0.25)
 except KeyboardInterrupt:
     raise
-except Exception:
+except Exception as e:
+    print("  exception:", e)
+    time.sleep(5)
     import supervisor
 
     supervisor.reload()

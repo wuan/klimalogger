@@ -11,7 +11,7 @@ class Ntp:
         ntp_server = os.getenv("NTP_SERVER")
         kwargs = {}
         if ntp_server:
-            print(f"using NTP Server: {ntp_server}")
+            print(f"  using NTP Server: {ntp_server}")
             kwargs = {"server": ntp_server}
 
         self.ntp = adafruit_ntp.NTP(pool, tz_offset=0, **kwargs)
