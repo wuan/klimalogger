@@ -1,4 +1,8 @@
 __pycache__
+dist
+klimalogger.egg-info
+
+klimalogger.conf
 
 .cache
 .envrc
