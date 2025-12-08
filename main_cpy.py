@@ -127,7 +127,7 @@ try:
                 pixel.mqtt()
                 for entry in data_builder.data:
                     topic, data = map_entry(config.mqtt_prefix, entry)
-                    print(f"{topic}: {data["value"]} {data["unit"]} ({data["sensor"]})")
+                    print(f"{topic}: {data['value']} {data['unit']} ({data['sensor']})")
                     mqtt.publish(topic, json.dumps(data))
             else:
                 print(f"  skipping {ignore_count}")
