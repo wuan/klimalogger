@@ -28,12 +28,3 @@ class TSL2591Sensor(BaseSensor):
     def measure(self, data_builder: DataBuilder, measurements: Measurements) -> None:
         lux = self.driver.lux
         data_builder.add(self.name, "light", "lux", lux)
-
-        infrared = self.driver.infrared
-        data_builder.add(self.name, "light_raw_infrared", "", infrared)
-
-        visible = self.driver.visible
-        data_builder.add(self.name, "light_raw_visible", "", visible)
-
-        full_spectrum = self.driver.full_spectrum
-        data_builder.add(self.name, "light_raw_full_spectrum", "", full_spectrum)
