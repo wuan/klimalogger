@@ -170,7 +170,7 @@ Install required CircuitPython libraries using `circup`:
 pip install circup
 
 # Install dependencies
-circup install -r requirements_cpy.txt
+circup install -U -r requirements_cpy.txt
 ```
 
 #### 4. Configure Environment
