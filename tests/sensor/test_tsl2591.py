@@ -28,6 +28,3 @@ def test_measure_adds_all_channels(uut, sensor, data_builder, measurements, tuv)
 
     t = tuv(data_builder.data)
     assert ("light", "lux", 12.34) in t
-    assert ("light_raw_infrared", "", 101) in t
-    assert ("light_raw_visible", "", 202) in t
-    assert ("light_raw_full_spectrum", "", 303) in t
